@@ -19,7 +19,6 @@ Auth::routes([
     'verify'    => false,
 ]);
 
-
 Route::get('/', function () {
     return redirect('login');
 });
