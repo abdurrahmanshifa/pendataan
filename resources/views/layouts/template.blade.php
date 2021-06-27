@@ -5,6 +5,7 @@
      <meta charset="UTF-8">
      <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
      @yield('title')
+     <link rel="shortcut icon" type="image/png" href="{{ asset('stisla/img/logo.png') }}">
      @include('includes.css')
      @yield('style')
      <style>
@@ -29,7 +30,6 @@
                          @include('includes.sidebar')
                     </aside>
                </div>
-
                <!-- Main Content -->
                <div class="main-content">
                     @yield('content')
@@ -50,12 +50,17 @@
                          <p>Apakah anda ingin keluar dari aplikasi?</p>
                     </div>
                     <div class="modal-footer">
-                         <a href="" class="btn btn-primary">Ya</a>
+                         <a href="{{ route('logout') }}" class="btn btn-primary" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">Ya</a>
                          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Batal</button>
+                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                              @csrf
+                         </form>
                     </div>
                </div>
           </div>
      </div>
+     @yield('modal')
      @include('includes.javascript')
      
      <!-- JS Libraies -->
