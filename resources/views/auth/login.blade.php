@@ -23,10 +23,10 @@
                <div class="d-flex flex-wrap align-items-stretch">
                     <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
                          <div class="p-4 m-3">
-                              <img src="{{ asset('stisla/img/logo.png') }}" alt="logo" width="80" class="shadow-light rounded-circle mb-5 mt-2">
+                              <img src="{{ asset('stisla/img/logo.png') }}" alt="logo" width="80" class="mb-5 mt-2">
                               <h4 class="text-dark font-weight-normal">
                                    <span class="font-weight-bold">
-                                   Pendataan Bangunan Gedung
+                                   Pendataan Bangunan milik Pemerintah Kota Tangerang
                                    </span>
                               </h4>
                               <p class="text-muted">
@@ -36,7 +36,7 @@
                                 @csrf
                                    <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -48,7 +48,7 @@
                                         <div class="d-block">
                                              <label for="password" class="control-label">Password</label>
                                         </div>
-                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="current-password">
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

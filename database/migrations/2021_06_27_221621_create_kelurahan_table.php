@@ -16,8 +16,8 @@ class CreateKelurahanTable extends Migration
     {
         Schema::create('kelurahan', function (Blueprint $table) {
             $table->bigIncrements('id')->primary();
-            $table->string('id_kec');
-            $table->string('nama_kel');
+            $table->string('id_kec')->nullable();
+            $table->string('nama_kel')->nullable();
             $table->timestamps();
             $table->softdeletes();
         });

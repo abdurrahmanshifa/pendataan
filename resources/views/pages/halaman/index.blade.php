@@ -1,16 +1,16 @@
 @extends('layouts.template')
 
 @section('title')
-<title>MASTER KELURAHAN | DINAS PERKIM KOTA TANGERANG </title>
+<title>MASTER HALAMAN | DINAS PERKIM KOTA TANGERANG </title>
 @endsection
 
 @section('content')
 <section class="section">
      <div class="section-header">
-          <h1>Kelurahan</h1>
+          <h1>Halaman</h1>
           <div class="section-header-breadcrumb">
                <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-               <div class="breadcrumb-item">Kelurahan</div>
+               <div class="breadcrumb-item">Halaman</div>
           </div>
      </div>
      <div class="section-body">
@@ -19,6 +19,9 @@
                     <div class="card">
                          <div class="card-header">
                               <h4>
+                                   <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Tambah Data">
+                                        <i class="fas fa-plus"></i> Tambah
+                                   </button>
                                    <button type="button" class="refresh btn btn-icon btn-lg btn-success">
                                         <i class="fas fa-sync-alt"></i> Muat Ulang
                                    </button>
@@ -35,8 +38,9 @@
                                                   <thead>
                                                        <tr>
                                                             <th style="text-align: center;" width="50px;">No</th>
-                                                            <th style="text-align: center;">Kecamatan</th>
-                                                            <th style="text-align: center;">Kelurahan</th>
+                                                            <th style="text-align: center;">Nama</th>
+                                                            <th style="text-align: center;">Keterangan</th>
+                                                            <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>
                                                   </thead>
                                                   <tbody>
@@ -55,9 +59,9 @@
 @endsection
 
 @section('modal')
-     @include('pages.kelurahan.modal')
+     @include('pages.halaman.modal')
 @endsection
 
 @section('script')
-     @include('pages.kelurahan.script')
+     @include('pages.halaman.script')
 @endsection

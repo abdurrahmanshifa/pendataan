@@ -34,7 +34,7 @@
                                              <table id="table" class="table table-bordered table-hover">
                                                   <thead>
                                                        <tr>
-                                                            <th style="text-align: center;">No</th>
+                                                            <th style="text-align: center;" width="50px;">No</th>
                                                             <th style="text-align: center;">Kecamatan</th>
                                                        </tr>
                                                   </thead>

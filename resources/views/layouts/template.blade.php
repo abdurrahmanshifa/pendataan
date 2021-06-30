@@ -9,6 +9,9 @@
      @include('includes.css')
      @yield('style')
      <style>
+          .select2 {
+               width:100% !important;
+          }
           .help{
                color:#fc544b;
                font-weight: 600;

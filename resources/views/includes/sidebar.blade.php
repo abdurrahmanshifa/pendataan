@@ -1,8 +1,12 @@
 <div class="sidebar-brand">
-    <a href="{{ url('/') }}">DINAS PERKIM</a>
+    <a href="{{ url('/') }}">
+        <img src="{{ asset('stisla/img/logo.png') }}" alt="logo" height="30" class="shadow-light"> DINAS PERKIM
+    </a>
 </div>
 <div class="sidebar-brand sidebar-brand-sm">
-    <a href="{{ url('/') }}"> <span class="fas fa-house-damage"></span> </a>
+    <a href="{{ url('/') }}">
+        <img src="{{ asset('stisla/img/logo.png') }}" alt="logo" height="30" class="shadow-light">
+    </a>
 </div>
 <ul class="sidebar-menu">
     <li class="menu-header">Dashboard</li>
@@ -31,12 +35,24 @@
                     Ruangan
                 </a>
             </li>
+            <li class="{{ request()->is('master/halaman*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('halaman') }}">
+                    Halaman
+                </a>
+            </li>
         </ul>
     </li>
     <li class="nav-item {{ request()->is('pengguna*') ? 'active' : '' }}">
         <a href="{{ route('pengguna') }}" class="nav-link">
             <i class="fas fa-user-plus"></i>
             <span>Pengguna</span>
+        </a>
+    </li>
+    <li class="menu-header">Transaksi</li>
+    <li class="nav-item {{ request()->is('survey*') ? 'active' : '' }}">
+        <a href="{{ route('survey') }}" class="nav-link">
+            <i class="fas fa-poll-h"></i>
+            <span>Survey</span>
         </a>
     </li>
 </ul>

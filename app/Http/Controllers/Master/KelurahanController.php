@@ -38,4 +38,20 @@ class KelurahanController extends Controller
           }
           return view('pages.kelurahan.index');
      }
+
+     public function kel_by_kec($id=null,$id_kel=null)
+     {
+         $kel = Kelurahan::where('id_kec', $id)->get();
+
+          $option = '<option value="">-- Pilih Kelurahan --</option>';
+          foreach($kel as $val){
+               if($id_kel != null)
+               {
+                    $option .= '<option '.($val->id == $id_kel?'selected':'').' value="'.$val->id.'">'.$val->nama_kel.'</option>';
+               }else{
+                    $option .= '<option value="'.$val->id.'">'.$val->nama_kel.'</option>';
+               }
+          }
+          echo $option;
+     }
 }

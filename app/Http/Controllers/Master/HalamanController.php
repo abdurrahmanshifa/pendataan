@@ -1,15 +1,12 @@
 <?php
-
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Helpers\DateHelper;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Halaman;
 use DataTables;
 use Validator;
 
-class PenggunaController extends Controller
+class HalamanController extends Controller
 {
      public function __construct()
      {
@@ -19,7 +16,7 @@ class PenggunaController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = User::orderBy('created_at','desc')->get();
+               $data = Halaman::orderBy('created_at','desc')->get();
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
@@ -30,20 +27,10 @@ class PenggunaController extends Controller
 
                          return $data;
                     })
-                    ->editColumn('last_login', function($row) {
-                         if($row->last_login_at != null)
-                         {
-                              $data = DateHelper::tglIndTime($row->last_login_at);
-                         }else{
-                              $data = '-';
-                         }
-
-                         return $data;
-                    })
                     ->escapeColumns([])
                     ->make(true);
           }
-          return view('pages.pengguna.index');
+          return view('pages.halaman.index');
      }
 
      public function simpan(Request $request)
@@ -52,24 +39,17 @@ class PenggunaController extends Controller
           {
                $validator = Validator::make($request->all(), [
                          'nama' => 'required',
-                         'email'     => 'required|email|unique:users,email,'.$request->input('id'),
-                         'password'  => 'required',
                     ],
                     [
                          'nama.required' => 'Nama tidak boleh kosong!',
-                         'email.required'    => 'Alamat email tidak boleh kosong!',
-                         'email.email'       => 'Alamat email tidak sesuai!',
-                         'email.unique'      => 'Alamat email sudah terdaftar di data kami!',
-                         'password.required' => 'Password tidak boleh kosong!',
                     ]
                );
                
           
                if ($validator->passes()) {
-                    $data = new User();
-                    $data->name = $request->input('nama');
-                    $data->email = $request->input('email');
-                    $data->password = Hash::make($request->input('password'));
+                    $data = new Halaman();
+                    $data->nama = strtoupper($request->input('nama'));
+                    $data->keterangan = $request->input('keterangan');
                     $data->created_at = now();
                     
                     if($data->save()){
@@ -100,28 +80,19 @@ class PenggunaController extends Controller
      {
           if($request->input())
           {
-               $validator = Validator::make($request->all(), [
+                    $validator = Validator::make($request->all(), [
                          'nama' => 'required',
-                         'email'     => 'required|email|unique:users,email,'.$request->input('id'),
                     ],
                     [
                          'nama.required' => 'Nama tidak boleh kosong!',
-                         'email.required'    => 'Alamat email tidak boleh kosong!',
-                         'email.email'       => 'Alamat email tidak sesuai!',
-                         'email.unique'      => 'Alamat email sudah terdaftar di data kami!',
                     ]
                );
           
                if ($validator->passes()) {
-                    $data = User::find($request->input('id'));
-                    $data->name = $request->input('nama');
-                    $data->email = $request->input('email');
-                    if($request->input('password') != null)
-                    {
-                         $data->password = Hash::make($request->input('password'));
-                    }
+                    $data = Halaman::find($request->input('id'));
+                    $data->nama = strtoupper($request->input('nama'));
+                    $data->keterangan = $request->input('keterangan');
                     $data->updated_at = now();
-
                     if($data->save()){
                          $msg = array(
                          'success' => true, 
@@ -148,13 +119,13 @@ class PenggunaController extends Controller
 
      public function data($id)
      {
-          $data = User::where('id', $id)->first();
+          $data = Halaman::where('id', $id)->first();
           return response()->json($data);
      }
 
      public function hapus(Request $request , $id)
      {
-          $data = User::find($id);
+          $data = Halaman::find($id);
           if($data->delete()){
                $msg = array(
                     'success' => true, 
@@ -183,18 +154,7 @@ class PenggunaController extends Controller
                $data['status'] = false;
           endif;
 
-          if ($validator->errors()->has('email')):
-               $data['input_error'][] = 'email';
-               $data['error_string'][] = $validator->errors()->first('email');
-               $data['status'] = false;
-           endif;
-     
-           if ($validator->errors()->has('password')):
-               $data['input_error'][] = 'password';
-               $data['error_string'][] = $validator->errors()->first('password');
-               $data['status'] = false;
-           endif;
-
           return $data;
      }
+
 }

@@ -172,7 +172,9 @@ select.form-control:not([size]):not([multiple]),
   height: 42px; }
 
 textarea.form-control {
-  height: 64px; }
+  height: 64px !important;
+  resize: none;
+}
 
 .custom-control {
   line-height: 1.6rem; }
@@ -2366,12 +2368,7 @@ pre {
     font-weight: 600;
     position: relative;
     margin: 30px 0 25px 0; }
-    .section .section-title:before {
-      content: ' ';
-      border-radius: 5px;
-      height: 8px;
-      width: 30px;
-      background-color: #ea6811;
+    .section .section-title .icon-back {
       display: inline-block;
       float: left;
       margin-top: 6px;
