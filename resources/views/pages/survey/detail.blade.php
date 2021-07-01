@@ -37,7 +37,7 @@
                                              <i class="fas fa-edit"></i> Ubah
                                         </a>
                                    @else
-                                        <a href="{{ route('pembangunan',['id' => $data->id]) }}" class="btn btn-icon btn-lg btn-info" title="Tambah Data">
+                                        <a href="{{ route('pembangunan',['id' => $data->id]) }}" class="btn btn-icon btn-lg btn-dark" title="Tambah Data">
                                              <i class="fas fa-plus"></i> Tambah
                                         </a>
                                    @endif
@@ -193,7 +193,7 @@
                                    Rehabilitasi
                               </h4>
                               <div class="card-header-action">
-                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
+                                   <button class="btn btn-icon btn-lg btn-dark tambah_rehabilitasi" type="button" title="Simpan Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
                                    <a data-collapse="#rehabilitasi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
@@ -212,6 +212,7 @@
                                                                       <th style="text-align: center;">Nama</th>
                                                                       <th style="text-align: center;">Tahun</th>
                                                                       <th style="text-align: center;">Sumber Anggaran</th>
+                                                                      <th style="text-align: center;" width="100px;">Aksi</th>
                                                                  </tr>
                                                             </thead>
                                                             <tbody>

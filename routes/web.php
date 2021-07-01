@@ -70,6 +70,18 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('pembangunan/ruangan-ubah', 'App\Http\Controllers\PembangunanController@ruangan_ubah')->name('pembangunan-ruangan.ubah');
         Route::get('pembangunan/ruangan-data/{id}', 'App\Http\Controllers\PembangunanController@ruangan_data')->name('pembangunan-ruangan.data');
         Route::delete('pembangunan/ruangan-hapus/{id}', 'App\Http\Controllers\PembangunanController@ruangan_hapus')->name('pembangunan-ruangan.hapus');
+
+        Route::get('/rehabilitasi/{id}', 'App\Http\Controllers\RehabilitasiController@index')->name('rehabilitasi');
+        Route::post('rehabilitasi/simpan', 'App\Http\Controllers\RehabilitasiController@simpan')->name('rehabilitasi.simpan');
+        Route::post('rehabilitasi/ubah', 'App\Http\Controllers\RehabilitasiController@ubah')->name('rehabilitasi.ubah');
+        Route::get('rehabilitasi/data/{id}', 'App\Http\Controllers\RehabilitasiController@data')->name('rehabilitasi.data');
+        Route::delete('rehabilitasi/hapus/{id}', 'App\Http\Controllers\RehabilitasiController@hapus')->name('rehabilitasi.hapus');
+
+        Route::get('/rehabilitasi-detail/{id}', 'App\Http\Controllers\RehabilitasiController@rehabilitasi_detail')->name('rehabilitasi-detail');
+        Route::post('rehabilitasi-detail/simpan', 'App\Http\Controllers\RehabilitasiController@simpan_detail')->name('rehabilitasi-detail.simpan');
+        Route::post('rehabilitasi-detail/ubah', 'App\Http\Controllers\RehabilitasiController@ubah_detail')->name('rehabilitasi-detail.ubah');
+        Route::get('rehabilitasi-detail/data/{id}', 'App\Http\Controllers\RehabilitasiController@data_detail')->name('rehabilitasi-detail.data');
+        Route::delete('rehabilitasi-detail/hapus/{id}', 'App\Http\Controllers\RehabilitasiController@hapus_detail')->name('rehabilitasi-detail.hapus');
     });
 
 });

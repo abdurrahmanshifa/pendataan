@@ -13,6 +13,7 @@
             {"data":"nama_objek"},
             {"data":"lokasi"},
             {"data":"status_lahan"},
+            {"data":"media"},
             {"data":"aksi"},
         ],
         columnDefs: [
@@ -212,4 +213,10 @@
         });
      });
     
+     $(document).on("click", ".open-AddBookDialog", function () {
+          var myBookId = $(this).data('id');
+          var title = $(this).data('title');
+          $(".modal-body #bookId").attr('src','{{ url("show-image/survey") }}/'+myBookId);
+          $(".modal-body #img-title").html(title);
+     });
 </script>

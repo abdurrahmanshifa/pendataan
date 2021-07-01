@@ -42,6 +42,7 @@
                                                             <th style="text-align: center;">Nama Objek</th>
                                                             <th style="text-align: center;" width="200px;">Lokasi</th>
                                                             <th style="text-align: center;">Status Lahan</th>
+                                                            <th style="text-align: center;width:100px;">Media</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>
                                                   </thead>

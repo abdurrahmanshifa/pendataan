@@ -43,6 +43,21 @@ class SurveyController extends Controller
                          $data = $row->statuslahan->nama;
                          return $data;
                     })
+                    ->editColumn('media', function($row) {
+                         if($row->foto != null):
+                              $data = "
+                                   <div class='gallery gallery-md text-center'>
+                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->klasifikasi."' href='#foto-modal'>
+                                             <div class='gallery-item' data-title='".$row->klasifikasi."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
+                                        </a>
+                                   </div>
+                              ";
+                         else:
+                              $data = '-';
+                         endif;
+
+                         return $data;
+                    })
                     ->escapeColumns([])
                     ->make(true);
           }
@@ -83,6 +98,15 @@ class SurveyController extends Controller
                     $data->lat               = $request->input('lat');
                     $data->long              = $request->input('long');
                     $data->id_status_lahan   = $request->input('id_status_lahan');
+
+                    if($request->hasFile('foto'))
+                    {
+                         $file = $request->file('foto');
+                         $file_ext = $file->getClientOriginalExtension();
+                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.time().'.'.$file_ext;
+                         $file->storeAs('survey', $filename);
+                         $data->foto    = $filename;
+                    }
                     $data->created_at        = now();
                     
                     if($data->save()){
@@ -137,6 +161,15 @@ class SurveyController extends Controller
                     $data->lat               = $request->input('lat');
                     $data->long              = $request->input('long');
                     $data->id_status_lahan   = $request->input('id_status_lahan');
+                    if($request->hasFile('foto'))
+                    {
+                         $file = $request->file('foto');
+                         $file_ext = $file->getClientOriginalExtension();
+                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.time().'.'.$file_ext;
+                         $file->storeAs('survey', $filename);
+                         $data->foto    = $filename;
+                    }
+
                     $data->updated_at = now();
 
                     if($data->save()){
