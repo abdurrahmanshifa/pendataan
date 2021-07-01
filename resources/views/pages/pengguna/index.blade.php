@@ -19,7 +19,7 @@
                     <div class="card">
                          <div class="card-header">
                               <h4>
-                                   <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Tambah Data">
+                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Tambah Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
                                    <button type="button" class="refresh btn btn-icon btn-lg btn-success">

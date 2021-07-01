@@ -65,9 +65,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix'=>'survey'], function () {
         Route::get('/pembangunan/{id}', 'App\Http\Controllers\PembangunanController@index')->name('pembangunan');
         Route::post('pembangunan/simpan', 'App\Http\Controllers\PembangunanController@simpan')->name('pembangunan.simpan');
-        Route::post('pembangunan/ubah', 'App\Http\Controllers\PembangunanController@ubah')->name('pembangunan.ubah');
-        Route::get('pembangunan/data/{id}', 'App\Http\Controllers\PembangunanController@data')->name('pembangunan.data');
-        Route::delete('pembangunan/hapus/{id}', 'App\Http\Controllers\PembangunanController@hapus')->name('pembangunan.hapus');
+
+        Route::post('pembangunan/ruangan-simpan', 'App\Http\Controllers\PembangunanController@ruangan_simpan')->name('pembangunan-ruangan.simpan');
+        Route::post('pembangunan/ruangan-ubah', 'App\Http\Controllers\PembangunanController@ruangan_ubah')->name('pembangunan-ruangan.ubah');
+        Route::get('pembangunan/ruangan-data/{id}', 'App\Http\Controllers\PembangunanController@ruangan_data')->name('pembangunan-ruangan.data');
+        Route::delete('pembangunan/ruangan-hapus/{id}', 'App\Http\Controllers\PembangunanController@ruangan_hapus')->name('pembangunan-ruangan.hapus');
     });
 
 });
+
+Route::get('show-file/{dir}/{filename}', 'App\Http\Controllers\Controller@displayFiles');
+Route::get('show-files/{dir}/{filename}', 'App\Http\Controllers\Controller@displayFile');
+Route::get('show-image/{dir}/{filename}', 'App\Http\Controllers\Controller@showImage');

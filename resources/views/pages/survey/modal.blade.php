@@ -80,7 +80,7 @@
                          </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
-                         <button type="submit" id="btn" class="btn btn-info">
+                         <button type="submit" id="btn" class="btn btn-dark">
                               Simpan
                          </button>
                          <button type="button" class="btn btn-danger" data-dismiss="modal">

@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="{{ asset('stisla/node_modules/owl.carousel/dist/assets/owl.theme.default.min.css') }}">
 <!-- Template CSS -->
 <link rel="stylesheet" href="{{ asset('stisla/css/style.css') }}">
+
+<link rel="stylesheet" href="{{ asset('stisla/node_modules/chocolat/dist/css/chocolat.css') }}">
 <link rel="stylesheet" href="{{ asset('stisla/css/components.css') }}">
 <link rel="stylesheet" href="{{ asset('stisla/vendor/sweetalert2/sweetalert2.css') }}">
 <link rel="stylesheet" href="{{ asset('stisla/vendor/select2/dist/css/select2.css') }}">

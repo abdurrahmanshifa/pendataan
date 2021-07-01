@@ -41,7 +41,7 @@
                                              <i class="fas fa-plus"></i> Tambah
                                         </a>
                                    @endif
-                                   <a data-collapse="#mycard-collapse" class="btn btn-icon btn-lg btn-warning" href="#"><i class="fas fa-minus"></i></a>
+                                   <a data-collapse="#mycard-collapse" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
                          <div class="collapse show" id="mycard-collapse" style="">
@@ -50,79 +50,106 @@
                                         <div class="row">
                                              <div class="col-md-4">
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Tahun </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                            {{ ($data->pembangunan->tahun != null ?$data->pembangunan->tahun:'-') }}
+                                                            {{ (isset($data->pembangunan->tahun) ?$data->pembangunan->tahun:'-') }}
                                                        </label>
                                                   </div>
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Luas </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->luas != null ?$data->pembangunan->luas:'-') }}
+                                                       {{ (isset($data->pembangunan->luas) ?$data->pembangunan->luas:'-') }}
                                                        </label>
                                                   </div>
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Jumlah Lantai </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->jml_lantai != null ?$data->pembangunan->jml_lantai:'-') }}
+                                                       {{ (isset($data->pembangunan->jml_lantai) ?$data->pembangunan->jml_lantai:'-') }}
                                                        </label>
                                                   </div>
                                              </div>
                                              <div class="col-md-4">
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Halaman </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->halaman != null ?$data->pembangunan->halaman->nama:'-') }}
+                                                       {{ (isset($data->pembangunan->halaman) ?$data->pembangunan->halaman->nama:'-') }}
                                                        </label>
                                                   </div>
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Pagar </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->pagar != null ?$data->pembangunan->pagar->nama:'-') }}
+                                                       {{ (isset($data->pembangunan->pagar) ?$data->pembangunan->pagar->nama:'-') }}
                                                        </label>
                                                   </div>
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Saluran </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->saluran != null ?$data->pembangunan->saluran->nama:'-') }}
+                                                       {{ (isset($data->pembangunan->saluran) ?$data->pembangunan->saluran->nama:'-') }}
                                                        </label>
                                                   </div>
                                              </div>
                                              <div class="col-md-4">
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Luas Halaman </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->luas_halaman != null ?$data->pembangunan->luas_halaman:'-') }}
+                                                       {{ (isset($data->pembangunan->luas_halaman) ?$data->pembangunan->luas_halaman:'-') }} m <sup>2</sup>
                                                        </label>
                                                   </div>
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Panjang Pagar </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->panjang_pagar != null ?$data->pembangunan->panjang_pagar:'-') }}
+                                                       {{ (isset($data->pembangunan->panjang_pagar) ?$data->pembangunan->panjang_pagar:'-') }} m <sup>2</sup>
                                                        </label>
                                                   </div>
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                       <label class="col-form-label col-md-5 col-lg-5">
                                                             <strong> Panjang Saluran </strong>
                                                        </label>
+                                                       <label class="col-form-label col-md-1 col-lg-1">
+                                                            <strong> : </strong>
+                                                       </label>
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                       {{ ($data->pembangunan->panjang_saluran != null ?$data->pembangunan->panjang_saluran:'-') }}
+                                                       {{ (isset($data->pembangunan->panjang_saluran) ?$data->pembangunan->panjang_saluran:'-') }} m <sup>2</sup>
                                                        </label>
                                                   </div>
                                              </div>
@@ -138,9 +165,9 @@
                                                                  <tr>
                                                                       <th style="text-align: center;" width="50px;">No</th>
                                                                       <th style="text-align: center;">Ruangan</th>
-                                                                      <th style="text-align: center;">Jumlah Ruangan</th>
-                                                                      <th style="text-align: center;">Luas</th>
-                                                                      <th style="text-align: center;">Media</th>
+                                                                      <th style="text-align: center;" width="150px">Jumlah Ruangan</th>
+                                                                      <th style="text-align: center;" width="150px">Luas</th>
+                                                                      <th style="text-align: center;width:100px;">Media</th>
                                                                  </tr>
                                                             </thead>
                                                             <tbody>
@@ -166,10 +193,10 @@
                                    Rehabilitasi
                               </h4>
                               <div class="card-header-action">
-                                   <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Simpan Data">
+                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
-                                   <a data-collapse="#rehabilitasi" class="btn btn-icon btn-lg btn-warning" href="#"><i class="fas fa-minus"></i></a>
+                                   <a data-collapse="#rehabilitasi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
                          <div class="collapse show" id="rehabilitasi" style="">
@@ -210,10 +237,10 @@
                                    Spesifikasi Bangunan
                               </h4>
                               <div class="card-header-action">
-                                   <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Simpan Data">
+                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
-                                   <a data-collapse="#spesifikasi" class="btn btn-icon btn-lg btn-warning" href="#"><i class="fas fa-minus"></i></a>
+                                   <a data-collapse="#spesifikasi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
                          <div class="collapse show" id="spesifikasi" style="">
@@ -254,10 +281,10 @@
                                    Kondisi Tahun {{ date('Y') }}
                               </h4>
                               <div class="card-header-action">
-                                   <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Simpan Data">
+                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
-                                   <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-warning" href="#"><i class="fas fa-minus"></i></a>
+                                   <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
                          <div class="collapse show" id="kondisi" style="">
@@ -300,10 +327,10 @@
                                    Site Plan
                               </h4>
                               <div class="card-header-action">
-                                   <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Simpan Data">
+                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
-                                   <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-warning" href="#"><i class="fas fa-minus"></i></a>
+                                   <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
                          <div class="collapse show" id="kondisi" style="">

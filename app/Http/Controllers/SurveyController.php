@@ -28,7 +28,7 @@ class SurveyController extends Controller
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
                          $data = '
-                              <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-info btn-sm"> <i class="fas fa-eye text-white"></i></a>
+                              <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
                               <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
                               <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
                          ';
@@ -37,7 +37,7 @@ class SurveyController extends Controller
                     })
                     ->editColumn('lokasi', function($row) {
                          $data = 'KECAMATAN : '.$row->kecamatan->nama_kec.'<br> KELURAHAN : '.$row->kelurahan->nama_kel;
-                         return $data;
+                         return  ucwords(strtolower($data));
                     })
                     ->editColumn('status_lahan', function($row) {
                          $data = $row->statuslahan->nama;
@@ -129,7 +129,6 @@ class SurveyController extends Controller
           
                if ($validator->passes()) {
                     $data                    = Survey::find($request->input('id'));
-                    $data->id                = Uuid::uuid4()->getHex();
                     $data->klasifikasi       = $request->input('klasifikasi');
                     $data->nama_objek        = $request->input('nama_objek');
                     $data->id_kec            = $request->input('id_kec');

@@ -19,7 +19,7 @@
                     <div class="card">
                          <div class="card-header">
                               <h4>
-                                   <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Tambah Data">
+                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Tambah Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
                                    <button type="button" class="refresh btn btn-icon btn-lg btn-success">
@@ -40,7 +40,7 @@
                                                             <th style="text-align: center;" width="50px;">No</th>
                                                             <th style="text-align: center;">Klasifikasi</th>
                                                             <th style="text-align: center;">Nama Objek</th>
-                                                            <th style="text-align: center;">Lokasi</th>
+                                                            <th style="text-align: center;" width="200px;">Lokasi</th>
                                                             <th style="text-align: center;">Status Lahan</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>
