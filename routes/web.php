@@ -82,6 +82,20 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('rehabilitasi-detail/ubah', 'App\Http\Controllers\RehabilitasiController@ubah_detail')->name('rehabilitasi-detail.ubah');
         Route::get('rehabilitasi-detail/data/{id}', 'App\Http\Controllers\RehabilitasiController@data_detail')->name('rehabilitasi-detail.data');
         Route::delete('rehabilitasi-detail/hapus/{id}', 'App\Http\Controllers\RehabilitasiController@hapus_detail')->name('rehabilitasi-detail.hapus');
+
+        Route::get('/spesifikasi/{id}', 'App\Http\Controllers\SpesifikasiController@index')->name('spesifikasi');
+        Route::post('spesifikasi/simpan', 'App\Http\Controllers\SpesifikasiController@simpan')->name('spesifikasi.simpan');
+        Route::post('spesifikasi/simpan-lain', 'App\Http\Controllers\SpesifikasiController@simpan_lain')->name('spesifikasi.simpan-lain');
+        Route::post('spesifikasi/ubah', 'App\Http\Controllers\SpesifikasiController@ubah')->name('spesifikasi.ubah');
+        Route::get('spesifikasi/data/{id}', 'App\Http\Controllers\SpesifikasiController@data')->name('spesifikasi.data');
+        Route::delete('spesifikasi/hapus/{id}', 'App\Http\Controllers\SpesifikasiController@hapus')->name('spesifikasi.hapus');
+
+        Route::get('/kondisi/{id}', 'App\Http\Controllers\KondisiController@index')->name('kondisi');
+        Route::post('kondisi/simpan', 'App\Http\Controllers\KondisiController@simpan')->name('kondisi.simpan');
+        Route::post('kondisi/simpan-lain', 'App\Http\Controllers\KondisiController@simpan_lain')->name('kondisi.simpan-lain');
+        Route::post('kondisi/ubah', 'App\Http\Controllers\KondisiController@ubah')->name('kondisi.ubah');
+        Route::get('kondisi/data/{id}', 'App\Http\Controllers\KondisiController@data')->name('kondisi.data');
+        Route::delete('kondisi/hapus/{id}', 'App\Http\Controllers\KondisiController@hapus')->name('kondisi.hapus');
     });
 
 });

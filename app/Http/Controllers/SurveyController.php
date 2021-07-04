@@ -6,7 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Survey;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
+use App\Models\Atap;
+use App\Models\Dinding;
+use App\Models\Kusen;
+use App\Models\Lantai;
+use App\Models\Plafond;
+use App\Models\RangkaAtap;
 use App\Models\StatusLahan;
+use App\Models\Spesifikasi;
 use App\Helpers\DateHelper;
 use Illuminate\Support\Facades\Hash;
 use DataTables;
@@ -257,7 +264,14 @@ class SurveyController extends Controller
      public function detail($id)
      {
           $data = Survey::with(['pembangunan.halaman','pembangunan.pagar','pembangunan.saluran'])->findOrFail($id);
+          $atap = Atap::get();
+          $dinding = Dinding::get();
+          $kusen = Kusen::get();
+          $lantai = Lantai::get();
+          $plafond = Plafond::get();
+          $rangkaAtap = RangkaAtap::get();
+          $spesifikai = Spesifikasi::where('id_survey',$id)->get();
           
-          return view('pages.survey.detail')->with('data',$data);
+          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai'));
      }
 }
