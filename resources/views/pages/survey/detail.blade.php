@@ -3,6 +3,10 @@
 @section('title')
 <title>SURVEY DETAIL {{ strtoupper($data->klasifikasi) }} | DINAS PERKIM KOTA TANGERANG </title>
 <style>
+     .file {
+          visibility: hidden;
+          position: absolute;
+     }
 </style>
 @endsection
 
@@ -336,7 +340,7 @@
                               </h4>
                               <div class="card-header-action">
                                    <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
-                                        <i class="fas fa-plus"></i> Tambah
+                                        <i class="fas fa-save"></i> Simpan
                                    </button>
                                    <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
@@ -347,12 +351,19 @@
                                         <div class="row">
                                              <div class="col-md-12">
                                                   <div class="form-group row mb-1">
-                                                       <label class="col-form-label col-md-3 col-lg-3">
-                                                            <strong> Foto </strong>
+                                                       <label class="col-form-label col-md-6 col-lg-6">
+                                                            <img src="{{ asset('stisla/img/news/img04.jpg') }}" id="preview" class="img-thumbnail">
                                                        </label>
-                                                       <label class="col-form-label col-md-9 col-lg-9">
-                                                            Tahun
-                                                       </label>
+                                                  </div>
+                                                  <div class="form-group row mb-1">
+                                                       <div class="col-md-6 col-lg-6">
+                                                            <div class="input-group mb-3">
+                                                                 <div class="custom-file">
+                                                                      <input type="file" class="custom-file-input" name="foto" id="inputGroupFile02">
+                                                                      <label class="custom-file-label" for="inputGroupFile02">Pilih File</label>
+                                                                 </div>
+                                                            </div>
+                                                       </div>
                                                   </div>
                                              </div>
                                         </div>
