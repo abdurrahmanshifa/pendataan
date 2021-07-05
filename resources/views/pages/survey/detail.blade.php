@@ -293,9 +293,9 @@
                                    Kondisi Tahun {{ date('Y') }}
                               </h4>
                               <div class="card-header-action">
-                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
-                                        <i class="fas fa-plus"></i> Tambah
-                                   </button>
+                                   <a  href="{{ url('survey/kondisi/'.$data->id) }}" class="btn btn-icon btn-lg btn-dark" title="Simpan Data">
+                                        <i class="fas fa-plus"></i> Kondisi
+                                   </a>
                                    <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
@@ -334,12 +334,15 @@
           <div class="row">
                <div class="col-12">
                     <div class="card">
+                    <form role="form" id="form_site_plan" name="form_site_plan" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id_survey" value="{{ $data->id }}">
                          <div class="card-header">
                               <h4>
                                    Site Plan
                               </h4>
                               <div class="card-header-action">
-                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Simpan Data">
+                                   <button class="btn btn-icon btn-lg btn-dark" id="btn_siteplan" type="submit" title="Tambah Data">
                                         <i class="fas fa-save"></i> Simpan
                                    </button>
                                    <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
@@ -352,14 +355,18 @@
                                              <div class="col-md-12">
                                                   <div class="form-group row mb-1">
                                                        <label class="col-form-label col-md-6 col-lg-6">
-                                                            <img src="{{ asset('stisla/img/news/img04.jpg') }}" id="preview" class="img-thumbnail">
+                                                            @if(isset($sitePlan->foto))
+                                                                 <img src="{{ url('show-image/site-plan/'.$sitePlan->foto) }}" id="preview" class="img-thumbnail">
+                                                            @else
+                                                                 <img src="{{ asset('stisla/img/news/img04.jpg') }}" id="preview" class="img-thumbnail">
+                                                            @endif
                                                        </label>
                                                   </div>
                                                   <div class="form-group row mb-1">
                                                        <div class="col-md-6 col-lg-6">
                                                             <div class="input-group mb-3">
                                                                  <div class="custom-file">
-                                                                      <input type="file" class="custom-file-input" name="foto" id="inputGroupFile02">
+                                                                      <input type="file" accept="image/x-png,image/gif,image/jpeg" class="custom-file-input" name="foto" id="inputGroupFile02">
                                                                       <label class="custom-file-label" for="inputGroupFile02">Pilih File</label>
                                                                  </div>
                                                             </div>
@@ -370,6 +377,7 @@
                                    </div>
                               </div>
                          </div>
+                    </form>
                     </div>
                </div>
           </div>

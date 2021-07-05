@@ -22,16 +22,37 @@ class KondisiController extends Controller
      public function index(Request $request,$id)
      {
           if ($request->ajax()) {
-               $data = Kondisi::where('id_survey',$id)->where('tahun',date('Y'))->orderBy('urutan','asc')->get();  
+               if(isset($_GET['filter']['tahun']))
+               {
+                    $tahun = $_GET['filter']['tahun'];
+               }else{
+                    $tahun = date('Y');
+               }
+               $data = Kondisi::where('id_survey',$id)->where('tahun',$tahun)->orderBy('urutan','asc')->get();  
                
                return Datatables::of($data)
                     ->addIndexColumn()
-                    ->editColumn('media', function($row) {
+                    ->editColumn('foto_kondisi', function($row) {
                          if($row->foto_kondisi != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-spesifikasi' data-id='".$row->foto_kondisi."' data-title='".$row->nama."<br>".$row->kondisi."' href='#foto-modal'>
-                                             <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/spesifikasi/'.$row->foto_kondisi).")'></div>
+                                        <a data-toggle='modal' class='open-kondisi' data-id='".$row->foto_kondisi."' data-title='".$row->nama."<br>".$row->kondisi."' href='#foto-modal'>
+                                             <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/kondisi/'.$row->foto_kondisi).")'></div>
+                                        </a>
+                                   </div>
+                              ";
+                         else:
+                              $data = '-';
+                         endif;
+
+                         return $data;
+                    })
+                    ->editColumn('foto_luas', function($row) {
+                         if($row->foto_luas != null):
+                              $data = "
+                                   <div class='gallery gallery-md text-center'>
+                                        <a data-toggle='modal' class='open-luas' data-id='".$row->foto_luas."' data-title='".$row->nama."<br>".$row->luas."' href='#foto-modal'>
+                                             <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/luas-kondisi/'.$row->foto_luas).")'></div>
                                         </a>
                                    </div>
                               ";
@@ -43,7 +64,8 @@ class KondisiController extends Controller
                     })
                     ->editColumn('aksi', function($row) {
                          $data = '
-                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
+                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
+                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus(\''.$row->id.'\')"> <i class="fas fa-trash text-white"></i></a>
                          ';
 
                          return $data;
@@ -60,6 +82,9 @@ class KondisiController extends Controller
                     ->escapeColumns([])
                     ->make(true);
           }
+          $survey   = Survey::find($id);
+          $tahun    = date('Y'); 
+          return view('pages.kondisi.index')->with('survey',$survey)->with('tahun',$tahun);
           
      }
 
@@ -67,100 +92,81 @@ class KondisiController extends Controller
      {
           if($request->input())
           {
-               foreach($request->input('nama') as $key => $val)
-               {
-                    $data = new Spesifikasi();
-                    $id                      = Uuid::uuid4()->getHex();
-                    $data->id                = $id;
-                    $data->id_survey         = $request->input('id_survey');
-                    $data->nama              = $val;
-                    if(isset($request->input('jenis')[$key]))
-                    {
-                         $data->jenis             = $request->input('jenis')[$key];
-                    }
-                    
-                    if(isset($request->file('foto')[$key]))
-                    {
-                         $file = $request->file('foto')[$key];
-                         $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
-                         $file->storeAs('spesifikasi', $filename);
-                         $data->foto    = $filename;
-                    }
-                    $data->urutan            = $key+1;
-                   
-                    
-                    $data->created_at        = now();
-                    $save = $data->save();
-               }
+               $validator = Validator::make($request->all(), [
+                         'tahun'  => 'required',
+                    ],
+                    [
+                         'tahun.required'   => 'Tahun tidak boleh kosong!',
+                    ]
+               );
                
-               if($save){
-                    $msg = array(
-                         'success' => true, 
-                         'message' => 'Data berhasil disimpan!',
-                         'status' => TRUE
-                    );
-                    return response()->json($msg);
-               }else{
-                    $msg = array(
-                         'success' => false, 
-                         'message' => 'Data gagal disimpan!',
-                         'status' => TRUE
-                    );
-                    return response()->json($msg);
-               }
+          
+               if ($validator->passes()) {
+                    
+                    $jml = Kondisi::where('id_survey',$request->input('id_survey'))->where('tahun',$request->input('tahun'))->orderBy('urutan','desc')->first();
 
-          }
-     }
-
-     public function simpan_lain(Request $request)
-     {
-          if($request->input())
-          {
-               $jml = Spesifikasi::where('id_survey',$request->input('id_survey'))->count();
-
-               foreach($request->input('nama') as $key => $val)
-               {
-                    $data = new Spesifikasi();
-                    $id                      = Uuid::uuid4()->getHex();
-                    $data->id                = $id;
-                    $data->id_survey         = $request->input('id_survey');
-                    $data->nama              = $val;
-                    if(isset($request->input('jenis')[$key]))
+                    foreach($request->input('nama') as $key => $val)
                     {
-                         $data->jenis             = $request->input('jenis')[$key];
+                         $data = new Kondisi();
+                         $id                      = Uuid::uuid4()->getHex();
+                         $data->id                = $id;
+                         $data->tahun             = $request->input('tahun');
+                         $data->id_survey         = $request->input('id_survey');
+                         $data->nama              = $val;
+                         if(isset($request->input('kondisi')[$key]))
+                         {
+                              $data->kondisi             = $request->input('kondisi')[$key];
+                         }
+                         
+                         if(isset($request->file('foto_kondisi')[$key]))
+                         {
+                              $file = $request->file('foto_kondisi')[$key];
+                              $file_ext = $file->getClientOriginalExtension();
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $file->storeAs('kondisi', $filename);
+                              $data->foto_kondisi    = $filename;
+                         }
+
+                         if(isset($request->input('luas')[$key]))
+                         {
+                              $data->luas             = $request->input('luas')[$key];
+                         }
+
+                         if(isset($request->file('foto_luas')[$key]))
+                         {
+                              $file = $request->file('foto_luas')[$key];
+                              $file_ext = $file->getClientOriginalExtension();
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $file->storeAs('luas-kondisi', $filename);
+                              $data->foto_luas    = $filename;
+                         }
+                         $data->urutan            = $jml+=1;
+                    
+                         
+                         $data->created_at        = now();
+                         $save = $data->save();
                     }
                     
-                    if(isset($request->file('foto')[$key]))
-                    {
-                         $file = $request->file('foto')[$key];
-                         $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
-                         $file->storeAs('spesifikasi', $filename);
-                         $data->foto    = $filename;
+                    if($save){
+                         $msg = array(
+                              'success' => true, 
+                              'message' => 'Data berhasil disimpan!',
+                              'status' => TRUE
+                         );
+                         return response()->json($msg);
+                    }else{
+                         $msg = array(
+                              'success' => false, 
+                              'message' => 'Data gagal disimpan!',
+                              'status' => TRUE
+                         );
+                         return response()->json($msg);
                     }
-                    $data->urutan            = $jml+=1;
-                   
-                    
-                    $data->created_at        = now();
-                    $save = $data->save();
+
                }
-               
-               if($save){
-                    $msg = array(
-                         'success' => true, 
-                         'message' => 'Data berhasil disimpan!',
-                         'status' => TRUE
-                    );
-                    return response()->json($msg);
-               }else{
-                    $msg = array(
-                         'success' => false, 
-                         'message' => 'Data gagal disimpan!',
-                         'status' => TRUE
-                    );
-                    return response()->json($msg);
-               }
+
+               $data = $this->_validate($validator);
+               return response()->json($data);
 
           }
      }
@@ -169,16 +175,26 @@ class KondisiController extends Controller
      {
           if($request->input())
           {
-               $data             = Spesifikasi::find($request->input('id_spesifikasi'));
-               $data->nama       = $request->input('nama');
-               $data->jenis        = $request->input('jenis');
-               if($request->hasFile('foto'))
+               $data             = Kondisi::find($request->input('id_kondisi'));
+               $data->nama       = $request->input('nama_ubah');
+               $data->kondisi        = $request->input('kondisi_ubah');
+               $data->luas        = $request->input('luas_ubah');
+               if($request->hasFile('foto_kondisi_ubah'))
                {
-                    $file = $request->file('foto');
+                    $file = $request->file('foto_kondisi_ubah');
                     $file_ext = $file->getClientOriginalExtension();
-                    $filename = strtolower(str_replace(' ','_',$request->input('id_spesifikasi'))).'_'.time().'.'.$file_ext;
-                    $file->storeAs('spesifikasi', $filename);
-                    $data->foto    = $filename;
+                    $filename = strtolower(str_replace(' ','_',$request->input('id_kondisi'))).'_'.time().'.'.$file_ext;
+                    $file->storeAs('kondisi', $filename);
+                    $data->foto_kondisi    = $filename;
+               }
+
+               if($request->hasFile('foto_luas_ubah'))
+               {
+                    $file = $request->file('foto_luas_ubah');
+                    $file_ext = $file->getClientOriginalExtension();
+                    $filename = strtolower(str_replace(' ','_',$request->input('id_kondisi'))).'_'.time().'.'.$file_ext;
+                    $file->storeAs('luas-kondisi', $filename);
+                    $data->foto_luas    = $filename;
                }
 
                $data->updated_at = now();
@@ -202,6 +218,32 @@ class KondisiController extends Controller
           }
      }
 
+     public function hapus(Request $request , $id)
+     {
+          $data = Kondisi::find($id);
+          if($data->delete()){
+               $msg = array(
+                    'success' => true, 
+                    'message' => 'Data berhasil dihapus!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }else{
+               $msg = array(
+                    'success' => false, 
+                    'message' => 'Data gagal dihapus!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }
+     }
+
+
+     public function data($id)
+     {
+          $data = Kondisi::where('id', $id)->first();
+          return response()->json($data);
+     }
 
      private function _validate($validator){
           $data = array();
@@ -209,162 +251,12 @@ class KondisiController extends Controller
           $data['input_error'] = array();
 
           if ($validator->errors()->has('tahun')):
-               $data['input_error'][] = 'tahun';
+               $data['input_error'][] = 'pilih_tahun';
                $data['error_string'][] = $validator->errors()->first('tahun');
-               $data['status'] = false;
-          endif;
-     
-          if ($validator->errors()->has('jml_lantai')):
-               $data['input_error'][] = 'jml_lantai';
-               $data['error_string'][] = $validator->errors()->first('jml_lantai');
-               $data['status'] = false;
-          endif;
-
-          if ($validator->errors()->has('luas_halaman')):
-               $data['input_error'][] = 'luas_halaman';
-               $data['error_string'][] = $validator->errors()->first('luas_halaman');
-               $data['status'] = false;
-          endif;
-
-          if ($validator->errors()->has('panjang_saluran')):
-               $data['input_error'][] = 'panjang_saluran';
-               $data['error_string'][] = $validator->errors()->first('panjang_saluran');
-               $data['status'] = false;
-          endif;
-
-          if ($validator->errors()->has('panjang_pagar')):
-               $data['input_error'][] = 'panjang_pagar';
-               $data['error_string'][] = $validator->errors()->first('panjang_pagar');
-               $data['status'] = false;
-          endif;
-
-          if ($validator->errors()->has('jml_ruangan')):
-               $data['input_error'][] = 'jml_ruangan';
-               $data['error_string'][] = $validator->errors()->first('jml_ruangan');
-               $data['status'] = false;
-          endif;
-
-          if ($validator->errors()->has('luas')):
-               $data['input_error'][] = 'luas';
-               $data['error_string'][] = $validator->errors()->first('luas');
                $data['status'] = false;
           endif;
 
           return $data;
      }
 
-     public function data($id)
-     {
-          $data = Spesifikasi::find($id);
-          $type = $data->nama;
-          switch ($type) {
-               case 'Dinding':
-                    $dinding = Dinding::get();
-                    $result['nama'] = '
-                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">
-                         Dinding
-                         <input type="hidden" name="id_spesifikasi" value="'.$data->id.'">
-                         <input type="hidden" name="nama" value="Dinding">
-                    </label>';
-                    $result['type'] = '
-                         <select name="jenis" class="select2 form-control">
-                              <option value="">-- Pilih Salah Satu --</option>';
-                              foreach($dinding as $val):
-                                  $result['type'] .= ' <option '.($val->nama == $data->jenis?'selected':'').' value="'.$val->nama.'">'. $val->nama.'</option>';
-                              endforeach;
-                    $result['type'] .= '</select><span class="help form-control-label"></span>';
-               break;
-               case 'Lantai':
-                    $lantai = Lantai::get();
-                    $result['nama'] = '
-                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">
-                         Lantai
-                         <input type="hidden" name="id_spesifikasi" value="'.$data->id.'">
-                         <input type="hidden" name="nama" value="Lantai">
-                    </label>';
-                    $result['type'] = '
-                         <select name="jenis" class="select2 form-control">
-                              <option value="">-- Pilih Salah Satu --</option>';
-                              foreach($lantai as $val):
-                                  $result['type'] .= ' <option '.($val->nama == $data->jenis?'selected':'').' value="'.$val->nama.'">'. $val->nama.'</option>';
-                              endforeach;
-                    $result['type'] .= '</select><span class="help form-control-label"></span>';
-               break;
-               case 'Plafond':
-                    $plafond = Plafond::get();
-                    $result['nama'] = '
-                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">
-                         Plafond
-                         <input type="hidden" name="id_spesifikasi" value="'.$data->id.'">
-                         <input type="hidden" name="nama" value="Plafond">
-                    </label>';
-                    $result['type'] = '
-                         <select name="jenis" class="select2 form-control">
-                              <option value="">-- Pilih Salah Satu --</option>';
-                              foreach($plafond as $val):
-                                  $result['type'] .= ' <option '.($val->nama == $data->jenis?'selected':'').' value="'.$val->nama.'">'. $val->nama.'</option>';
-                              endforeach;
-                    $result['type'] .= '</select><span class="help form-control-label"></span>';
-               break;
-               case 'Kusen':
-                    $kusen = Kusen::get();
-                    $result['nama'] = '
-                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">
-                         Kusen
-                         <input type="hidden" name="id_spesifikasi" value="'.$data->id.'">
-                         <input type="hidden" name="nama" value="Kusen">
-                    </label>';
-                    $result['type'] = '
-                         <select name="jenis" class="select2 form-control">
-                              <option value="">-- Pilih Salah Satu --</option>';
-                              foreach($kusen as $val):
-                                  $result['type'] .= ' <option '.($val->nama == $data->jenis?'selected':'').' value="'.$val->nama.'">'. $val->nama.'</option>';
-                              endforeach;
-                    $result['type'] .= '</select><span class="help form-control-label"></span>';
-               break;
-               case 'Atap':
-                    $atap = Atap::get();
-                    $result['nama'] = '
-                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">
-                         Atap
-                         <input type="hidden" name="id_spesifikasi" value="'.$data->id.'">
-                         <input type="hidden" name="nama" value="Atap">
-                    </label>';
-                    $result['type'] = '
-                         <select name="jenis" class="select2 form-control">
-                              <option value="">-- Pilih Salah Satu --</option>';
-                              foreach($atap as $val):
-                                  $result['type'] .= ' <option '.($val->nama == $data->jenis?'selected':'').' value="'.$val->nama.'">'. $val->nama.'</option>';
-                              endforeach;
-                    $result['type'] .= '</select><span class="help form-control-label"></span>';
-               break;
-               case 'Rangka Atap':
-                    $lantai = RangkaAtap::get();
-                    $result['nama'] = '
-                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">
-                         Rangka Atap
-                         <input type="hidden" name="id_spesifikasi" value="'.$data->id.'">
-                         <input type="hidden" name="nama" value="Rangka Atap">
-                    </label>';
-                    $result['type'] = '
-                         <select name="jenis" class="select2 form-control">
-                              <option value="">-- Pilih Salah Satu --</option>';
-                              foreach($lantai as $val):
-                                  $result['type'] .= ' <option '.($val->nama == $data->jenis?'selected':'').' value="'.$val->nama.'">'. $val->nama.'</option>';
-                              endforeach;
-                    $result['type'] .= '</select><span class="help form-control-label"></span>';
-               break;
-               default:
-                    $result['nama'] = '
-                    <div class="col-sm-12">
-                         <input type="hidden" name="id_spesifikasi" value="'.$data->id.'">
-                         <input type="text" name="nama" class="form-control" placeholder="Nama" value="'.$data->nama.'">
-                    </div>
-                    ';
-                    $result['type'] = '<input type="text" name="jenis" class="form-control" placeholder="Jenis" value="'.$data->jenis.'">';
-                    $result['type'] .= '<span class="help form-control-label"></span>';
-               break;
-          }
-          return response()->json($result);
-     }
 }

@@ -13,6 +13,7 @@ use App\Models\Lantai;
 use App\Models\Plafond;
 use App\Models\RangkaAtap;
 use App\Models\StatusLahan;
+use App\Models\SitePlan;
 use App\Models\Spesifikasi;
 use App\Helpers\DateHelper;
 use Illuminate\Support\Facades\Hash;
@@ -271,7 +272,8 @@ class SurveyController extends Controller
           $plafond = Plafond::get();
           $rangkaAtap = RangkaAtap::get();
           $spesifikai = Spesifikasi::where('id_survey',$id)->get();
+          $sitePlan =    SitePlan::where('id_survey',$id)->first();
           
-          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai'));
+          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan'));
      }
 }

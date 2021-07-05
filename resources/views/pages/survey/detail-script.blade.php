@@ -482,7 +482,7 @@
                                         '<div class="form-group row mb-4">'+
                                             '<label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Media</label>'+
                                             '<div class="col-sm-12 col-md-9">'+
-                                                '<input type="file" class="form-control" name="foto[]">'+
+                                                '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto[]">'+
                                                 '<span class="help form-control-label"></span>'+
                                             '</div>'+
                                         '</div>'+
@@ -523,7 +523,7 @@
                                         '<div class="form-group row mb-4">'+
                                             '<label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Media</label>'+
                                             '<div class="col-sm-12 col-md-9">'+
-                                                '<input type="file" class="form-control" name="foto[]">'+
+                                                '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto[]">'+
                                                 '<span class="help form-control-label"></span>'+
                                             '</div>'+
                                         '</div>'+
@@ -551,10 +551,10 @@
         columns: [
             {"data":"DT_RowIndex"},
             {"data":"nama"},
-            {"data":"jenis"},
-            {"data":"media"},
-            {"data":"aksi"},
-            {"data":"aksi"},
+            {"data":"kondisi"},
+            {"data":"foto_kondisi"},
+            {"data":"luas"},
+            {"data":"foto_luas"},
         ],
         columnDefs: [
             {
@@ -574,4 +574,74 @@
         reader.readAsDataURL(this.files[0]);
     });
 
+    $("[name=form_site_plan]").on('submit', function(e) {
+        e.preventDefault();
+
+        $('.help-block').empty();
+        $("div").removeClass("has-error");
+        $('#btn_siteplan').text('sedang menyimpan...');
+        $('#btn_siteplan').attr('disabled', true);
+
+        var form = $('[name="form_site_plan"]')[0];
+        var data = new FormData(form);
+        var url = '{{route("site-plan.simpan")}}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function(obj) {
+                if(obj.status)
+                {
+                    if (obj.success !== true) {
+                        Swal.fire({
+                            text: obj.message,
+                            title: "Perhatian!",
+                            icon: "error",
+                            button: true,
+                            timer: 1000
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            text: obj.message,
+                            title: "Perhatian!",
+                            icon: "success",
+                            button: true,
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    }
+                    $('#btn_siteplan').text('Simpan');
+                    $('#btn_siteplan').attr('disabled', false);
+                }else{
+                    for (var i = 0; i < obj.input_error.length; i++) 
+                    {
+                        $('[name="'+obj.input_error[i]+'"]').parent().parent().addClass('has-error');
+                        $('[name="'+obj.input_error[i]+'"]').next().text(obj.error_string[i]);
+                    }
+                    $('#btn_siteplan').text('Simpan');
+                    $('#btn_siteplan').attr('disabled', false);
+                }
+            }
+        });
+    });
+
+    $(document).on("click", ".open-kondisi", function () {
+          var myBookId = $(this).data('id');
+          var title = $(this).data('title');
+          $(".modal-body #bookId").attr('src','{{ url("show-image/kondisi") }}/'+myBookId);
+          $(".modal-body #img-title").html(title);
+     });
+
+     $(document).on("click", ".open-luas", function () {
+          var myBookId = $(this).data('id');
+          var title = $(this).data('title');
+          $(".modal-body #bookId").attr('src','{{ url("show-image/luas-kondisi") }}/'+myBookId);
+          $(".modal-body #img-title").html(title);
+     });
 </script>
