@@ -9,6 +9,17 @@
                @csrf
                     <div class="modal-body">
                          <div class="form-group row mb-4">
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Klasifikasi <span class="text-danger">*</span></label>
+                              <div class="col-sm-12 col-md-9">
+                                   <select name="klasifikasi" class="form-control select2" id="">
+                                        @foreach($klasifikasi as $val)
+                                             <option value="{{$val->id}}">{{$val->nama}}</option>
+                                        @endforeach
+                                   </select>
+                                   <span class="help form-control-label"></span>
+                              </div>
+                         </div>
+                         <div class="form-group row mb-4">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nama <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <input type="hidden" name="id">

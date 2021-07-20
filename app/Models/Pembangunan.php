@@ -37,4 +37,9 @@ class Pembangunan extends Model
           return $this->BelongsTo('App\Models\Saluran','id_saluran');
      }
 
+     function ruangan()
+     {
+          return $this->HasMany('App\Models\PembangunanRuangan','id_pembangunan');
+     }
+
 }

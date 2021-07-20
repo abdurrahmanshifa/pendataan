@@ -40,6 +40,7 @@
                                                             <th style="text-align: center;" width="50px;">No</th>
                                                             <th style="text-align: center;">Nama</th>
                                                             <th style="text-align: center;">Email</th>
+                                                            <th style="text-align: center;">Group</th>
                                                             <th style="text-align: center;" width="200px;">Terakhir Login</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>

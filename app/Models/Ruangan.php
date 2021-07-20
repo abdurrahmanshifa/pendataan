@@ -17,4 +17,8 @@ class Ruangan extends Model
 
     protected $table = 'master_ruangan';
 
+    function klasifikasi()
+    {
+        return $this->belongsTo('App\Models\Klasifikasi','id_klasifikasi');
+    }
 }

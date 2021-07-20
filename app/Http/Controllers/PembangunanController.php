@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use DataTables;
 use Validator;
 use Ramsey\Uuid\Uuid;
+use Str;
 
 class PembangunanController extends Controller
 {
@@ -41,7 +42,7 @@ class PembangunanController extends Controller
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('ruangan', function($row) {
-                         $data = $row->ruangan->nama;
+                         $data = $row->nama;
                          return $data;
                     })
                     ->editColumn('luas_ruangan', function($row) {
@@ -57,8 +58,8 @@ class PembangunanController extends Controller
                          if($row->foto != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->ruangan->nama."' href='#foto-modal'>
-                                             <div class='gallery-item' data-title='".$row->ruangan->nama."' style='background-image:url(".url('show-image/jenis-ruangan/'.$row->foto).")'></div>
+                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/jenis-ruangan/'.$row->foto)."' data-title='".$row->nama."' href='#foto-modal'>
+                                             <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/jenis-ruangan/'.$row->foto).")'></div>
                                         </a>
                                    </div>
                               ";
@@ -79,27 +80,6 @@ class PembangunanController extends Controller
                     ->escapeColumns([])
                     ->make(true);
           }
-          $data = Pembangunan::with('survey')->where('id_survey',$id)->first();
-          if(!$data)
-          {
-               $pembangunan = New Pembangunan;
-               $pembangunan->id = Uuid::uuid4()->getHex();
-               $pembangunan->id_survey = $id;
-               $pembangunan->created_at = now();
-               $pembangunan->save();
-
-               $data = Pembangunan::with('survey')->where('id',$pembangunan->id)->first();
-          }
-          
-          $halaman  = Halaman::get();
-          $pagar    = Pagar::get();
-          $saluran  = Saluran::get();
-          $ruangan  = Ruangan::get();
-          return view('pages.pembangunan.index')->with('ruangan',$ruangan)
-          ->with('data',$data)
-          ->with('halaman',$halaman)
-          ->with('pagar',$pagar)
-          ->with('saluran',$saluran);
      }
 
      public function simpan(Request $request)
@@ -133,20 +113,139 @@ class PembangunanController extends Controller
                
           
                if ($validator->passes()) {
-                    $data = Pembangunan::find($request->input('id'));
-
-                    $data->tahun       = $request->input('tahun');
-                    $data->luas        = $request->input('luas');
+                    $data = new Pembangunan;
+                    $data->id                = Uuid::uuid4()->getHex();
+                    $data->created_at        = now();
+                    $data->id_survey             = $request->input('id_survey');
+                    $data->tahun             = $request->input('tahun');
+                    $data->luas              = $request->input('luas');
                     $data->jml_lantai        = $request->input('jml_lantai');
                     $data->luas_halaman      = $request->input('luas_halaman');
                     $data->panjang_pagar     = $request->input('panjang_pagar');
-                    $data->panjang_saluran     = $request->input('panjang_saluran');
+                    $data->panjang_saluran   = $request->input('panjang_saluran');
                     $data->id_halaman        = $request->input('id_halaman');
                     $data->id_saluran        = $request->input('id_saluran');
                     $data->id_pagar          = $request->input('id_pagar');
-                    $data->updated_at        = now();
+                    $data->save();
+
+                    foreach($request->input('id_jenis_ruangan') as $key => $val)
+                    {
+                         $ruangan                    = new PembangunanRuangan();
+                         $ruangan->id                = Uuid::uuid4()->getHex();
+                         $ruangan->id_survey         = $request->input('id_survey');;
+                         $ruangan->id_pembangunan    = $data->id;
+                         $ruangan->nama  = $val;
+                         $ruangan->jml_ruangan       = $request->input('jml_ruangan')[$key];
+                         $ruangan->luas              = $request->input('luas_ruangan')[$key];
+
+                         if(isset($request->file('foto')[$key]))
+                         {
+                              $file = $request->file('foto')[$key];
+                              $file_ext = $file->getClientOriginalExtension();
+                              $filename = strtolower(str_replace(' ','_',$data->id)).'_'.Str::random(7).'.'.$file_ext;
+                              $file->storeAs('jenis-ruangan', $filename);
+                              $ruangan->foto    = $filename;
+                         }
+
+                         $ruangan->created_at        = now();
+                         $save = $ruangan->save();
+                    }
                     
-                    if($data->save()){
+                    if($save){
+                         $msg = array(
+                              'success' => true, 
+                              'message' => 'Data berhasil disimpan!',
+                              'status' => TRUE
+                         );
+                         return response()->json($msg);
+                    }else{
+                         $msg = array(
+                              'success' => false, 
+                              'message' => 'Data gagal disimpan!',
+                              'status' => TRUE
+                         );
+                         return response()->json($msg);
+                    }
+
+               }
+
+               $data = $this->_validate($validator);
+               return response()->json($data);
+
+          }
+     }
+
+     public function ubah(Request $request)
+     {
+          if($request->input())
+          {
+               $validator = Validator::make($request->all(), [
+                         'tahun'             => 'required|numeric',
+                         'luas'              => 'required|numeric',
+                         'jml_lantai'        => 'required|numeric',
+                         'luas_halaman'      => 'required|numeric',
+                         'panjang_saluran'   => 'required|numeric',
+                         'panjang_pagar'     => 'required|numeric'
+                    ],
+                    [
+                         'tahun.required'         => 'Tahun tidak boleh kosong!',
+                         'luas.required'          => 'Luas tidak boleh kosong!',
+                         'jml_lantai.required'    => 'Jumlah lantai tidak boleh kosong!',
+                         'tahun.numeric'          => 'Tahun harus angka!',
+                         'luas.numeric'           => 'Luas harus angka!',
+                         'jml_lantai.numeric'     => 'Jumlah lantai harus angka!',
+                         'luas_halaman.required'  => 'Luas halaman tidak boleh kosong!',
+                         'panjang_saluran.required'=> 'Panjang saluran tidak boleh kosong!',
+                         'panjang_pagar.required'  => 'Panjang pagar tidak boleh kosong!',
+                         'luas_halaman.numeric'  => 'Luas halaman harus angka!',
+                         'panjang_saluran.numeric'=> 'Panjang saluran harus angka!',
+                         'panjang_pagar.numeric'  => 'Panjang pagar harus angka!',
+                         
+                    ]
+               );
+               
+          
+               if ($validator->passes()) {
+                    $data = Pembangunan::find($request->input('id_pembangunan'));
+                    $data->updated_at        = now();
+                    $data->tahun             = $request->input('tahun');
+                    $data->luas              = $request->input('luas');
+                    $data->jml_lantai        = $request->input('jml_lantai');
+                    $data->luas_halaman      = $request->input('luas_halaman');
+                    $data->panjang_pagar     = $request->input('panjang_pagar');
+                    $data->panjang_saluran   = $request->input('panjang_saluran');
+                    $data->id_halaman        = $request->input('id_halaman');
+                    $data->id_saluran        = $request->input('id_saluran');
+                    $data->id_pagar          = $request->input('id_pagar');
+                    $data->save();
+
+                    PembangunanRuangan::where('id_pembangunan',$request->input('id_pembangunan'))->delete();
+                    foreach($request->input('id_jenis_ruangan') as $key => $val)
+                    {
+                         $ruangan                    = new PembangunanRuangan();
+                         $ruangan->id                = Uuid::uuid4()->getHex();
+                         $ruangan->id_survey         = $request->input('id_survey');;
+                         $ruangan->id_pembangunan    = $data->id;
+                         $ruangan->nama  = $val;
+                         $ruangan->jml_ruangan       = $request->input('jml_ruangan')[$key];
+                         $ruangan->luas              = $request->input('luas_ruangan')[$key];
+
+                         if(isset($request->file('foto')[$key]))
+                         {
+                              $file = $request->file('foto')[$key];
+                              $file_ext = $file->getClientOriginalExtension();
+                              $filename = strtolower(str_replace(' ','_',$data->id)).'_'.Str::random(7).'.'.$file_ext;
+                              $file->storeAs('jenis-ruangan', $filename);
+                              $ruangan->foto    = $filename;
+                         }else{
+                              $ruangan->foto    = $request->input('foto_lama')[$key];
+                         }
+
+                         $ruangan->created_at        = now();
+                         $save = $ruangan->save();
+                    }
+                    
+                    if($save){
                          $msg = array(
                               'success' => true, 
                               'message' => 'Data berhasil disimpan!',
@@ -220,147 +319,9 @@ class PembangunanController extends Controller
           return $data;
      }
 
-     public function detail($id)
+     public function data($id)
      {
-          $data = Survey::with(['pembangunan'])->findOrFail($id);
-          return view('pages.survey.detail')->with('data',$data);
-     }
-
-     public function ruangan_simpan(Request $request){
-          if($request->input())
-          {
-               $validator = Validator::make($request->all(), [
-                         'jml_ruangan'  => 'required|numeric',
-                         'luas'         => 'required',
-                    ],
-                    [
-                         'jml_ruangan.required'   => 'Jumlah ruangan tidak boleh kosong!',
-                         'jml_ruangan.numeric'    => 'Jumlah ruangan harus angka!',
-                         'luas.required'          => 'Luas ruangan tidak boleh kosong!',
-                    ]
-               );
-               
-          
-               if ($validator->passes()) {
-                    $data                    = new PembangunanRuangan();
-                    $data->id                = Uuid::uuid4()->getHex();
-                    $data->id_survey         = $request->input('id_survey');
-                    $data->id_pembangunan    = $request->input('id_pembangunan');
-                    $data->id_jenis_ruangan  = $request->input('id_jenis_ruangan');
-                    $data->jml_ruangan       = $request->input('jml_ruangan');
-                    $data->luas              = $request->input('luas');
-
-                    if($request->hasFile('foto'))
-                    {
-                         $file = $request->file('foto');
-                         $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('id_pembangunan'))).'_'.time().'.'.$file_ext;
-                         $file->storeAs('jenis-ruangan', $filename);
-                         $data->foto    = $filename;
-                    }
-                    $data->created_at        = now();
-                    
-                    if($data->save()){
-                         $msg = array(
-                              'success' => true, 
-                              'message' => 'Data berhasil disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }else{
-                         $msg = array(
-                              'success' => false, 
-                              'message' => 'Data gagal disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }
-
-               }
-
-               $data = $this->_validate($validator);
-               return response()->json($data);
-
-          }
-     }
-     public function ruangan_ubah(Request $request){
-          if($request->input())
-          {
-               $validator = Validator::make($request->all(), [
-                         'jml_ruangan'  => 'required|numeric',
-                         'luas'         => 'required',
-                    ],
-                    [
-                         'jml_ruangan.required'   => 'Jumlah ruangan tidak boleh kosong!',
-                         'jml_ruangan.numeric'    => 'Jumlah ruangan harus angka!',
-                         'luas.required'          => 'Luas ruangan tidak boleh kosong!',
-                    ]
-               );
-               
-          
-               if ($validator->passes()) {
-                    $data                    = PembangunanRuangan::find($request->input('id'));
-                    $data->id_jenis_ruangan  = $request->input('id_jenis_ruangan');
-                    $data->jml_ruangan       = $request->input('jml_ruangan');
-                    $data->luas              = $request->input('luas');
-
-                    if($request->hasFile('foto'))
-                    {
-                         $file = $request->file('foto');
-                         $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('id_pembangunan'))).'_'.time().'.'.$file_ext;
-                         $file->storeAs('jenis-ruangan', $filename);
-                         $data->foto    = $filename;
-                    }
-                    $data->updated_at        = now();
-                    
-                    if($data->save()){
-                         $msg = array(
-                              'success' => true, 
-                              'message' => 'Data berhasil disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }else{
-                         $msg = array(
-                              'success' => false, 
-                              'message' => 'Data gagal disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }
-
-               }
-
-               $data = $this->_validate($validator);
-               return response()->json($data);
-
-          }
-     }
-
-     public function ruangan_data($id)
-     {
-          $data = PembangunanRuangan::where('id', $id)->first();
+          $data = Pembangunan::with(['ruangan'])->findOrFail($id);
           return response()->json($data);
-     }
-
-     public function ruangan_hapus(Request $request , $id)
-     {
-          $data = PembangunanRuangan::find($id);
-          if($data->delete()){
-               $msg = array(
-                    'success' => true, 
-                    'message' => 'Data berhasil dihapus!',
-                    'status' => TRUE
-               );
-               return response()->json($msg);
-          }else{
-               $msg = array(
-                    'success' => false, 
-                    'message' => 'Data gagal dihapus!',
-                    'status' => TRUE
-               );
-               return response()->json($msg);
-          }
      }
 }

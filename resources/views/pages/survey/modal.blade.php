@@ -12,7 +12,13 @@
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Klasifikasi <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <input type="hidden" name="id">
-                                   <input class="form-control" type="text" name="klasifikasi">
+                                   <select name="klasifikasi" class="form-control select2">
+                                        <option value="">--Pilih Klasifikasi--</option>
+                                        @foreach($klasifikasi as $val)
+                                             <option value="{{$val->id}}">{{$val->nama}}</option>
+                                        @endforeach
+                                   </select>
+                                   <input type="hidden" name="id_klasifikasi">
                                    <span class="help form-control-label"></span>
                               </div>
                          </div>
@@ -47,24 +53,32 @@
                               </div>
                          </div>
                          <div class="form-group row mb-4">
-                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Alamat</label>
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Alamat <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <textarea name="alamat" class="form-control" rows="100"></textarea>
                                    <span class="help form-control-label"></span>
                               </div>
                          </div>
                          <div class="form-group row mb-4">
-                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Latitude</label>
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Latitude <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <input type="text" class="form-control" name="lat">
                                    <span class="help form-control-label"></span>
                               </div>
                          </div>
                          <div class="form-group row mb-4">
-                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Longtidue</label>
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Longtidue <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <input type="text" class="form-control" name="long">
                                    <span class="help form-control-label"></span>
+                              </div>
+                         </div>
+                         <div class="form-group row mb-4">
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>
+                              <div class="col-sm-12 col-md-9">
+                                   <button class="btn btn-info" type="button" onclick="getLocation()">
+                                        Klik untuk Dapatkan Latitude & Longtidue
+                                   </button>
                               </div>
                          </div>
                          <div class="form-group row mb-4">
@@ -79,10 +93,11 @@
                               </div>
                          </div>
                          <div class="form-group row mb-4">
-                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Foto</label>
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Foto <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto">
                                    <span class="help form-control-label"></span>
+                                   <span class="help-text form-control-label"><p>*Hanya Untuk JPG / PNG, Maksimal 2 Mb</p></span>
                               </div>
                          </div>
                     </div>

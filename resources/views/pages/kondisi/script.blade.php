@@ -1,91 +1,139 @@
 <script>
-     $(document).on("click", ".open-kondisi", function () {
-          var myBookId = $(this).data('id');
-          var title = $(this).data('title');
-          $(".modal-body #bookId").attr('src','{{ url("show-image/kondisi") }}/'+myBookId);
-          $(".modal-body #img-title").html(title);
-     });
+    var table_kondisi = $('#table-kondisi').DataTable({
+        pageLength: 10,
+        processing: true,
+        serverSide: true,
+        info :false,
+        ajax: {
+            url: "{{ route('kondisi',['id' => $data->id]) }}",
+            data: function (data) {
+                data.filter = {   
+                        'tahun'    : $('.tahun').val(),
+                };
+            }
+        },
+        columns: [
+            {"data":"DT_RowIndex"},
+            {"data":"nama"},
+            {"data":"kondisi"},
+            {"data":"foto_kondisi"},
+            {"data":"luas"},
+            {"data":"foto_luas"},
+        ],
+        columnDefs: [
+            {
+                targets: [0,-1],
+                className: 'text-center'
+            },
+        ]
+    });
 
-     $(document).on("click", ".open-luas", function () {
-          var myBookId = $(this).data('id');
-          var title = $(this).data('title');
-          $(".modal-body #bookId").attr('src','{{ url("show-image/luas-kondisi") }}/'+myBookId);
-          $(".modal-body #img-title").html(title);
-     });
+    $(".tahun").change(function(){
+            table_kondisi.ajax.reload(null,true);
+        });
 
-     var table_kondisi = $('#table-kondisi').DataTable({
-          pageLength: 10,
-          processing: true,
-          serverSide: true,
-          info :false,
-          ajax: {
-               url: "{{ route('kondisi',['id' => $survey->id]) }}",
-               data: function (data) {
-                    data.filter = {   
-                         'tahun'    : $('.tahun').val(),
-                    };
-               }
-          },
-          columns: [
-               {"data":"DT_RowIndex"},
-               {"data":"nama"},
-               {"data":"kondisi"},
-               {"data":"foto_kondisi"},
-               {"data":"luas"},
-               {"data":"foto_luas"},
-               {"data":"aksi"},
-          ],
-          columnDefs: [
-               {
-                    targets: [0,-1],
-                    className: 'text-center'
-               },
-          ]
-     });
+    $('input[type="file"]').change(function(e) {
+        var fileName = e.target.files[0].name;
+        $("#file").val(fileName);
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("preview").src = e.target.result;
+        };
+        reader.readAsDataURL(this.files[0]);
+    });
 
-     $(".tambah_kondisi").click(function(){
-          save_method = 'add';
-          $('#form_kondisi')[0].reset();
-          $('.form-group').removeClass('has-error');
-          $('.help').empty();
-          $('#modal_kondisi').modal('show');
-          $('.modal-title').text('Tambah Kondisi');
-     });
+    $("[name=form_site_plan]").on('submit', function(e) {
+        e.preventDefault();
 
-     function ubah(id)
-     {
-          save_method = 'edit';
-          $('#form_ubah')[0].reset();
-          $('.form-group').removeClass('has-error');
-          $('.help').empty();
+        $('.help').empty();
+        $("div").removeClass("has-error");
+        $('#btn_siteplan').text('sedang menyimpan...');
+        $('#btn_siteplan').attr('disabled', true);
 
-          $.ajax({
-               url : "{{url('survey/kondisi/data/')}}"+"/"+id,
-               type: "GET",
-               dataType: "JSON",
-               success: function(data){
+        var form = $('[name="form_site_plan"]')[0];
+        var data = new FormData(form);
+        var url = '{{route("site-plan.simpan")}}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function(obj) {
+                if(obj.status)
+                {
+                    if (obj.success !== true) {
+                        Swal.fire({
+                            text: obj.message,
+                            title: "Perhatian!",
+                            icon: "error",
+                            button: true,
+                            timer: 1000
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            text: obj.message,
+                            title: "Perhatian!",
+                            icon: "success",
+                            button: true,
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    }
+                    $('#btn_siteplan').text('Simpan');
+                    $('#btn_siteplan').attr('disabled', false);
+                }else{
+                    for (var i = 0; i < obj.input_error.length; i++) 
+                    {
+                        $('[name="'+obj.input_error[i]+'"]').parent().parent().addClass('has-error');
+                        $('[name="'+obj.input_error[i]+'"]').next().text(obj.error_string[i]);
+                    }
+                    $('#btn_siteplan').text('Simpan');
+                    $('#btn_siteplan').attr('disabled', false);
+                }
+            }
+        });
+    });
+
+    $(".tambah_kondisi").click(function(){
+            save_method = 'add';
+            $('#form_kondisi')[0].reset();
+            $('.form-group').removeClass('has-error');
+            $('.help').empty();
+            $('#modal_kondisi').modal('show');
+            $('.modal-title').text('Tambah Kondisi');
+        });
+
+        function ubah(id)
+        {
+            save_method = 'edit';
+            $('#form_ubah')[0].reset();
+            $('.form-group').removeClass('has-error');
+            $('.help').empty();
+
+            $.ajax({
+                url : "{{url('survey/kondisi/data/')}}"+"/"+id,
+                type: "GET",
+                dataType: "JSON",
+                success: function(data){
                     $('#modal_ubah').modal('show');
                     $('.modal-title').text('Ubah Data Kondisi');
                     $('[name="id_kondisi"]').val(data.id);
                     $('[name="nama_ubah"]').val(data.nama);
                     $('[name="kondisi_ubah"]').val(data.kondisi).change();
                     $('[name="luas_ubah"]').val(data.luas);
-               },
-               error: function (jqXHR, textStatus, errorThrown){
+                },
+                error: function (jqXHR, textStatus, errorThrown){
                     alert('Error get data from ajax');
-               }
-          });
-     }
+                }
+            });
+        }
 
-     $(".refresh").click(function(){
-          table_kondisi.ajax.reload(null,true);
-     });
-
-     $(".tahun").change(function(){
-          table_kondisi.ajax.reload(null,true);
-     });
-
-     $("[name=form_kondisi]").on('submit', function(e) {
+        $("[name=form_kondisi]").on('submit', function(e) {
         e.preventDefault();
 
         $('.help-block').empty();
@@ -142,9 +190,9 @@
                 }
             }
         });
-     });
+        });
 
-     $("[name=form_ubah]").on('submit', function(e) {
+        $("[name=form_ubah]").on('submit', function(e) {
         e.preventDefault();
 
         $('.help-block').empty();
@@ -183,7 +231,7 @@
                             button: true,
                         }).then((result) => {
                             if (result.value) {
-                              table_kondisi.ajax.reload(null,true);
+                                table_kondisi.ajax.reload(null,true);
                             }
                         });
                         
@@ -201,9 +249,9 @@
                 }
             }
         });
-     });
+    });
 
-     function hapus(id)
+    function hapus(id)
     {
         Swal.fire({
             text: "Apakah Data ini Ingin Di Hapus?",
@@ -257,49 +305,49 @@
         });
     }
 
-     var counterlain = 2;
-     $("#addButton_lain").click(function () {            
-          if(counterlain>10){
-               alert("Maksimal 10 Data Lainnya");
-               return false;
-          }   
-          
-          var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv_lain' + counterlain);        
-          newTextBoxDiv.after().html('<div class="row input">'+
+        var counterkondisi = 1;
+        $("#addButton_kondisi").click(function () {            
+            if(counterkondisi>10){
+                alert("Maksimal 10 Data Lainnya");
+                return false;
+            }   
+            
+            counterkondisi++;
+            var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv_kondisi' + counterkondisi);        
+            newTextBoxDiv.after().html('<div class="row input">'+
                                         '<div class="col-md-7">'+
-                                             '<div class="form-group row mb-4">'+
-                                             '<div class="col-sm-4 col-md-4">'+
-                                                  '<input type="text" name="nama[]" class="form-control" placeholder="Kondisi">'+
-                                             '</div>'+
-                                             '<div class="col-md-4">'+
-                                                  '<select name="kondisi[]" class="form-control"><option value="Baik">Baik</option><option value="Ada Kerusakaan">Ada Kerusakan</option></select>'+
-                                                  '<span class="help form-control-label"></span>'+
-                                             '</div>'+
-                                             '<div class="col-md-4">'+
-                                                  '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_kondisi[]">'+
-                                                  '<span class="help form-control-label"></span>'+
-                                             '</div>'+
-                                             '</div>'+
+                                                '<div class="form-group row mb-4">'+
+                                                '<div class="col-sm-4 col-md-4">'+
+                                                    '<input type="text" name="nama[]" class="form-control" placeholder="Kondisi">'+
+                                                '</div>'+
+                                                '<div class="col-md-4">'+
+                                                    '<select name="kondisi[]" class="form-control"><option value="Baik">Baik</option><option value="Ada Kerusakaan">Ada Kerusakan</option></select>'+
+                                                    '<span class="help form-control-label"></span>'+
+                                                '</div>'+
+                                                '<div class="col-md-4">'+
+                                                    '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_kondisi[]">'+
+                                                    '<span class="help form-control-label"></span>'+
+                                                '</div>'+
+                                                '</div>'+
                                         '</div>'+
                                         '<div class="col-md-5">'+
-                                             '<div class="form-group row mb-4">'+
-                                             '<div class="col-sm-6 col-md-6">'+
-                                             '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah"></div>'+
-                                             '<div class="col-sm-6">'+
-                                                  '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto[]">'+
-                                                  '<span class="help form-control-label"></span>'+
-                                             '</div>'+
-                                             '</div>'+
+                                                '<div class="form-group row mb-4">'+
+                                                '<div class="col-sm-6 col-md-6">'+
+                                                '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah"></div>'+
+                                                '<div class="col-sm-6">'+
+                                                    '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto[]">'+
+                                                    '<span class="help form-control-label"></span>'+
+                                                '</div>'+
+                                                '</div>'+
                                         '</div>'+
-                                   '</div>');
+                                    '</div>');
 
-          newTextBoxDiv.appendTo("#TextBoxesGroup_lain");        
-          counterlain++;
-     });
+            newTextBoxDiv.appendTo("#TextBoxesGroup_kondisi");        
+        });
 
-     $("#removeButton_lain").click(function () {
-          $("#TextBoxDiv_lain" + counterlain).remove();
-          counterlain--;   
-               
-     });
+        $("#removeButton_kondisi").click(function () {
+            $("#TextBoxDiv_kondisi" + counterkondisi).remove();
+            counterkondisi--;   
+                
+        });
 </script>

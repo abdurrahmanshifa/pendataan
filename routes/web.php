@@ -27,33 +27,44 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::group(['prefix'=>'master'], function () {
-        Route::get('/kecamatan', 'App\Http\Controllers\Master\KecamatanController@index')->name('kecamatan');
+    
+    Route::middleware(['admin'])->group(function () {
+        Route::group(['prefix'=>'master'], function () {
+            Route::get('/kecamatan', 'App\Http\Controllers\Master\KecamatanController@index')->name('kecamatan');
 
-        Route::get('/kelurahan', 'App\Http\Controllers\Master\KelurahanController@index')->name('kelurahan');
-        Route::get('/kelurahan/id-by-kec/{id}', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
-        Route::get('/kelurahan/id-by-kec/{id}/{id_kel}', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
-        Route::get('/kelurahan/id-by-kec', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
+            Route::get('/kelurahan', 'App\Http\Controllers\Master\KelurahanController@index')->name('kelurahan');
+            Route::get('/kelurahan/id-by-kec/{id}', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
 
-        Route::get('/ruangan', 'App\Http\Controllers\Master\RuanganController@index')->name('ruangan');
-        Route::post('ruangan/simpan', 'App\Http\Controllers\Master\RuanganController@simpan')->name('ruangan.simpan');
-        Route::post('ruangan/ubah', 'App\Http\Controllers\Master\RuanganController@ubah')->name('ruangan.ubah');
-        Route::get('ruangan/data/{id}', 'App\Http\Controllers\Master\RuanganController@data')->name('ruangan.data');
-        Route::delete('ruangan/hapus/{id}', 'App\Http\Controllers\Master\RuanganController@hapus')->name('ruangan.hapus');
+            Route::get('/ruangan', 'App\Http\Controllers\Master\RuanganController@index')->name('ruangan');
+            Route::post('ruangan/simpan', 'App\Http\Controllers\Master\RuanganController@simpan')->name('ruangan.simpan');
+            Route::post('ruangan/ubah', 'App\Http\Controllers\Master\RuanganController@ubah')->name('ruangan.ubah');
+            Route::get('ruangan/data/{id}', 'App\Http\Controllers\Master\RuanganController@data')->name('ruangan.data');
+            Route::delete('ruangan/hapus/{id}', 'App\Http\Controllers\Master\RuanganController@hapus')->name('ruangan.hapus');
 
-        Route::get('/halaman', 'App\Http\Controllers\Master\HalamanController@index')->name('halaman');
-        Route::post('halaman/simpan', 'App\Http\Controllers\Master\HalamanController@simpan')->name('halaman.simpan');
-        Route::post('halaman/ubah', 'App\Http\Controllers\Master\HalamanController@ubah')->name('halaman.ubah');
-        Route::get('halaman/data/{id}', 'App\Http\Controllers\Master\HalamanController@data')->name('halaman.data');
-        Route::delete('halaman/hapus/{id}', 'App\Http\Controllers\Master\HalamanController@hapus')->name('halaman.hapus');
-        
+            Route::get('/klasifikasi', 'App\Http\Controllers\Master\KlasifikasiController@index')->name('klasifikasi');
+            Route::post('klasifikasi/simpan', 'App\Http\Controllers\Master\KlasifikasiController@simpan')->name('klasifikasi.simpan');
+            Route::post('klasifikasi/ubah', 'App\Http\Controllers\Master\KlasifikasiController@ubah')->name('klasifikasi.ubah');
+            Route::get('klasifikasi/data/{id}', 'App\Http\Controllers\Master\KlasifikasiController@data')->name('klasifikasi.data');
+            Route::delete('klasifikasi/hapus/{id}', 'App\Http\Controllers\Master\KlasifikasiController@hapus')->name('klasifikasi.hapus');
+
+            Route::get('/halaman', 'App\Http\Controllers\Master\HalamanController@index')->name('halaman');
+            Route::post('halaman/simpan', 'App\Http\Controllers\Master\HalamanController@simpan')->name('halaman.simpan');
+            Route::post('halaman/ubah', 'App\Http\Controllers\Master\HalamanController@ubah')->name('halaman.ubah');
+            Route::get('halaman/data/{id}', 'App\Http\Controllers\Master\HalamanController@data')->name('halaman.data');
+            Route::delete('halaman/hapus/{id}', 'App\Http\Controllers\Master\HalamanController@hapus')->name('halaman.hapus');
+        });
+
+        Route::get('/pengguna', 'App\Http\Controllers\PenggunaController@index')->name('pengguna');
+        Route::post('pengguna/simpan', 'App\Http\Controllers\PenggunaController@simpan')->name('pengguna.simpan');
+        Route::post('pengguna/ubah', 'App\Http\Controllers\PenggunaController@ubah')->name('pengguna.ubah');
+        Route::get('pengguna/data/{id}', 'App\Http\Controllers\PenggunaController@data')->name('pengguna.data');
+        Route::delete('pengguna/hapus/{id}', 'App\Http\Controllers\PenggunaController@hapus')->name('pengguna.hapus');
     });
 
-    Route::get('/pengguna', 'App\Http\Controllers\PenggunaController@index')->name('pengguna');
-    Route::post('pengguna/simpan', 'App\Http\Controllers\PenggunaController@simpan')->name('pengguna.simpan');
-    Route::post('pengguna/ubah', 'App\Http\Controllers\PenggunaController@ubah')->name('pengguna.ubah');
-    Route::get('pengguna/data/{id}', 'App\Http\Controllers\PenggunaController@data')->name('pengguna.data');
-    Route::delete('pengguna/hapus/{id}', 'App\Http\Controllers\PenggunaController@hapus')->name('pengguna.hapus');
+    Route::group(['prefix'=>'master'], function () {
+        Route::get('/kelurahan/id-by-kec/{id}/{id_kel}', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
+        Route::get('/kelurahan/id-by-kec', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
+    });
 
     Route::get('/survey', 'App\Http\Controllers\SurveyController@index')->name('survey');
     Route::post('survey/simpan', 'App\Http\Controllers\SurveyController@simpan')->name('survey.simpan');
@@ -65,22 +76,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix'=>'survey'], function () {
         Route::get('/pembangunan/{id}', 'App\Http\Controllers\PembangunanController@index')->name('pembangunan');
         Route::post('pembangunan/simpan', 'App\Http\Controllers\PembangunanController@simpan')->name('pembangunan.simpan');
+        Route::post('pembangunan/ubah', 'App\Http\Controllers\PembangunanController@ubah')->name('pembangunan.ubah');
+        Route::get('pembangunan/data/{id}', 'App\Http\Controllers\PembangunanController@data')->name('pembangunan.data');
 
-        Route::post('pembangunan/ruangan-simpan', 'App\Http\Controllers\PembangunanController@ruangan_simpan')->name('pembangunan-ruangan.simpan');
-        Route::post('pembangunan/ruangan-ubah', 'App\Http\Controllers\PembangunanController@ruangan_ubah')->name('pembangunan-ruangan.ubah');
-        Route::get('pembangunan/ruangan-data/{id}', 'App\Http\Controllers\PembangunanController@ruangan_data')->name('pembangunan-ruangan.data');
-        Route::delete('pembangunan/ruangan-hapus/{id}', 'App\Http\Controllers\PembangunanController@ruangan_hapus')->name('pembangunan-ruangan.hapus');
-
-        Route::get('/rehabilitasi/{id}', 'App\Http\Controllers\RehabilitasiController@index')->name('rehabilitasi');
         Route::post('rehabilitasi/simpan', 'App\Http\Controllers\RehabilitasiController@simpan')->name('rehabilitasi.simpan');
         Route::post('rehabilitasi/ubah', 'App\Http\Controllers\RehabilitasiController@ubah')->name('rehabilitasi.ubah');
         Route::get('rehabilitasi/data/{id}', 'App\Http\Controllers\RehabilitasiController@data')->name('rehabilitasi.data');
-        Route::delete('rehabilitasi/hapus/{id}', 'App\Http\Controllers\RehabilitasiController@hapus')->name('rehabilitasi.hapus');
 
-        Route::get('/rehabilitasi-detail/{id}', 'App\Http\Controllers\RehabilitasiController@rehabilitasi_detail')->name('rehabilitasi-detail');
-        Route::post('rehabilitasi-detail/simpan', 'App\Http\Controllers\RehabilitasiController@simpan_detail')->name('rehabilitasi-detail.simpan');
-        Route::post('rehabilitasi-detail/ubah', 'App\Http\Controllers\RehabilitasiController@ubah_detail')->name('rehabilitasi-detail.ubah');
-        Route::get('rehabilitasi-detail/data/{id}', 'App\Http\Controllers\RehabilitasiController@data_detail')->name('rehabilitasi-detail.data');
+        Route::get('/rehabilitasi-detail', 'App\Http\Controllers\RehabilitasiController@rehabilitasi_detail')->name('rehabilitasi-detail');
         Route::delete('rehabilitasi-detail/hapus/{id}', 'App\Http\Controllers\RehabilitasiController@hapus_detail')->name('rehabilitasi-detail.hapus');
 
         Route::get('/spesifikasi/{id}', 'App\Http\Controllers\SpesifikasiController@index')->name('spesifikasi');

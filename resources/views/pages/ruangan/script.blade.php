@@ -9,6 +9,7 @@
         },
         columns: [
             {"data":"DT_RowIndex"},
+            {"data":"klasifikasi"},
             {"data":"nama"},
             {"data":"keterangan"},
             {"data":"aksi"},
@@ -117,6 +118,7 @@
                 $('[name="id"]').val(data.id);
                 $('[name="nama"]').val(data.nama);
                 $('[name="keterangan"]').val(data.keterangan);
+                $('[name="klasifikasi"]').val(data.id_klasifikasi).change();
             },
             error: function (jqXHR, textStatus, errorThrown){
                 alert('Error get data from ajax');

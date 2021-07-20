@@ -40,6 +40,16 @@ class PenggunaController extends Controller
 
                          return $data;
                     })
+                    ->editColumn('group', function($row) {
+                         if($row->group == 0)
+                         {
+                              $data = '<span class="badge badge-info">Surveyor</span>';
+                         }else{
+                              $data = '<span class="badge badge-primary">Administrator</span>';
+                         }
+
+                         return $data;
+                    })
                     ->escapeColumns([])
                     ->make(true);
           }
@@ -69,6 +79,7 @@ class PenggunaController extends Controller
                     $data = new User();
                     $data->name = $request->input('nama');
                     $data->email = $request->input('email');
+                    $data->group = $request->input('group');
                     $data->password = Hash::make($request->input('password'));
                     $data->created_at = now();
                     
@@ -116,6 +127,7 @@ class PenggunaController extends Controller
                     $data = User::find($request->input('id'));
                     $data->name = $request->input('nama');
                     $data->email = $request->input('email');
+                    $data->group = $request->input('group');
                     if($request->input('password') != null)
                     {
                          $data->password = Hash::make($request->input('password'));

@@ -11,43 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use DataTables;
 use Validator;
 use Ramsey\Uuid\Uuid;
+use App\Rules\CheckTahunRehab;
 
 class RehabilitasiController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-     public function index(Request $request, $id)
+     public function __construct()
      {
-          if ($request->ajax()) {
-               $data = Rehabilitasi::where('id_survey',$id)->orderBy('created_at', 'asc')->get();
-               
-               return Datatables::of($data)
-                    ->addIndexColumn()
-                    ->editColumn('nama', function ($row) {
-                        $data = 'Rehabilitasi Ke '.$row->urutan;
-                        return $data;
-                    })
-                    ->editColumn('aksi', function ($row) {
-                        $data = '
-                              <a title="Lihat Data" class="btn btn-warning btn-sm" href="'.route('rehabilitasi',['id' => $row->id]).'"> 
-                                   <i class="fas fa-eye text-white"></i>
-                              </a>
-                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_rehabilitasi(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
-                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_rehabilitasi(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
-                         ';
-
-                        return $data;
-                    })
-                    ->escapeColumns([])
-                    ->make(true);
-          }
-
-          $data = Rehabilitasi::with('survey')->findOrFail($id);
-
-          return view('pages.rehabilitasi.index')->with('data', $data);
+          $this->middleware('auth');
      }
 
      public function simpan(Request $request)
@@ -55,11 +25,12 @@ class RehabilitasiController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                         'tahun'             => 'required',
+                         'tahun'             => ['required','numeric',new CheckTahunRehab($request->input('id_survey'))],
                          'sumber_anggaran'   => 'required',
                     ],
                     [
                          'tahun.required'              => 'Tahun tidak boleh kosong!',
+                         'tahun.numeric'          => 'Tahun harus angka!',
                          'sumber_anggaran.required'    => 'Sumber anggaran tidak boleh kosong!',
                     ]
                );
@@ -75,8 +46,34 @@ class RehabilitasiController extends Controller
                     $data->urutan            = $check + 1;
                     $data->sumber_anggaran   = $request->input('sumber_anggaran');
                     $data->created_at        = now();
+                    $data->save();
                     
-                    if($data->save()){
+                    foreach($request->input('nama') as $key => $val)
+                    {
+                         $detail = new RehabilitasiDetail();
+                         $id                 = Uuid::uuid4()->getHex();
+                         $detail->id         = $id;
+                         $detail->id_survey  = $request->input('id_survey');
+                         $detail->id_rehabilitasi  = $data->id;
+                         $detail->nama       = $val;
+                         if(isset($request->input('luas')[$key]))
+                         {
+                              $detail->luas             = $request->input('luas')[$key];
+                         }
+                         if(isset($request->file('foto')[$key]))
+                         {
+                              $file = $request->file('foto')[$key];
+                              $file_ext = $file->getClientOriginalExtension();
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $file->storeAs('rehabilitasi-detail', $filename);
+                              $detail->foto    = $filename;
+                         }
+                         $detail->created_at        = now();
+                         $detail->urutan            = $key+1;
+                         $save = $detail->save();
+                    }
+                    
+                    if($save){
                          $msg = array(
                               'success' => true, 
                               'message' => 'Data berhasil disimpan!',
@@ -105,22 +102,53 @@ class RehabilitasiController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                    'tahun'             => 'required',
+                    'tahun'             => ['required','numeric'],
                     'sumber_anggaran'   => 'required',
                ],
                [
                     'tahun.required'              => 'Tahun tidak boleh kosong!',
+                    'tahun.numeric'          => 'Tahun harus angka!',
                     'sumber_anggaran.required'    => 'Sumber anggaran tidak boleh kosong!',
                ]
-          );
+               );
           
                if ($validator->passes()) {
                     $data                    = Rehabilitasi::find($request->input('id_rehabilitasi'));
                     $data->tahun             = $request->input('tahun');
                     $data->sumber_anggaran   = $request->input('sumber_anggaran');
-                    $data->updated_at = now();
+                    $data->updated_at        = now();
+                    $data->save();
 
-                    if($data->save()){
+                    RehabilitasiDetail::where('id_rehabilitasi',$request->input('id_rehabilitasi'))->delete();
+                    foreach($request->input('nama') as $key => $val)
+                    {
+                         $detail = new RehabilitasiDetail();
+                         $id                 = Uuid::uuid4()->getHex();
+                         $detail->id         = $id;
+                         $detail->id_survey  = $request->input('id_survey');
+                         $detail->id_rehabilitasi  = $data->id;
+                         $detail->nama       = $val;
+                         if(isset($request->input('luas')[$key]))
+                         {
+                              $detail->luas             = $request->input('luas')[$key];
+                         }
+                         if(isset($request->file('foto')[$key]))
+                         {
+                              $file = $request->file('foto')[$key];
+                              $file_ext = $file->getClientOriginalExtension();
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $file->storeAs('rehabilitasi-detail', $filename);
+                              $detail->foto    = $filename;
+                         }
+                         else{
+                              $detail->foto    = $request->input('foto_lama')[$key];
+                         }
+                         $detail->created_at        = now();
+                         $detail->urutan            = $key+1;
+                         $save = $detail->save();
+                    }
+                    
+                    if($save){
                          $msg = array(
                               'success' => true, 
                               'message' => 'Data berhasil diubah!',
@@ -146,30 +174,10 @@ class RehabilitasiController extends Controller
 
      public function data($id)
      {
-          $data = Rehabilitasi::where('id', $id)->first();
+          $data = Rehabilitasi::with(['rehabilitasiDetail' => function($query) {
+               $query->orderBy('urutan','ASC');
+          }])->where('id', $id)->first();
           return response()->json($data);
-     }
-
-     public function hapus(Request $request , $id)
-     {
-          $data = Rehabilitasi::find($id);
-          if($data->delete()){
-               RehabilitasiDetail::where('id_rehabilitasi',$id)->delete();
-
-               $msg = array(
-                    'success' => true, 
-                    'message' => 'Data berhasil dihapus!',
-                    'status' => TRUE
-               );
-               return response()->json($msg);
-          }else{
-               $msg = array(
-                    'success' => false, 
-                    'message' => 'Data gagal dihapus!',
-                    'status' => TRUE
-               );
-               return response()->json($msg);
-          }
      }
 
      private function _validate($validator){
@@ -204,10 +212,11 @@ class RehabilitasiController extends Controller
           return $data;
      }
 
-     public function rehabilitasi_detail(Request $request, $id)
+     public function rehabilitasi_detail(Request $request)
      {
           if ($request->ajax()) {
-               $data = RehabilitasiDetail::where('id_rehabilitasi',$id)->orderBy('created_at', 'asc')->get();
+               $id = $_GET['filter']['id_rehabilitasi'];
+               $data = RehabilitasiDetail::where('id_rehabilitasi',$id)->orderBy('urutan', 'asc')->get();
                
                return Datatables::of($data)
                     ->addIndexColumn()
@@ -215,7 +224,7 @@ class RehabilitasiController extends Controller
                          if($row->foto != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama."' href='#foto-modal'>
+                                        <a data-toggle='modal' class='zoom' data-id='".url("show-image/rehabilitasi-detail/".$row->foto)."' data-title='".$row->nama."' href='#foto-modal'>
                                              <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/rehabilitasi-detail/'.$row->foto).")'></div>
                                         </a>
                                    </div>
@@ -233,8 +242,8 @@ class RehabilitasiController extends Controller
                      })
                     ->editColumn('aksi', function ($row) {
                         $data = '
-                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
-                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
+                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_rehabilitasi(\''.$row->id_rehabilitasi.'\')"> <i class="fas fa-edit text-white"></i></a>
+                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_rehabilitasi(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
                          ';
 
                         return $data;
@@ -242,132 +251,6 @@ class RehabilitasiController extends Controller
                     ->escapeColumns([])
                     ->make(true);
           }
-     }
-     
-     public function simpan_detail(Request $request){
-          if($request->input())
-          {
-               $validator = Validator::make($request->all(), [
-                         'nama'    => 'required',
-                         'luas'         => 'required',
-                         'nama_lain'    => 'required_if:nama,==,lain',
-                    ],
-                    [
-                         'luas.required'          => 'Luas tidak boleh kosong!',
-                         'nama_lain.required_if'     => 'Nama tidak boleh kosong!',
-                    ]
-               );
-               
-          
-               if ($validator->passes()) {
-                    $data                    = new RehabilitasiDetail();
-                    $data->id                = Uuid::uuid4()->getHex();
-                    $data->id_survey         = $request->input('id_survey');
-                    $data->id_rehabilitasi   = $request->input('id_rehabilitasi');
-                    if($request->input('nama') == 'lain')
-                    {
-                         $data->nama  = $request->input('nama_lain');
-                    }else{
-                         $data->nama  = $request->input('nama');
-                    }
-                    $data->luas              = $request->input('luas');
-
-                    if($request->hasFile('foto'))
-                    {
-                         $file = $request->file('foto');
-                         $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('id_rehabilitasi'))).'_'.time().'.'.$file_ext;
-                         $file->storeAs('rehabilitasi-detail', $filename);
-                         $data->foto    = $filename;
-                    }
-                    $data->created_at        = now();
-                    
-                    if($data->save()){
-                         $msg = array(
-                              'success' => true, 
-                              'message' => 'Data berhasil disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }else{
-                         $msg = array(
-                              'success' => false, 
-                              'message' => 'Data gagal disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }
-
-               }
-
-               $data = $this->_validate($validator);
-               return response()->json($data);
-
-          }
-     }
-     public function ubah_detail(Request $request){
-          if($request->input())
-          {
-               $validator = Validator::make($request->all(), [
-                         'nama'    => 'required',
-                         'luas'         => 'required',
-                         'nama_lain'    => 'required_if:nama,==,lain',
-                    ],
-                    [
-                         'luas.required'          => 'Luas tidak boleh kosong!',
-                         'nama_lain.required_if'     => 'Nama tidak boleh kosong!',
-                    ]
-               );
-               
-          
-               if ($validator->passes()) {
-                    $data                    = RehabilitasiDetail::find($request->input('id'));
-                    if($request->input('nama') == 'lain')
-                    {
-                         $data->nama  = $request->input('nama_lain');
-                    }else{
-                         $data->nama  = $request->input('nama');
-                    }
-                    $data->luas              = $request->input('luas');
-
-                    if($request->hasFile('foto'))
-                    {
-                         $file = $request->file('foto');
-                         $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('id_rehabilitasi'))).'_'.time().'.'.$file_ext;
-                         $file->storeAs('rehabilitasi-detail', $filename);
-                         $data->foto    = $filename;
-                    }
-                    $data->updated_at        = now();
-                    
-                    if($data->save()){
-                         $msg = array(
-                              'success' => true, 
-                              'message' => 'Data berhasil disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }else{
-                         $msg = array(
-                              'success' => false, 
-                              'message' => 'Data gagal disimpan!',
-                              'status' => TRUE
-                         );
-                         return response()->json($msg);
-                    }
-
-               }
-
-               $data = $this->_validate($validator);
-               return response()->json($data);
-
-          }
-     }
-
-     public function data_detail($id)
-     {
-          $data = RehabilitasiDetail::where('id', $id)->first();
-          return response()->json($data);
      }
 
      public function hapus_detail(Request $request , $id)

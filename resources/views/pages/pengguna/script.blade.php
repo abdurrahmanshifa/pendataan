@@ -11,6 +11,7 @@
             {"data":"DT_RowIndex"},
             {"data":"name"},
             {"data":"email"},
+            {"data":"group"},
             {"data":"last_login"},
             {"data":"aksi"},
         ],

@@ -16,6 +16,7 @@
             <span>Dashboard</span>
         </a>
     </li>
+    @if(Auth::user()->group == 1)
     <li class="menu-header">Master</li>
     <li class="nav-item {{ request()->is('master*') ? 'active' : '' }}  dropdown">
         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Master Data</span></a>
@@ -30,11 +31,18 @@
                     Kelurahan
                 </a>
             </li>
+            <li class="{{ request()->is('master/klasifikasi*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('klasifikasi') }}">
+                    Klasifikasi
+                </a>
+            </li>
+            {{-- 
             <li class="{{ request()->is('master/ruangan*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('ruangan') }}">
                     Ruangan
                 </a>
             </li>
+            --}}
             <li class="{{ request()->is('master/halaman*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('halaman') }}">
                     Halaman
@@ -48,6 +56,7 @@
             <span>Pengguna</span>
         </a>
     </li>
+    @endif;
     <li class="menu-header">Transaksi</li>
     <li class="nav-item {{ request()->is('survey*') ? 'active' : '' }}">
         <a href="{{ route('survey') }}" class="nav-link">

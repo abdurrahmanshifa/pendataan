@@ -12,7 +12,7 @@
           .select2 {
                width:100% !important;
           }
-          .help{
+          .help, .help-text{
                color:#fc544b;
                font-weight: 600;
                font-size: 11px;

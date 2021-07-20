@@ -10,9 +10,9 @@
         columns: [
             {"data":"DT_RowIndex"},
             {"data":"klasifikasi"},
-            {"data":"nama_objek"},
             {"data":"lokasi"},
             {"data":"status_lahan"},
+            {"data":"kelengkapan"},
             {"data":"media"},
             {"data":"aksi"},
         ],
@@ -100,6 +100,7 @@
         $('.help').empty();
         $('#modal_form').modal('show');
         $('[name="id_kec"]').val('').change();
+        $('[name="klasifikasi"]').val('').change();
         $('.modal-title').text('Tambah Data');
     });
 
@@ -121,6 +122,7 @@
                 $('[name="klasifikasi"]').val(data.klasifikasi);
                 $('[name="nama_objek"]').val(data.nama_objek);
                 $('[name="id_status_lahan"]').val(data.id_status_lahan).change();
+                $('[name="klasifikasi"]').val(data.klasifikasi).change();
                 $('.id_kec').val(data.id_kec).change();
                 $.ajax({
                     url : "{{url('master/kelurahan/id-by-kec/')}}"+"/"+data.id_kec+'/'+data.id_kel,
@@ -219,4 +221,23 @@
           $(".modal-body #bookId").attr('src','{{ url("show-image/survey") }}/'+myBookId);
           $(".modal-body #img-title").html(title);
      });
+    
+    
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            Swal.fire({
+                text: "Geolocation tidak support pada browser ini!",
+                title: "Perhatian",
+                icon: "error",
+                button: true,
+            });
+        }
+    }
+
+    function showPosition(position) {
+        $('[name="lat"]').val(position.coords.latitude);
+        $('[name="long"]').val(position.coords.longitude);
+    }
 </script>

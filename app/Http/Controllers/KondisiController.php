@@ -36,7 +36,7 @@ class KondisiController extends Controller
                          if($row->foto_kondisi != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-kondisi' data-id='".$row->foto_kondisi."' data-title='".$row->nama."<br>".$row->kondisi."' href='#foto-modal'>
+                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/kondisi/'.$row->foto_kondisi)."' data-title='".$row->nama."<br>".$row->kondisi."' href='#foto-modal'>
                                              <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/kondisi/'.$row->foto_kondisi).")'></div>
                                         </a>
                                    </div>
@@ -51,7 +51,7 @@ class KondisiController extends Controller
                          if($row->foto_luas != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-luas' data-id='".$row->foto_luas."' data-title='".$row->nama."<br>".$row->luas."' href='#foto-modal'>
+                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/luas-kondisi/'.$row->foto_luas)."' data-title='".$row->nama."<br>".$row->luas."' href='#foto-modal'>
                                              <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/luas-kondisi/'.$row->foto_luas).")'></div>
                                         </a>
                                    </div>

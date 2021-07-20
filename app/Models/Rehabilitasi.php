@@ -21,4 +21,9 @@ class Rehabilitasi extends Model
     {
         return $this->BelongsTo('App\Models\Survey','id_survey');
     }
+
+    function rehabilitasiDetail()
+    {
+        return $this->HasMany('App\Models\RehabilitasiDetail','id_rehabilitasi');
+    }
 }

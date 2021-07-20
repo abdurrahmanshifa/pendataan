@@ -14,12 +14,24 @@ use App\Models\Plafond;
 use App\Models\RangkaAtap;
 use App\Models\StatusLahan;
 use App\Models\SitePlan;
+use App\Models\Halaman;
+use App\Models\Pagar;
+use App\Models\Saluran;
+use App\Models\Kondisi;
+use App\Models\Pembangunan;
+use App\Models\PembangunanRuangan;
+use App\Models\Rehabilitasi;
+use App\Models\RehabilitasiDetail;
 use App\Models\Spesifikasi;
+use App\Models\Klasifikasi;
+use App\Models\SurveyValidasi;
 use App\Helpers\DateHelper;
 use Illuminate\Support\Facades\Hash;
 use DataTables;
 use Validator;
 use Ramsey\Uuid\Uuid;
+use Auth;
+
 
 class SurveyController extends Controller
 {
@@ -28,12 +40,100 @@ class SurveyController extends Controller
           $this->middleware('auth');
      }
 
+     private function check15($jml)
+     {
+          if($jml != 0)
+          {
+               return 15;
+          }else{
+               return 0;
+          }
+     }
+
+     private function check10($jml)
+     {
+          if($jml != 0)
+          {
+               return 10;
+          }else{
+               return 0;
+          }
+     }
+
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan'])->orderBy('created_at','desc')->get();
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi'])->orderBy('created_at','desc');
+               if(Auth::user()->group != 1)
+               {
+                    $data = $data->where('id_created',Auth::user()->id)->get();
+               }else{
+                    $data = $data->get();
+               }
+
                return Datatables::of($data)
                     ->addIndexColumn()
+                    ->editColumn('ket', function($row) {
+                         $data = 'KECAMATAN : '.$row->kecamatan->nama_kec.'<br> KELURAHAN : '.$row->kelurahan->nama_kel;
+                         return  ucwords(strtolower($data));
+                    })
+                    ->editColumn('detail', function($row) {
+                         $data = '
+                              <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
+                         ';
+
+                         return $data;
+                    })
+                    ->editColumn('kelengkapan', function($row) {
+                         $persen = 0;
+
+                         $kondisi = Kondisi::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check15($kondisi);
+
+                         $pembangunan = Pembangunan::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check10($pembangunan);
+
+                         $pembangunanDetail = PembangunanRuangan::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check10($pembangunanDetail);
+
+                         $Rehabilitasi = Rehabilitasi::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check10($Rehabilitasi);
+
+                         $RehabilitasiDetail = RehabilitasiDetail::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check10($RehabilitasiDetail);
+
+                         $sitePlan = SitePlan::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check15($sitePlan);
+
+                         $spesifikasi = Spesifikasi::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check15($spesifikasi);
+
+                         $validasi = SurveyValidasi::where('id_survey',$row->id)->count();
+                         $persen = $persen + $this->check15($validasi);
+
+                         if($persen <= 40)
+                         {
+                              $status = 'bg-danger';
+                         }else if($persen <= 70)
+                         {
+                              $status = 'bg-warning';
+                         }else{
+                              $status = 'bg-success';
+                         }
+                         if($persen == 0)
+                         {
+                              $jarak = 100;
+                         }else{
+                              $jarak = $persen;
+                         }
+                         $data = '
+                              <div class="progress mb-3">
+                                   <div class="progress-bar '.$status.'" role="progressbar" data-width="'.$persen.'%" aria-valuenow="'.$persen.'" aria-valuemin="0" aria-valuemax="100" style="width:'.$jarak.'%">'.$persen.'%</div>
+                              </div>
+                         ';
+
+                         return $data;
+                    })
                     ->editColumn('aksi', function($row) {
                          $data = '
                               <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
@@ -51,12 +151,16 @@ class SurveyController extends Controller
                          $data = $row->statuslahan->nama;
                          return $data;
                     })
+                    ->editColumn('klasifikasi', function($row) {
+                         $data = '<strong>Klasifikasi : '.$row->klasi->nama.'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
+                         return $data;
+                    })
                     ->editColumn('media', function($row) {
                          if($row->foto != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->klasifikasi."' href='#foto-modal'>
-                                             <div class='gallery-item' data-title='".$row->klasifikasi."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
+                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama_objek."' href='#foto-modal'>
+                                             <div class='gallery-item' data-title='".$row->nama_objek."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
                                         </a>
                                    </div>
                               ";
@@ -70,10 +174,11 @@ class SurveyController extends Controller
                     ->make(true);
           }
 
+          $klasifikasi   = Klasifikasi::get();
           $kecamatan     = Kecamatan::orderBy('nama_kec','asc')->get();
           $statuslahan   = StatusLahan::orderBy('created_at','asc')->get();
 
-          return view('pages.survey.index')->with('kecamatan',$kecamatan)->with('status_lahan',$statuslahan);
+          return view('pages.survey.index')->with('kecamatan',$kecamatan)->with('status_lahan',$statuslahan)->with('klasifikasi',$klasifikasi);
      }
 
      public function simpan(Request $request)
@@ -85,12 +190,20 @@ class SurveyController extends Controller
                          'nama_objek'   => 'required',
                          'id_kec'       => 'required',
                          'id_kel'       => 'required',
+                         'alamat'       => 'required',
+                         'lat'       => 'required',
+                         'long'       => 'required',
+                         'foto'       => 'required|mimes:jpeg,png|max:2048',
                     ],
                     [
                          'klasifikasi.required'   => 'Klasifikasi tidak boleh kosong!',
                          'nama_objek.required'    => 'Nama Objek tidak boleh kosong!',
                          'id_kec.required'        => 'Kecamatan tidak boleh kosong!',
                          'id_kel.required'        => 'Kelurahan tidak boleh kosong!',
+                         'alamat.required'        => 'Alamat tidak boleh kosong!',
+                         'lat.required'           => 'Latitude tidak boleh kosong!',
+                         'long.required'          => 'Longtitude tidak boleh kosong!',
+                         'foto.required'          => 'Foto tidak boleh kosong!',
                     ]
                );
                
@@ -106,6 +219,7 @@ class SurveyController extends Controller
                     $data->lat               = $request->input('lat');
                     $data->long              = $request->input('long');
                     $data->id_status_lahan   = $request->input('id_status_lahan');
+                    $data->id_created        = Auth::user()->id;
 
                     if($request->hasFile('foto'))
                     {
@@ -169,6 +283,8 @@ class SurveyController extends Controller
                     $data->lat               = $request->input('lat');
                     $data->long              = $request->input('long');
                     $data->id_status_lahan   = $request->input('id_status_lahan');
+                    $data->id_updated        = Auth::user()->id;
+
                     if($request->hasFile('foto'))
                     {
                          $file = $request->file('foto');
@@ -236,7 +352,7 @@ class SurveyController extends Controller
           $data['input_error'] = array();
 
           if ($validator->errors()->has('klasifikasi')):
-               $data['input_error'][] = 'klasifikasi';
+               $data['input_error'][] = 'id_klasifikasi';
                $data['error_string'][] = $validator->errors()->first('klasifikasi');
                $data['status'] = false;
           endif;
@@ -259,21 +375,49 @@ class SurveyController extends Controller
                $data['status'] = false;
           endif;
 
+          if ($validator->errors()->has('alamat')):
+               $data['input_error'][] = 'alamat';
+               $data['error_string'][] = $validator->errors()->first('alamat');
+               $data['status'] = false;
+          endif;
+
+          if ($validator->errors()->has('lat')):
+               $data['input_error'][] = 'lat';
+               $data['error_string'][] = $validator->errors()->first('lat');
+               $data['status'] = false;
+          endif;
+
+          if ($validator->errors()->has('long')):
+               $data['input_error'][] = 'long';
+               $data['error_string'][] = $validator->errors()->first('long');
+               $data['status'] = false;
+          endif;
+
+          if ($validator->errors()->has('foto')):
+               $data['input_error'][] = 'foto';
+               $data['error_string'][] = $validator->errors()->first('foto');
+               $data['status'] = false;
+          endif;
+
           return $data;
      }
 
      public function detail($id)
      {
-          $data = Survey::with(['pembangunan.halaman','pembangunan.pagar','pembangunan.saluran'])->findOrFail($id);
+          $data = Survey::with(['pembangunan.halaman','pembangunan.pagar','pembangunan.saluran','klasi'])->findOrFail($id);
           $atap = Atap::get();
           $dinding = Dinding::get();
           $kusen = Kusen::get();
           $lantai = Lantai::get();
           $plafond = Plafond::get();
+          $halaman  = Halaman::get();
+          $pagar    = Pagar::get();
+          $saluran  = Saluran::get();
           $rangkaAtap = RangkaAtap::get();
+          $rehabilitasi = Rehabilitasi::where('id_survey',$id)->get();
           $spesifikai = Spesifikasi::where('id_survey',$id)->get();
           $sitePlan =    SitePlan::where('id_survey',$id)->first();
           
-          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan'));
+          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan','rehabilitasi','halaman','pagar','saluran'));
      }
 }

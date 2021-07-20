@@ -35,7 +35,7 @@ class SpesifikasiController extends Controller
                          if($row->foto != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-spesifikasi' data-id='".$row->foto."' data-title='".$row->nama."<br>".$row->jenis."' href='#foto-modal'>
+                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/spesifikasi/'.$row->foto)."' data-title='".$row->nama."<br>".$row->jenis."' href='#foto-modal'>
                                              <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/spesifikasi/'.$row->foto).")'></div>
                                         </a>
                                    </div>
@@ -49,6 +49,7 @@ class SpesifikasiController extends Controller
                     ->editColumn('aksi', function($row) {
                          $data = '
                               <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
+                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
                          ';
 
                          return $data;
@@ -371,5 +372,25 @@ class SpesifikasiController extends Controller
                break;
           }
           return response()->json($result);
+     }
+
+     public function hapus(Request $request , $id)
+     {
+          $data = Spesifikasi::find($id);
+          if($data->delete()){
+               $msg = array(
+                    'success' => true, 
+                    'message' => 'Data berhasil dihapus!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }else{
+               $msg = array(
+                    'success' => false, 
+                    'message' => 'Data gagal dihapus!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }
      }
 }

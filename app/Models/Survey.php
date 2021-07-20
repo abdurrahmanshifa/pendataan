@@ -33,6 +33,11 @@ class Survey extends Model
           return $this->belongsTo('App\Models\Kelurahan','id_kel');
      }
 
+     function klasi()
+     {
+          return $this->belongsTo('App\Models\Klasifikasi','klasifikasi');
+     }
+
      function pembangunan()
      {
           return $this->HasOne('App\Models\Pembangunan','id_survey');

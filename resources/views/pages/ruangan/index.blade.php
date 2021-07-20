@@ -38,6 +38,7 @@
                                                   <thead>
                                                        <tr>
                                                             <th style="text-align: center;" width="50px;">No</th>
+                                                            <th style="text-align: center;">Klasifikasi</th>
                                                             <th style="text-align: center;">Nama</th>
                                                             <th style="text-align: center;">Keterangan</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>

@@ -4,6 +4,7 @@
 <title>DASHBOARD | DINAS PERKIM KOTA TANGERANG </title>
 @endsection
 
+
 @section('content')
 <section class="section">
      <div class="section-header">
@@ -71,8 +72,39 @@
                </div>
           </div>
      </div>
+     <div class="row">
+          <div class="col-lg-6 col-6">
+               <div class="card">
+                    <div class="card-header">
+                         <h4>Survey Menurut Klasifikasi</h4>
+                    </div>
+                    <div class="card-body">
+                         <canvas id="myChart2"></canvas>
+                    </div>
+               </div>
+          </div>
+          <div class="col-lg-6 col-6">
+               <div class="card">
+                    <div class="card-header">
+                         <h4>Data Survey </h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="table">
+                             <thead>
+                                  <tr>
+                                       <th>No</th>
+                                       <th>Klasifikasi</th>
+                                       <th>Kelengkapan</th>
+                                       <th>Aksi</th>
+                                  </tr>
+                             </thead>
+                        </table>
+                    </div>
+               </div>
+          </div>
+     </div>
 </section>
 @endsection
 @section('script')
-
+     @include('pages.dashboard.script')
 @endsection

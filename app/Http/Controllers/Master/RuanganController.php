@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ruangan;
+use App\Models\Klasifikasi;
 use DataTables;
 use Validator;
 
@@ -16,9 +17,19 @@ class RuanganController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Ruangan::orderBy('created_at','desc')->get();
+               $data = Ruangan::with('klasifikasi')->orderBy('created_at','desc')->get();
                return Datatables::of($data)
                     ->addIndexColumn()
+                    ->editColumn('klasifikasi', function($row) {
+                         if(isset($row->klasifikasi->nama))
+                         {
+                              $data = $row->klasifikasi->nama;
+                         }else{
+                              $data = '-';
+                         }
+                         
+                         return $data;
+                    })
                     ->editColumn('aksi', function($row) {
                          $data = '
                               <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
@@ -30,7 +41,8 @@ class RuanganController extends Controller
                     ->escapeColumns([])
                     ->make(true);
           }
-          return view('pages.ruangan.index');
+          $klasifikasi = Klasifikasi::get();
+          return view('pages.ruangan.index')->with('klasifikasi',$klasifikasi);
      }
 
      public function simpan(Request $request)
@@ -50,6 +62,7 @@ class RuanganController extends Controller
                     $data = new Ruangan();
                     $data->nama = strtoupper($request->input('nama'));
                     $data->keterangan = $request->input('keterangan');
+                    $data->id_klasifikasi = $request->input('klasifikasi');
                     $data->created_at = now();
                     
                     if($data->save()){
@@ -92,6 +105,7 @@ class RuanganController extends Controller
                     $data = Ruangan::find($request->input('id'));
                     $data->nama = strtoupper($request->input('nama'));
                     $data->keterangan = $request->input('keterangan');
+                    $data->id_klasifikasi = $request->input('klasifikasi');
                     $data->updated_at = now();
                     if($data->save()){
                          $msg = array(
