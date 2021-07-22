@@ -152,7 +152,7 @@ class SurveyController extends Controller
                          return $data;
                     })
                     ->editColumn('klasifikasi', function($row) {
-                         $data = '<strong>Klasifikasi : '.$row->klasi->nama.'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
+                         $data = '<strong>Klasifikasi : '.(isset($row->klasi->nama)?$row->klasi->nama:'-').'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
                          return $data;
                     })
                     ->editColumn('media', function($row) {
