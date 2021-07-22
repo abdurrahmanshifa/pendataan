@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Survey;
-use App\Models\SitePlan;
+use App\Models\SurveyValidasi;
 use App\Helpers\DateHelper;
+use Illuminate\Support\Facades\Hash;
 use DataTables;
 use Validator;
 use Ramsey\Uuid\Uuid;
 
-class SitePlanController extends Controller
+class SurveyValidasiController extends Controller
 {
      public function __construct()
      {
@@ -28,23 +28,23 @@ class SitePlanController extends Controller
                
           
                if ($validator->passes()) {
-                    $check = SitePlan::where('id_survey',$request->input('id_survey'))->first();
+                    $check = SurveyValidasi::where('id_survey',$request->input('id_survey'))->first();
 
                     if(isset($check->foto))
                     {
-                         $data = SitePlan::find($check->id);
+                         $data = SurveyValidasi::find($check->id);
                          if($request->hasFile('foto'))
                          {
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
                               $filename = strtolower(str_replace(' ','_',$check->id)).'_'.time().'.'.$file_ext;
-                              $file->storeAs('site-plan', $filename);
-                              $data->foto    = $filename;
+                              $file->storeAs('survey-validasi', $filename);
+                              $data->berkas    = $filename;
                          }
                          $data->updated_at        = now();
                     }else{
                          $id = Uuid::uuid4()->getHex();
-                         $data                    = new SitePlan();
+                         $data                    = new SurveyValidasi();
                          $data->id                = $id;
                          $data->id_survey         = $request->input('id_survey');
                          if($request->hasFile('foto'))
@@ -52,8 +52,8 @@ class SitePlanController extends Controller
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
                               $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
-                              $file->storeAs('site-plan', $filename);
-                              $data->foto    = $filename;
+                              $file->storeAs('survey-validasi', $filename);
+                              $data->berkas    = $filename;
                          }
                          $data->created_at   = now();
                     }

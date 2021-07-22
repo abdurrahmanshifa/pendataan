@@ -96,10 +96,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/kondisi/{id}', 'App\Http\Controllers\KondisiController@index')->name('kondisi');
         Route::post('kondisi/simpan', 'App\Http\Controllers\KondisiController@simpan')->name('kondisi.simpan');
         Route::post('kondisi/ubah', 'App\Http\Controllers\KondisiController@ubah')->name('kondisi.ubah');
-        Route::get('kondisi/data/{id}', 'App\Http\Controllers\KondisiController@data')->name('kondisi.data');
+        Route::get('kondisi/data/{id}/{tahun}', 'App\Http\Controllers\KondisiController@data')->name('kondisi.data');
         Route::delete('kondisi/hapus/{id}', 'App\Http\Controllers\KondisiController@hapus')->name('kondisi.hapus');
 
         Route::post('site-plan/simpan', 'App\Http\Controllers\SitePlanController@simpan')->name('site-plan.simpan');
+        Route::post('survey-validasi/simpan', 'App\Http\Controllers\SurveyValidasiController@simpan')->name('survey-validasi.simpan');
 
     });
 

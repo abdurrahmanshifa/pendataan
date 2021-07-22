@@ -17,7 +17,7 @@
                                         <div class="col-sm-12 col-md-9">
                                              <input type="hidden" name="id_kondisi">
                                              <input type="hidden" name="id_survey" value="{{ $data->id }}">
-                                             <select class="form-control select2" name="tahun">
+                                             <select class="form-control select2 tahun_kondisi" name="tahun">
                                                   <option value="">Pilih Tahun</option>
                                                   @for($i=(date('Y')-2); $i<=date('Y')+2; $i++)
                                                        <option value="{{$i}}">{{$i}}</option>
@@ -45,43 +45,11 @@
                               </div>
                          </div>
                          <div class="lainnya" id="TextBoxesGroup_kondisi">
-                              <div id="TextBoxDiv_kondisi1">
-                                   <div class="row input">
-                                        <div class="col-md-7">
-                                             <div class="form-group row mb-4">
-                                                  <div class="col-sm-4 col-md-4">
-                                                       <input type="text" name="nama[]" class="form-control" placeholder="Kondisi">
-                                                  </div>
-                                                  <div class="col-md-4">
-                                                       <select name="kondisi[]" class="form-control">
-                                                            <option value="Baik">Baik</option>
-                                                            <option value="Ada Kerusakaan">Ada Kerusakan</option>
-                                                       </select>
-                                                       <span class="help form-control-label"></span>
-                                                  </div>
-                                                  <div class="col-md-4">
-                                                       <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_kondisi[]">
-                                                       <span class="help form-control-label"></span>
-                                                  </div>
-                                             </div>
-                                        </div>
-                                        <div class="col-md-5">
-                                             <div class="form-group row mb-4">
-                                                  <div class="col-sm-6 col-md-6">
-                                                       <input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah">
-                                                  </div>
-                                                  <div class="col-md-6">
-                                                       <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_luas[]">
-                                                       <span class="help form-control-label"></span>
-                                                  </div>
-                                             </div>
-                                        </div>
-                                   </div>
-                              </div>
+                             
                          </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
-                         <button type="submit" id="" class="btn btn-dark">
+                         <button type="submit" id="btn-kondisi" class="btn btn-dark">
                               Simpan
                          </button>
                          <button type="button" class="btn btn-danger" data-dismiss="modal">

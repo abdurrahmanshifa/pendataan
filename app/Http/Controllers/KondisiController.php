@@ -36,7 +36,7 @@ class KondisiController extends Controller
                          if($row->foto_kondisi != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/kondisi/'.$row->foto_kondisi)."' data-title='".$row->nama."<br>".$row->kondisi."' href='#foto-modal'>
+                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/kondisi/'.$row->foto_kondisi)."' data-title='".$row->nama."<br> Kondisi : ".$row->kondisi."' href='#foto-modal'>
                                              <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/kondisi/'.$row->foto_kondisi).")'></div>
                                         </a>
                                    </div>
@@ -51,7 +51,7 @@ class KondisiController extends Controller
                          if($row->foto_luas != null):
                               $data = "
                                    <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/luas-kondisi/'.$row->foto_luas)."' data-title='".$row->nama."<br>".$row->luas."' href='#foto-modal'>
+                                        <a data-toggle='modal' class='zoom' data-id='".url('show-image/luas-kondisi/'.$row->foto_luas)."' data-title='".$row->nama."<br> Luas : ".$row->luas."' href='#foto-modal'>
                                              <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/luas-kondisi/'.$row->foto_luas).")'></div>
                                         </a>
                                    </div>
@@ -64,8 +64,8 @@ class KondisiController extends Controller
                     })
                     ->editColumn('aksi', function($row) {
                          $data = '
-                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
-                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus(\''.$row->id.'\')"> <i class="fas fa-trash text-white"></i></a>
+                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_kondisi(\''.$row->id_survey.'\',\''.$row->tahun.'\')"> <i class="fas fa-edit text-white"></i></a>
+                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_kondisi(\''.$row->id.'\')"> <i class="fas fa-trash text-white"></i></a>
                          ';
 
                          return $data;
@@ -175,31 +175,56 @@ class KondisiController extends Controller
      {
           if($request->input())
           {
-               $data             = Kondisi::find($request->input('id_kondisi'));
-               $data->nama       = $request->input('nama_ubah');
-               $data->kondisi        = $request->input('kondisi_ubah');
-               $data->luas        = $request->input('luas_ubah');
-               if($request->hasFile('foto_kondisi_ubah'))
+               Kondisi::where('id_survey',$request->input('id_survey'))->where('tahun',$request->input('pilih_tahun'))->delete();
+               $jml = Kondisi::where('id_survey',$request->input('id_survey'))->where('tahun',$request->input('pilih_tahun'))->orderBy('urutan','desc')->first();
+
+               foreach($request->input('nama') as $key => $val)
                {
-                    $file = $request->file('foto_kondisi_ubah');
-                    $file_ext = $file->getClientOriginalExtension();
-                    $filename = strtolower(str_replace(' ','_',$request->input('id_kondisi'))).'_'.time().'.'.$file_ext;
-                    $file->storeAs('kondisi', $filename);
-                    $data->foto_kondisi    = $filename;
+                    $data = new Kondisi();
+                    $id                      = Uuid::uuid4()->getHex();
+                    $data->id                = $id;
+                    $data->tahun             = $request->input('pilih_tahun');
+                    $data->id_survey         = $request->input('id_survey');
+                    $data->nama              = $val;
+                    if(isset($request->input('kondisi')[$key]))
+                    {
+                         $data->kondisi             = $request->input('kondisi')[$key];
+                    }
+                    
+                    if(isset($request->file('foto_kondisi')[$key]))
+                    {
+                         $file = $request->file('foto_kondisi')[$key];
+                         $file_ext = $file->getClientOriginalExtension();
+                         $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                         $file->storeAs('kondisi', $filename);
+                         $data->foto_kondisi    = $filename;
+                    }else{
+                         $data->foto_kondisi    = $request->input('foto_kondisi_lama')[$key];
+                    }
+
+                    if(isset($request->input('luas')[$key]))
+                    {
+                         $data->luas             = $request->input('luas')[$key];
+                    }
+
+                    if(isset($request->file('foto_luas')[$key]))
+                    {
+                         $file = $request->file('foto_luas')[$key];
+                         $file_ext = $file->getClientOriginalExtension();
+                         $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                         $file->storeAs('luas-kondisi', $filename);
+                         $data->foto_luas    = $filename;
+                    }else{
+                         $data->foto_luas    = $request->input('foto_luas_lama')[$key];
+                    }
+                    $data->urutan            = $jml+=1;
+               
+                    
+                    $data->created_at        = now();
+                    $save = $data->save();
                }
 
-               if($request->hasFile('foto_luas_ubah'))
-               {
-                    $file = $request->file('foto_luas_ubah');
-                    $file_ext = $file->getClientOriginalExtension();
-                    $filename = strtolower(str_replace(' ','_',$request->input('id_kondisi'))).'_'.time().'.'.$file_ext;
-                    $file->storeAs('luas-kondisi', $filename);
-                    $data->foto_luas    = $filename;
-               }
-
-               $data->updated_at = now();
-
-               if($data->save()){
+               if($save){
                     $msg = array(
                          'success' => true, 
                          'message' => 'Data berhasil diubah!',
@@ -239,9 +264,9 @@ class KondisiController extends Controller
      }
 
 
-     public function data($id)
+     public function data($id,$tahun)
      {
-          $data = Kondisi::where('id', $id)->first();
+          $data = Kondisi::where('id_survey', $id)->where('tahun', $tahun)->orderBy('urutan',)->get();
           return response()->json($data);
      }
 

@@ -417,7 +417,8 @@ class SurveyController extends Controller
           $rehabilitasi = Rehabilitasi::where('id_survey',$id)->get();
           $spesifikai = Spesifikasi::where('id_survey',$id)->get();
           $sitePlan =    SitePlan::where('id_survey',$id)->first();
+          $validasi =    SurveyValidasi::where('id_survey',$id)->first();
           
-          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan','rehabilitasi','halaman','pagar','saluran'));
+          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan','rehabilitasi','halaman','pagar','saluran','validasi'));
      }
 }

@@ -36,8 +36,9 @@
                                              <th style="text-align: center;">Jenis</th>
                                              <th style="text-align: center;">Kondisi</th>
                                              <th style="text-align: center;">Foto Kondisi</th>
-                                             <th style="text-align: center;">Luas</th>
-                                             <th style="text-align: center;">Foto Luas</th>
+                                             <th style="text-align: center;">Luas / Jumlah</th>
+                                             <th style="text-align: center;">Foto</th>
+                                             <th style="text-align: center;" width="100px">Aksi</th>
                                         </tr>
                                    </thead>
                                    <tbody>

@@ -213,6 +213,7 @@
           $('#form_rehabilitasi_ubah')[0].reset();
           $('.form-group').removeClass('has-error');
           $('.help').empty();
+          counterrehab = 0;
 
           $.ajax({
                url : "{{url('survey/rehabilitasi/data/')}}"+"/"+id,
