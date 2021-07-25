@@ -75,8 +75,8 @@ class SurveyController extends Controller
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('ket', function($row) {
-                         $data = 'KECAMATAN : '.$row->kecamatan->nama_kec.'<br> KELURAHAN : '.$row->kelurahan->nama_kel;
-                         return  ucwords(strtolower($data));
+                         $data = '<strong>Klasifikasi : '.(isset($row->klasi->nama)?$row->klasi->nama:'-').'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
+                         return $data;
                     })
                     ->editColumn('detail', function($row) {
                          $data = '
