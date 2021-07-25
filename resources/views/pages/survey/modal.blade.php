@@ -1,5 +1,5 @@
 <div class="modal fade" role="dialog" id="modal_form" data-backdrop="static">
-     <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-dialog modal-xl" role="document">
           <div class="modal-content">
                <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle"></h5>
@@ -60,6 +60,12 @@
                               </div>
                          </div>
                          <div class="form-group row mb-4">
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Lokasi <span class="text-danger">*</span></label>
+                              <div class="col-sm-12 col-md-9">
+                                   <div id="main-map"></div>
+                              </div>
+                         </div>
+                         <div class="form-group row mb-4">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Latitude <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <input type="text" class="form-control" name="lat">
@@ -73,6 +79,7 @@
                                    <span class="help form-control-label"></span>
                               </div>
                          </div>
+                         {{-- 
                          <div class="form-group row mb-4">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>
                               <div class="col-sm-12 col-md-9">
@@ -81,6 +88,7 @@
                                    </button>
                               </div>
                          </div>
+                         --}}
                          <div class="form-group row mb-4">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Status Lahan <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">

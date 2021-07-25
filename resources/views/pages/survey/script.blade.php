@@ -1,4 +1,39 @@
-<script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script> 
+<script>    
+    var lat = -6.071530
+    var long = 106.359520;
+    var marker = {};
+
+    // peta(lat,long);
+    document.getElementById('main-map').innerHTML = "<div id='mapid' style='width: 100%; height: 400px;'></div>";
+    var map = L.map('mapid', {
+        center: [lat, long],
+        minZoom: 8,
+        zoom: 20,
+    });
+
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '<a href="https://tangerangkota.go.id" target="_blank" style="float:left">Kota Tangerang&nbsp;|&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    subdomains: ['a', 'b', 'c'],
+    }).addTo(map);
+
+    map.panTo(L.latLng(lat, long));
+    marker = L.marker([lat, long]).addTo(map);
+
+    map.on('click', function(e) {
+        
+        map.removeLayer(marker);
+        marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+        
+        $('[name="lat"]').val(e.latlng.lat);
+        $('[name="long"]').val(e.latlng.lng);
+    });
+          
+    L.Control.geocoder().addTo(map);
+
      var table = $('#table').DataTable({
         pageLength: 10,
         processing: true,
@@ -67,14 +102,15 @@
                             });
                         }
                         else {
-                            table_data();
-                            $('#modal_form').modal('hide');
                             Swal.fire({
-                                text: obj.message,
-                                title: "Perhatian!",
-                                icon: "success",
-                                button: true,
-                                timer: 1000
+                            text: obj.message,
+                            title: "Perhatian!",
+                            icon: "success",
+                            button: true,
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
                             });
                             
                         }

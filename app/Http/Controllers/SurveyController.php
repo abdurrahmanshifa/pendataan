@@ -31,6 +31,7 @@ use DataTables;
 use Validator;
 use Ramsey\Uuid\Uuid;
 use Auth;
+use Str;
 
 
 class SurveyController extends Controller
@@ -225,7 +226,7 @@ class SurveyController extends Controller
                     {
                          $file = $request->file('foto');
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.time().'.'.$file_ext;
+                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.Str::random(10).'.'.$file_ext;
                          $file->storeAs('survey', $filename);
                          $data->foto    = $filename;
                     }
@@ -289,7 +290,7 @@ class SurveyController extends Controller
                     {
                          $file = $request->file('foto');
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.time().'.'.$file_ext;
+                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.Str::random(10).'.'.$file_ext;
                          $file->storeAs('survey', $filename);
                          $data->foto    = $filename;
                     }

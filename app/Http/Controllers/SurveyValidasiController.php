@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use DataTables;
 use Validator;
 use Ramsey\Uuid\Uuid;
+use Str;
 
 class SurveyValidasiController extends Controller
 {
@@ -37,7 +38,7 @@ class SurveyValidasiController extends Controller
                          {
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$check->id)).'_'.time().'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$check->id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('survey-validasi', $filename);
                               $data->berkas    = $filename;
                          }
@@ -51,7 +52,7 @@ class SurveyValidasiController extends Controller
                          {
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('survey-validasi', $filename);
                               $data->berkas    = $filename;
                          }

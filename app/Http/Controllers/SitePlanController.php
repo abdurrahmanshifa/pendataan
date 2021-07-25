@@ -8,6 +8,7 @@ use App\Models\SitePlan;
 use App\Helpers\DateHelper;
 use DataTables;
 use Validator;
+use Str;
 use Ramsey\Uuid\Uuid;
 
 class SitePlanController extends Controller
@@ -37,7 +38,7 @@ class SitePlanController extends Controller
                          {
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$check->id)).'_'.time().'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$check->id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('site-plan', $filename);
                               $data->foto    = $filename;
                          }
@@ -51,7 +52,7 @@ class SitePlanController extends Controller
                          {
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('site-plan', $filename);
                               $data->foto    = $filename;
                          }

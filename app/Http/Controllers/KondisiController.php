@@ -9,6 +9,7 @@ use App\Helpers\DateHelper;
 use Illuminate\Support\Facades\Hash;
 use DataTables;
 use Validator;
+use Str;
 use App\Models\Kondisi;
 use Ramsey\Uuid\Uuid;
 
@@ -122,7 +123,7 @@ class KondisiController extends Controller
                          {
                               $file = $request->file('foto_kondisi')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('kondisi', $filename);
                               $data->foto_kondisi    = $filename;
                          }
@@ -136,7 +137,7 @@ class KondisiController extends Controller
                          {
                               $file = $request->file('foto_luas')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('luas-kondisi', $filename);
                               $data->foto_luas    = $filename;
                          }
@@ -195,7 +196,7 @@ class KondisiController extends Controller
                     {
                          $file = $request->file('foto_kondisi')[$key];
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                         $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                          $file->storeAs('kondisi', $filename);
                          $data->foto_kondisi    = $filename;
                     }else{
@@ -211,7 +212,7 @@ class KondisiController extends Controller
                     {
                          $file = $request->file('foto_luas')[$key];
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$id)).'_'.time().'.'.$file_ext;
+                         $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                          $file->storeAs('luas-kondisi', $filename);
                          $data->foto_luas    = $filename;
                     }else{
