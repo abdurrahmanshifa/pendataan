@@ -33,7 +33,6 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/kecamatan', 'App\Http\Controllers\Master\KecamatanController@index')->name('kecamatan');
 
             Route::get('/kelurahan', 'App\Http\Controllers\Master\KelurahanController@index')->name('kelurahan');
-            Route::get('/kelurahan/id-by-kec/{id}', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
 
             Route::get('/ruangan', 'App\Http\Controllers\Master\RuanganController@index')->name('ruangan');
             Route::post('ruangan/simpan', 'App\Http\Controllers\Master\RuanganController@simpan')->name('ruangan.simpan');
@@ -64,6 +63,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix'=>'master'], function () {
         Route::get('/kelurahan/id-by-kec/{id}/{id_kel}', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
         Route::get('/kelurahan/id-by-kec', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
+        Route::get('/kelurahan/id-by-kec/{id}', 'App\Http\Controllers\Master\KelurahanController@kel_by_kec')->name('kel-by-kec');
     });
 
     Route::get('/survey', 'App\Http\Controllers\SurveyController@index')->name('survey');
