@@ -312,11 +312,11 @@
                               </div>
                               <div class="col-md-6">
                                    <div class="form-group row mb-4">
-                                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Foto <span class="text-danger">*</span></label>
+                                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Foto</label>
                                         <div class="col-sm-12 col-md-9">
-                                             <input type="file" required accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto">
+                                             <input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto">
                                              <span class="help form-control-label"></span>
-                                             <span></span>
+                                             <p><label class="help-text form-control-label">* Maksimal File 2 Mb, Kosongkan jika data tidak diubah</label></p>
                                         </div>
                                    </div>
                               </div>

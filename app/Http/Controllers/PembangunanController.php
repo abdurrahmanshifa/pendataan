@@ -144,7 +144,7 @@ class PembangunanController extends Controller
                          {
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$data->id)).'_'.Str::random(7).'.'.$file_ext;
+                              $filename = $id.'_'.Str::random(7).'.'.$file_ext;
 
                               $img = Image::make($file->path());
                               $img->resize(600, null, function ($constraint) {
@@ -242,7 +242,7 @@ class PembangunanController extends Controller
                          {
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(7).'.'.$file_ext;
+                              $filename = $id.'_'.Str::random(7).'.'.$file_ext;
 
                               $img = Image::make($file->path());
                               $img->resize(600, null, function ($constraint) {

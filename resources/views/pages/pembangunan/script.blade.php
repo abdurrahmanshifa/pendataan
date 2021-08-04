@@ -214,7 +214,7 @@
                                    '<label class="col-form-label col-12 col-md-5 col-lg-5">Foto</label>'+
                                    '<div class="col-sm-12 col-md-7">'+
                                    '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control foto-upload" name="foto[]">'+
-                                   '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb</label></p>'+
+                                   '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb, Kosongkan jika data tidak diubah</label></p>'+
                                    '</div>'+
                                    '</div>'+
                                    '</div></div>');

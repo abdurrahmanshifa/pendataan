@@ -6,7 +6,7 @@
           <button class="btn btn-icon btn-lg btn-dark tambah_rehabilitasi" type="button" title="Simpan Data">
                <i class="fas fa-plus"></i> Tambah
           </button>
-          @if($rehabilitasi != null)
+          @if(!$rehabilitasi->isEmpty())
                <button type="button" title="Ubah Data" class="btn-ubah-rehabilitasi btn btn-success btn-icon btn-lg" onclick="ubah_rehabilitasi('{{ $rehabilitasi[0]->id }}')">
                     <i class="fas fa-edit"></i> Ubah
                </button>

@@ -32,6 +32,7 @@ use Validator;
 use Ramsey\Uuid\Uuid;
 use Auth;
 use Str;
+use Image;
 
 
 class SurveyController extends Controller
@@ -210,8 +211,9 @@ class SurveyController extends Controller
                
           
                if ($validator->passes()) {
+                    $id = Uuid::uuid4()->getHex();
                     $data                    = new Survey();
-                    $data->id                = Uuid::uuid4()->getHex();
+                    $data->id                = $id;
                     $data->klasifikasi       = $request->input('klasifikasi');
                     $data->nama_objek        = $request->input('nama_objek');
                     $data->id_kec            = $request->input('id_kec');
@@ -226,8 +228,12 @@ class SurveyController extends Controller
                     {
                          $file = $request->file('foto');
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('survey', $filename);
+                         $filename = $id.'_'.Str::random(10).'.'.$file_ext;
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/survey').'/'. $filename);
+                         //$file->storeAs('survey', $filename);
                          $data->foto    = $filename;
                     }
                     $data->created_at        = now();
@@ -290,8 +296,12 @@ class SurveyController extends Controller
                     {
                          $file = $request->file('foto');
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('survey', $filename);
+                         $filename = $request->input('id').'_'.Str::random(10).'.'.$file_ext;
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/survey').'/'. $filename);
+                         //$file->storeAs('survey', $filename);
                          $data->foto    = $filename;
                     }
 
