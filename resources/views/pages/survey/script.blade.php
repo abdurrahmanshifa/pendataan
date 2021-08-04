@@ -38,7 +38,7 @@
         pageLength: 10,
         processing: true,
         serverSide: true,
-        info :false,
+        info :true,
         ajax: {
             url: "{{ route('survey') }}",
         },
@@ -49,13 +49,20 @@
             {"data":"status_lahan"},
             {"data":"kelengkapan"},
             {"data":"media"},
+            {"data":"petugas"},
             {"data":"aksi"},
         ],
         columnDefs: [
             {
-                targets: [0,-1],
+                targets: [0,-2,-1],
                 className: 'text-center'
             },
+            @if(Auth::user()->group != 1)
+            {
+                targets: [-2],
+                visible: false
+            },
+            @endif
         ]
     });
 

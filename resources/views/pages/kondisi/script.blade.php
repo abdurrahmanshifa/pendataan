@@ -4,7 +4,7 @@
         lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
         processing: true,
         serverSide: true,
-        info :false,
+        info :true,
         ajax: {
             url: "{{ route('kondisi',['id' => $data->id]) }}",
             data: function (data) {

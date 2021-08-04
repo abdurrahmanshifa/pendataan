@@ -65,14 +65,15 @@ class SurveyController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi'])->orderBy('created_at','desc');
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','user'])->orderBy('created_at','desc');
                if(Auth::user()->group != 1)
                {
                     $data = $data->where('id_created',Auth::user()->id)->get();
                }else{
                     $data = $data->get();
                }
-
+               // echo json_encode($data);
+               // exit();
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('ket', function($row) {
@@ -151,6 +152,15 @@ class SurveyController extends Controller
                     })
                     ->editColumn('status_lahan', function($row) {
                          $data = $row->statuslahan->nama;
+                         return $data;
+                    })
+                    ->editColumn('petugas', function($row) {
+                         if(isset($row->user->name))
+                         {
+                              $data = "<span style='font-size:10px;' class='badge badge-primary'>".$row->user->name."</span>";
+                         }else{
+                              $data = "<span style='font-size:10px;' class='badge badge-danger'>-</span>";
+                         }
                          return $data;
                     })
                     ->editColumn('klasifikasi', function($row) {
