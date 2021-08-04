@@ -12,6 +12,7 @@ use Validator;
 use Str;
 use App\Models\Kondisi;
 use Ramsey\Uuid\Uuid;
+use Image;
 
 class KondisiController extends Controller
 {
@@ -124,7 +125,11 @@ class KondisiController extends Controller
                               $file = $request->file('foto_kondisi')[$key];
                               $file_ext = $file->getClientOriginalExtension();
                               $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                              $file->storeAs('kondisi', $filename);
+                              $img = Image::make($file->path());
+                              $img->resize(600, null, function ($constraint) {
+                                   $constraint->aspectRatio();
+                              })->save(storage_path('app/public/kondisi').'/'. $filename);
+                              //$file->storeAs('kondisi', $filename);
                               $data->foto_kondisi    = $filename;
                          }
 
@@ -138,7 +143,11 @@ class KondisiController extends Controller
                               $file = $request->file('foto_luas')[$key];
                               $file_ext = $file->getClientOriginalExtension();
                               $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                              $file->storeAs('luas-kondisi', $filename);
+                              $img = Image::make($file->path());
+                              $img->resize(600, null, function ($constraint) {
+                                   $constraint->aspectRatio();
+                              })->save(storage_path('app/public/luas-kondisi').'/'. $filename);
+                              //$file->storeAs('luas-kondisi', $filename);
                               $data->foto_luas    = $filename;
                          }
                          $data->urutan            = $jml+=1;
@@ -197,7 +206,11 @@ class KondisiController extends Controller
                          $file = $request->file('foto_kondisi')[$key];
                          $file_ext = $file->getClientOriginalExtension();
                          $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('kondisi', $filename);
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/kondisi').'/'. $filename);
+                         //$file->storeAs('kondisi', $filename);
                          $data->foto_kondisi    = $filename;
                     }else{
                          $data->foto_kondisi    = $request->input('foto_kondisi_lama')[$key];
@@ -213,7 +226,11 @@ class KondisiController extends Controller
                          $file = $request->file('foto_luas')[$key];
                          $file_ext = $file->getClientOriginalExtension();
                          $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('luas-kondisi', $filename);
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/luas-kondisi').'/'. $filename);
+                         //$file->storeAs('luas-kondisi', $filename);
                          $data->foto_luas    = $filename;
                     }else{
                          $data->foto_luas    = $request->input('foto_luas_lama')[$key];

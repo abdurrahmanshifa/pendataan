@@ -89,7 +89,7 @@
                                         '</div>'+
                                         '<div class="col-md-4">'+
                                             '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_kondisi[]"><input type="hidden" class="form-control" name="foto_kondisi_lama[]" value="'+data[i].foto_kondisi+'">'+
-                                            '<span class="help form-control-label"></span><span class="help-text form-control-label"><p>Kosongkan jika data tidak diubah</p></span>'+
+                                            '<span class="help form-control-label"></span><span class="help-text form-control-label"><p>* Maksimal file 2 Mb, Kosongkan jika data tidak diubah</p></span>'+
                                         '</div>'+
                                         '</div>'+
                                 '</div>'+
@@ -99,7 +99,7 @@
                                         '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah" value="'+data[i].luas+'"></div>'+
                                         '<div class="col-sm-6">'+
                                             '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_luas[]"><input type="hidden" class="form-control" name="foto_luas_lama[]" value="'+data[i].foto_luas+'">'+
-                                            '<span class="help form-control-label"></span><span class="help-text form-control-label"><p>Kosongkan jika data tidak diubah</p></span>'+
+                                            '<span class="help form-control-label"></span><span class="help-text form-control-label"><p>* Maksimal file 2 Mb, Kosongkan jika data tidak diubah</p></span>'+
                                         '</div>'+
                                         '</div>'+
                                 '</div>'+
@@ -253,7 +253,7 @@
                                             '</div>'+
                                             '<div class="col-md-4">'+
                                                 '<input required type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_kondisi[]">'+
-                                                '<span class="help form-control-label"></span>'+
+                                                '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb</label></p>'+
                                             '</div>'+
                                             '</div>'+
                                     '</div>'+
@@ -263,7 +263,7 @@
                                             '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah"></div>'+
                                             '<div class="col-sm-6">'+
                                                 '<input required type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_luas[]">'+
-                                                '<span class="help form-control-label"></span>'+
+                                                '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb</label></p>'+
                                             '</div>'+
                                             '</div>'+
                                     '</div>'+

@@ -13,6 +13,7 @@ use Validator;
 use Str;
 use Ramsey\Uuid\Uuid;
 use App\Rules\CheckTahunRehab;
+use Image;
 
 class RehabilitasiController extends Controller
 {
@@ -66,7 +67,12 @@ class RehabilitasiController extends Controller
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
                               $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                              $file->storeAs('rehabilitasi-detail', $filename);
+                              $img = Image::make($file->path());
+                              $img->resize(600, null, function ($constraint) {
+                                   $constraint->aspectRatio();
+                              })->save(storage_path('app/public/rehabilitasi-detail').'/'. $filename);
+
+                              //$file->storeAs('rehabilitasi-detail', $filename);
                               $detail->foto    = $filename;
                          }
                          $detail->created_at        = now();
@@ -138,7 +144,12 @@ class RehabilitasiController extends Controller
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
                               $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                              $file->storeAs('rehabilitasi-detail', $filename);
+                              $img = Image::make($file->path());
+                              $img->resize(600, null, function ($constraint) {
+                                   $constraint->aspectRatio();
+                              })->save(storage_path('app/public/rehabilitasi-detail').'/'. $filename);
+
+                              //$file->storeAs('rehabilitasi-detail', $filename);
                               $detail->foto    = $filename;
                          }
                          else{

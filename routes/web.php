@@ -75,8 +75,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['prefix'=>'survey'], function () {
         Route::get('/pembangunan/{id}', 'App\Http\Controllers\PembangunanController@index')->name('pembangunan');
-        Route::post('pembangunan/simpan', 'App\Http\Controllers\PembangunanController@simpan')->name('pembangunan.simpan');
-        Route::post('pembangunan/ubah', 'App\Http\Controllers\PembangunanController@ubah')->name('pembangunan.ubah');
+        Route::post('pembangunan/simpan', 'App\Http\Controllers\PembangunanController@simpan')->name('pembangunan.simpan')->middleware('optimizeImages');
+        Route::post('pembangunan/ubah', 'App\Http\Controllers\PembangunanController@ubah')->name('pembangunan.ubah')->middleware('optimizeImages');
         Route::get('pembangunan/data/{id}', 'App\Http\Controllers\PembangunanController@data')->name('pembangunan.data');
 
         Route::post('rehabilitasi/simpan', 'App\Http\Controllers\RehabilitasiController@simpan')->name('rehabilitasi.simpan');

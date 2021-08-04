@@ -19,6 +19,7 @@ use DataTables;
 use Validator;
 use Ramsey\Uuid\Uuid;
 use Str;
+use Image;
 
 class PembangunanController extends Controller
 {
@@ -130,8 +131,9 @@ class PembangunanController extends Controller
 
                     foreach($request->input('id_jenis_ruangan') as $key => $val)
                     {
+                         $id = Uuid::uuid4()->getHex();
                          $ruangan                    = new PembangunanRuangan();
-                         $ruangan->id                = Uuid::uuid4()->getHex();
+                         $ruangan->id                = $id;
                          $ruangan->id_survey         = $request->input('id_survey');;
                          $ruangan->id_pembangunan    = $data->id;
                          $ruangan->nama  = $val;
@@ -143,7 +145,12 @@ class PembangunanController extends Controller
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
                               $filename = strtolower(str_replace(' ','_',$data->id)).'_'.Str::random(7).'.'.$file_ext;
-                              $file->storeAs('jenis-ruangan', $filename);
+
+                              $img = Image::make($file->path());
+                              $img->resize(600, null, function ($constraint) {
+                                   $constraint->aspectRatio();
+                              })->save(storage_path('app/public/jenis-ruangan').'/'. $filename);
+                              //$file->storeAs('jenis-ruangan', $filename);
                               $ruangan->foto    = $filename;
                          }
 
@@ -222,8 +229,9 @@ class PembangunanController extends Controller
                     PembangunanRuangan::where('id_pembangunan',$request->input('id_pembangunan'))->delete();
                     foreach($request->input('id_jenis_ruangan') as $key => $val)
                     {
+                         $id = Uuid::uuid4()->getHex();
                          $ruangan                    = new PembangunanRuangan();
-                         $ruangan->id                = Uuid::uuid4()->getHex();
+                         $ruangan->id                = $id;
                          $ruangan->id_survey         = $request->input('id_survey');;
                          $ruangan->id_pembangunan    = $data->id;
                          $ruangan->nama  = $val;
@@ -234,8 +242,13 @@ class PembangunanController extends Controller
                          {
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$data->id)).'_'.Str::random(7).'.'.$file_ext;
-                              $file->storeAs('jenis-ruangan', $filename);
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(7).'.'.$file_ext;
+
+                              $img = Image::make($file->path());
+                              $img->resize(600, null, function ($constraint) {
+                                   $constraint->aspectRatio();
+                              })->save(storage_path('app/public/jenis-ruangan').'/'. $filename);
+                              //$file->storeAs('jenis-ruangan', $filename);
                               $ruangan->foto    = $filename;
                          }else{
                               $ruangan->foto    = $request->input('foto_lama')[$key];
@@ -324,4 +337,5 @@ class PembangunanController extends Controller
           $data = Pembangunan::with(['ruangan'])->findOrFail($id);
           return response()->json($data);
      }
+
 }

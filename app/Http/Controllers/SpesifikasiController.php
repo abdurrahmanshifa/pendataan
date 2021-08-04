@@ -17,6 +17,7 @@ use App\Models\Plafond;
 use App\Models\RangkaAtap;
 use Ramsey\Uuid\Uuid;
 use Str;
+use Image;
 
 class SpesifikasiController extends Controller
 {
@@ -91,7 +92,11 @@ class SpesifikasiController extends Controller
                          $file = $request->file('foto')[$key];
                          $file_ext = $file->getClientOriginalExtension();
                          $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('spesifikasi', $filename);
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/spesifikasi').'/'. $filename);
+                         //$file->storeAs('spesifikasi', $filename);
                          $data->foto    = $filename;
                     }
                     $data->urutan            = $key+1;
@@ -143,7 +148,11 @@ class SpesifikasiController extends Controller
                          $file = $request->file('foto')[$key];
                          $file_ext = $file->getClientOriginalExtension();
                          $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('spesifikasi', $filename);
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/spesifikasi').'/'. $filename);
+                         //$file->storeAs('spesifikasi', $filename);
                          $data->foto    = $filename;
                     }
                     $data->urutan            = $jml+=1;
@@ -184,7 +193,11 @@ class SpesifikasiController extends Controller
                     $file = $request->file('foto');
                     $file_ext = $file->getClientOriginalExtension();
                     $filename = strtolower(str_replace(' ','_',$request->input('id_spesifikasi'))).'_'.Str::random(10).'.'.$file_ext;
-                    $file->storeAs('spesifikasi', $filename);
+                    $img = Image::make($file->path());
+                    $img->resize(600, null, function ($constraint) {
+                         $constraint->aspectRatio();
+                    })->save(storage_path('app/public/spesifikasi').'/'. $filename);
+                    //$file->storeAs('spesifikasi', $filename);
                     $data->foto    = $filename;
                }
 

@@ -19,7 +19,6 @@
                               <div class="col-md-12">
                                    <div class="form-group row mb-1">
                                         <label class="col-form-label col-md-4 col-lg-4 text-center">
-                                             <img src="{{ asset('stisla/img/news/img03.jpg') }}" class="img-thumbnail">
                                              @if(isset($validasi->berkas))
                                              <a target="_blank" href="{{ url('show-file/survey-validasi/'.$validasi->berkas) }}"> 
                                                   <i class="fas fa-file-download"></i> &nbsp;&nbsp; Unduh / Preview 

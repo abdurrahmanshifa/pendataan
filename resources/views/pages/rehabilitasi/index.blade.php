@@ -6,6 +6,11 @@
           <button class="btn btn-icon btn-lg btn-dark tambah_rehabilitasi" type="button" title="Simpan Data">
                <i class="fas fa-plus"></i> Tambah
           </button>
+          @if($rehabilitasi != null)
+               <button type="button" title="Ubah Data" class="btn-ubah-rehabilitasi btn btn-success btn-icon btn-lg" onclick="ubah_rehabilitasi('{{ $rehabilitasi[0]->id }}')">
+                    <i class="fas fa-edit"></i> Ubah
+               </button>
+          @endif
           <a data-collapse="#rehabilitasi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
      </div>
 </div>
