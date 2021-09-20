@@ -39,8 +39,8 @@
      }
 
      $("#addButton_ruangan").click(function () {
-        if(counterruangan>50){
-            alert("Maksimal 50 Data Lainnya");
+        if(counterruangan>100){
+            alert("Maksimal 100 Data Lainnya");
             return false;
         }   
         counterruangan++;

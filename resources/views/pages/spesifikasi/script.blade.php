@@ -246,8 +246,8 @@
      var counter = 0;
         
         $("#addButton").click(function () {            
-          if(counter>10){
-               alert("Maksimal 10 Data Lainnya");
+          if(counter>100){
+               alert("Maksimal 100 Data Lainnya");
                return false;
           }   
           counter++;
@@ -340,8 +340,8 @@
 
      var counterlain = 1;
      $("#addButton_lain").click(function () {            
-          if(counterlain>10){
-               alert("Maksimal 10 Data Lainnya");
+          if(counterlain>100){
+               alert("Maksimal 100 Data Lainnya");
                return false;
           }   
           counterlain++;

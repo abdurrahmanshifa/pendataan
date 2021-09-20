@@ -1,7 +1,7 @@
 <script>
      $(".addButton_rehab").click(function () {            
-          if(counterrehab>10){
-               alert("Maksimal 10 Data Lainnya");
+          if(counterrehab>100){
+               alert("Maksimal 100 Data Lainnya");
                return false;
           }   
           counterrehab++;

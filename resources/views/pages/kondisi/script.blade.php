@@ -235,8 +235,8 @@
     }
 
     $("#addButton_kondisi").click(function () {            
-        if(counterkondisi>10){
-            alert("Maksimal 10 Data Lainnya");
+        if(counterkondisi>100){
+            alert("Maksimal 100 Data Lainnya");
             return false;
         }   
         
