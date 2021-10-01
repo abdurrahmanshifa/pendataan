@@ -32,6 +32,7 @@ use Validator;
 use Ramsey\Uuid\Uuid;
 use Auth;
 use Str;
+use Image;
 
 
 class SurveyController extends Controller
@@ -64,14 +65,15 @@ class SurveyController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi'])->orderBy('created_at','desc');
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','user'])->orderBy('created_at','desc');
                if(Auth::user()->group != 1)
                {
                     $data = $data->where('id_created',Auth::user()->id)->get();
                }else{
                     $data = $data->get();
                }
-
+               // echo json_encode($data);
+               // exit();
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('ket', function($row) {
@@ -152,6 +154,15 @@ class SurveyController extends Controller
                          $data = $row->statuslahan->nama;
                          return $data;
                     })
+                    ->editColumn('petugas', function($row) {
+                         if(isset($row->user->name))
+                         {
+                              $data = "<span style='font-size:10px;' class='badge badge-primary'>".$row->user->name."</span>";
+                         }else{
+                              $data = "<span style='font-size:10px;' class='badge badge-danger'>-</span>";
+                         }
+                         return $data;
+                    })
                     ->editColumn('klasifikasi', function($row) {
                          $data = '<strong>Klasifikasi : '.(isset($row->klasi->nama)?$row->klasi->nama:'-').'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
                          return $data;
@@ -210,8 +221,9 @@ class SurveyController extends Controller
                
           
                if ($validator->passes()) {
+                    $id = Uuid::uuid4()->getHex();
                     $data                    = new Survey();
-                    $data->id                = Uuid::uuid4()->getHex();
+                    $data->id                = $id;
                     $data->klasifikasi       = $request->input('klasifikasi');
                     $data->nama_objek        = $request->input('nama_objek');
                     $data->id_kec            = $request->input('id_kec');
@@ -226,8 +238,12 @@ class SurveyController extends Controller
                     {
                          $file = $request->file('foto');
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('survey', $filename);
+                         $filename = $id.'_'.Str::random(10).'.'.$file_ext;
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/survey').'/'. $filename);
+                         //$file->storeAs('survey', $filename);
                          $data->foto    = $filename;
                     }
                     $data->created_at        = now();
@@ -290,8 +306,12 @@ class SurveyController extends Controller
                     {
                          $file = $request->file('foto');
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$request->input('klasifikasi'))).'_'.Str::random(10).'.'.$file_ext;
-                         $file->storeAs('survey', $filename);
+                         $filename = $request->input('id').'_'.Str::random(10).'.'.$file_ext;
+                         $img = Image::make($file->path());
+                         $img->resize(600, null, function ($constraint) {
+                              $constraint->aspectRatio();
+                         })->save(storage_path('app/public/survey').'/'. $filename);
+                         //$file->storeAs('survey', $filename);
                          $data->foto    = $filename;
                     }
 

@@ -4,7 +4,7 @@
         lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
         processing: true,
         serverSide: true,
-        info :false,
+        info :true,
         ajax: {
             url: "{{ route('pembangunan',['id' => $id_pembangunan]) }}",
         },
@@ -39,8 +39,8 @@
      }
 
      $("#addButton_ruangan").click(function () {
-        if(counterruangan>50){
-            alert("Maksimal 50 Data Lainnya");
+        if(counterruangan>100){
+            alert("Maksimal 100 Data Lainnya");
             return false;
         }   
         counterruangan++;
@@ -214,7 +214,7 @@
                                    '<label class="col-form-label col-12 col-md-5 col-lg-5">Foto</label>'+
                                    '<div class="col-sm-12 col-md-7">'+
                                    '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control foto-upload" name="foto[]">'+
-                                   '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb</label></p>'+
+                                   '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb, Kosongkan jika data tidak diubah</label></p>'+
                                    '</div>'+
                                    '</div>'+
                                    '</div></div>');

@@ -29,7 +29,7 @@
                               </div>
                          </div>
                          <div class="table-responsive">
-                              <table id="table-kondisi" class="table table-bordered table-hover">
+                              <table id="table-kondisi" class="table table-bordered ">
                                    <thead>
                                         <tr>
                                              <th style="text-align: center;" width="50px;">No</th>

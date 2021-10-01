@@ -21,7 +21,7 @@
                <div class="row">
                     <div class="col-md-12">
                          <div class="table-responsive">
-                              <table id="table-spesifikasi" class="table table-bordered table-hover">
+                              <table id="table-spesifikasi" class="table table-bordered ">
                                    <thead>
                                         <tr>
                                              <th style="text-align: center;" width="50px;">No</th>

@@ -56,7 +56,7 @@
         pageLength: 10,
         processing: true,
         serverSide: true,
-        info :false,
+        info :true,
         ajax: {
             url: "{{ route('survey') }}",
         },

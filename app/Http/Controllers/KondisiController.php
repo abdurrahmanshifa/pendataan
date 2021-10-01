@@ -124,7 +124,7 @@ class KondisiController extends Controller
                          {
                               $file = $request->file('foto_kondisi')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
+                              $filename = $id.'_'.Str::random(10).'.'.$file_ext;
                               $img = Image::make($file->path());
                               $img->resize(600, null, function ($constraint) {
                                    $constraint->aspectRatio();
@@ -142,7 +142,7 @@ class KondisiController extends Controller
                          {
                               $file = $request->file('foto_luas')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
+                              $filename = $id.'_'.Str::random(10).'.'.$file_ext;
                               $img = Image::make($file->path());
                               $img->resize(600, null, function ($constraint) {
                                    $constraint->aspectRatio();
@@ -205,7 +205,7 @@ class KondisiController extends Controller
                     {
                          $file = $request->file('foto_kondisi')[$key];
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
+                         $filename = $id.'_'.Str::random(10).'.'.$file_ext;
                          $img = Image::make($file->path());
                          $img->resize(600, null, function ($constraint) {
                               $constraint->aspectRatio();
@@ -225,7 +225,7 @@ class KondisiController extends Controller
                     {
                          $file = $request->file('foto_luas')[$key];
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
+                         $filename = $id.'_'.Str::random(10).'.'.$file_ext;
                          $img = Image::make($file->path());
                          $img->resize(600, null, function ($constraint) {
                               $constraint->aspectRatio();

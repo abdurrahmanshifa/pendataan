@@ -34,7 +34,7 @@
                               <div class="card-body p-0">
                                    <div style="padding: 30px;">
                                         <div class="table-responsive">
-                                             <table id="table" class="table table-bordered table-hover">
+                                             <table id="table" class="table table-bordered ">
                                                   <thead>
                                                        <tr>
                                                             <th style="text-align: center;" width="50px;">No</th>
@@ -43,6 +43,7 @@
                                                             <th style="text-align: center;">Status Lahan</th>
                                                             <th style="text-align: center;">Kelengkapan</th>
                                                             <th style="text-align: center;width:100px;">Media</th>
+                                                            <th style="text-align: center;width:100px;">Petugas Input</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>
                                                   </thead>

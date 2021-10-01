@@ -1,9 +1,10 @@
 <script>
     var table_kondisi = $('#table-kondisi').DataTable({
-        pageLength: 10,
+        pageLength: 5,
+        lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
         processing: true,
         serverSide: true,
-        info :false,
+        info :true,
         ajax: {
             url: "{{ route('kondisi',['id' => $data->id]) }}",
             data: function (data) {
@@ -234,8 +235,8 @@
     }
 
     $("#addButton_kondisi").click(function () {            
-        if(counterkondisi>10){
-            alert("Maksimal 10 Data Lainnya");
+        if(counterkondisi>100){
+            alert("Maksimal 100 Data Lainnya");
             return false;
         }   
         

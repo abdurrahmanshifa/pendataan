@@ -43,4 +43,9 @@ class Survey extends Model
           return $this->HasOne('App\Models\Pembangunan','id_survey');
      }
 
+     function user()
+     {
+          return $this->belongsTo('App\Models\User','id_created');
+     }
+
 }
