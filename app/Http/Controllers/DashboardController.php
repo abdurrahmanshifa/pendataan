@@ -64,16 +64,22 @@ class DashboardController extends Controller
                          return $data;
                     })
                     ->editColumn('tahun', function($row) {
-                         $data = '';
-                         return $data;
+                         foreach($row->pembangunan as $p){
+                              $data = $p->tahun;
+                              return $data;
+                         }
                     })
                     ->editColumn('luas', function($row) {
-                         $data ='';
-                         return $data;
+                         foreach($row->pembangunan as $p){
+                              $data = $p->luas;
+                              return $data;
+                         }
                     })
                     ->editColumn('titik_lokasi', function($row) {
-                         $data = $row->lat;
-                         return $data;
+                         // $data = $row->lat;
+                         // return $data;
+                         $data = 'Latitude : '.$row->lat.'<br> Longtidue : '.$row->long;
+                         return  ucwords(strtolower($data));
                     })
                     ->editColumn('klasifikasi', function($row) {
                          $data = '<strong>Klasifikasi : '.(isset($row->klasi->nama)?$row->klasi->nama:'-').'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
