@@ -76,8 +76,6 @@ class DashboardController extends Controller
                          }
                     })
                     ->editColumn('titik_lokasi', function($row) {
-                         // $data = $row->lat;
-                         // return $data;
                          $data = 'Latitude : '.$row->lat.'<br> Longtidue : '.$row->long;
                          return  ucwords(strtolower($data));
                     })
