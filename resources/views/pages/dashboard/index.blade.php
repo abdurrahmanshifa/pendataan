@@ -107,30 +107,7 @@
                                   </tr>
                              </thead>
                              <tbody>
-                              {{-- @foreach ($surveys as $survey)
-                              <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $survey->klasifikasi }}</td>
-                                <td>{{ $survey->nama_objek }}</td>
-                                <td>{{ $survey->kelurahan->nama_kel }}</td>
-                                <td>{{ $survey->kelurahan->kecamatan->nama_kec }}</td>
-                                <td>
-                                     @foreach ($survey->pembangunan as $p)
-                                     {{ $p->tahun }}
-                                     @endforeach
-                                   </td>
-                                <td>
-                                     @foreach ($survey->pembangunan as $p)
-                                     {{ $p->luas }}
-                                     @endforeach
-                                   </td>
-                                <td>{{ $survey->statuslahan->nama }}</td>
-                                <td>Lat:{{ $survey->lat }} Long:{{ $survey->lat }} </td>
-                                <td>
-                                   <a href="#" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
-                                </td>
-                              </tr> 
-                                @endforeach --}}
+                              
                              </tbody>
                         </table>
                      </div>
