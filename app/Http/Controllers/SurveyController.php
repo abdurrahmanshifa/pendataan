@@ -64,27 +64,29 @@ class SurveyController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi'])->orderBy('created_at','desc');
+
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','pembangunan'])->orderBy('created_at','desc');
+               
+               if($_GET['filter']['kec'] != ''){
+                    $data = $data->where('id_kec',$_GET['filter']['kec']);
+               }
+
+               if($_GET['filter']['kel'] != ''){
+                    $data = $data->where('id_kel',$_GET['filter']['kel']);
+               }
+
+               if($_GET['filter']['kla'] != ''){
+                    $data = $data->where('klasifikasi',$_GET['filter']['kla']);
+               }
+
                if(Auth::user()->group != 1)
                {
                     $data = $data->where('id_created',Auth::user()->id)->get();
                }else{
                     $data = $data->get();
                }
-
                return Datatables::of($data)
                     ->addIndexColumn()
-                    ->editColumn('ket', function($row) {
-                         $data = '<strong>Klasifikasi : '.(isset($row->klasi->nama)?$row->klasi->nama:'-').'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
-                         return $data;
-                    })
-                    ->editColumn('detail', function($row) {
-                         $data = '
-                              <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
-                         ';
-
-                         return $data;
-                    })
                     ->editColumn('kelengkapan', function($row) {
                          $persen = 0;
 
@@ -156,21 +158,25 @@ class SurveyController extends Controller
                          $data = '<strong>Klasifikasi : '.(isset($row->klasi->nama)?$row->klasi->nama:'-').'</strong><p> <small>Objek : '.$row->nama_objek.'</small></p>';
                          return $data;
                     })
-                    ->editColumn('media', function($row) {
-                         if($row->foto != null):
-                              $data = "
-                                   <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama_objek."' href='#foto-modal'>
-                                             <div class='gallery-item' data-title='".$row->nama_objek."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
-                                        </a>
-                                   </div>
-                              ";
-                         else:
-                              $data = '-';
-                         endif;
-
+                    ->editColumn('pembangunan', function($row) {
+                         $data = '<strong>Tahun : '.(isset($row->pembangunan->tahun)?$row->pembangunan->tahun:'-').'</strong><p> <strong>Luas : '.(isset($row->pembangunan->luas)?$row->pembangunan->luas:'-').'</strong></p>';
                          return $data;
                     })
+                    // ->editColumn('media', function($row) {
+                    //      if($row->foto != null):
+                    //           $data = "
+                    //                <div class='gallery gallery-md text-center'>
+                    //                     <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama_objek."' href='#foto-modal'>
+                    //                          <div class='gallery-item' data-title='".$row->nama_objek."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
+                    //                     </a>
+                    //                </div>
+                    //           ";
+                    //      else:
+                    //           $data = '-';
+                    //      endif;
+
+                    //      return $data;
+                    // })
                     ->escapeColumns([])
                     ->make(true);
           }
