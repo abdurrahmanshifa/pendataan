@@ -40,7 +40,7 @@ class Survey extends Model
 
      function pembangunan()
      {
-          return $this->hasMany('App\Models\Pembangunan','id_survey');
+          return $this->HasOne('App\Models\Pembangunan','id_survey');
      }
 
 }

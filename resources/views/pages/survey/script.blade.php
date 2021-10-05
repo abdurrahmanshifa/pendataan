@@ -2,7 +2,15 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script> 
-<script>    
+<script>
+    var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout(timer);
+            timer = setTimeout(callback,ms);
+        };
+    })();  
+
     var lat = -6.071530
     var long = 106.359520;
     var marker = {};
@@ -38,17 +46,24 @@
         pageLength: 10,
         processing: true,
         serverSide: true,
-        info :false,
+        info :true,
         ajax: {
             url: "{{ route('survey') }}",
+            data: function (data) {
+                data.filter = {
+                        'kec'    : $('[name="filter_kec"]').val(),
+                        'kel'   : $('[name="filter_kel"]').val(),
+                        'kla'   : $('[name="filter_kla"]').val(),
+                };
+            }
         },
         columns: [
             {"data":"DT_RowIndex"},
             {"data":"klasifikasi"},
             {"data":"lokasi"},
+            {"data":"pembangunan"},
             {"data":"status_lahan"},
             {"data":"kelengkapan"},
-            {"data":"media"},
             {"data":"aksi"},
         ],
         columnDefs: [
@@ -60,7 +75,7 @@
     });
 
     $(".refresh").click(function(){
-          table.ajax.reload(null,true);
+        table_data();
     });
 
     function table_data(){
@@ -250,7 +265,32 @@
             }
         });
      });
-    
+
+     $("[name='filter_kec']").change(function(){
+        var id = $(this).val();
+        $.ajax({
+            url : "{{url('master/kelurahan/id-by-kec/')}}"+"/"+id,
+            type: "GET",
+            dataType: "HTML",
+            success: function(data){
+                    $('[name="filter_kel"]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                    alert('Error get data from ajax');
+            }
+        });
+        table_data();
+     });
+     $("[name='filter_kla']").change(function(){
+        table_data();
+     });
+     $("[name='filter_kel']").change(function(){
+        table_data();
+     });
+     $("[name='filter_stat']").change(function(){
+        table_data();
+     });
+     
      $(document).on("click", ".open-AddBookDialog", function () {
           var myBookId = $(this).data('id');
           var title = $(this).data('title');
