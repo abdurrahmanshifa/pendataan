@@ -3,6 +3,7 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
 <script>
 
 //      var ctx = document.getElementById("myChart2").getContext('2d');
@@ -133,11 +134,31 @@ Highcharts.chart('myChart2', {
                         {
                             name : '{{ $val['klasifikasi'] }}',
                             y : {{ $val['jml'] }},
+                            drilldown: '{{ $val['klasifikasi'] }}'
                         },
                         @endforeach
                     ]
         }
     ],
+
+    drilldown: {
+        series: [
+            @foreach($data as $val)
+            {
+                name : '{{ $val['klasifikasi'] }}',
+                id : '{{ $val['klasifikasi'] }}',
+                data: [
+                    @foreach($data_kec as $val)
+                    [
+                        '{{ $val['id_kec'] }}',
+                        {{ $val['jml'] }}
+                    ],
+                    @endforeach
+                ]
+            },
+            @endforeach
+        ]
+    }
    
 });
 
