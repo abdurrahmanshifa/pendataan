@@ -63,19 +63,9 @@ class DashboardController extends Controller
                          $data = $row->statuslahan->nama;
                          return $data;
                     })
-                    ->editColumn('tahun', function($row) {
-                         // $data = $row->pembangunan->tahun;
-                         // return $data;
-                         // foreach($row->pembangunan as $p){
-                         //      $data = $p->tahun;
-                         //      return $data;
-                         // }
-                    })
-                    ->editColumn('luas', function($row) {
-                         // foreach($row->pembangunan as $p){
-                         //      $data = $p->luas;
-                         //      return $data;
-                         // }
+                    ->editColumn('pembangunan', function($row) {
+                         $data = '<strong>Tahun : '.(isset($row->pembangunan->tahun)?$row->pembangunan->tahun:'-').'</strong><p> <strong>Luas : '.(isset($row->pembangunan->luas)?$row->pembangunan->luas:'-').'</strong></p>';
+                         return $data;
                     })
                     ->editColumn('titik_lokasi', function($row) {
                          $data = 'Latitude : '.$row->lat.'<br> Longtidue : '.$row->long;
