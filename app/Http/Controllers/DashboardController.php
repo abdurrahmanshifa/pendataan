@@ -63,17 +63,9 @@ class DashboardController extends Controller
                          $data = $row->statuslahan->nama;
                          return $data;
                     })
-                    ->editColumn('tahun', function($row) {
-                         foreach($row->pembangunan as $p){
-                              $data = $p->tahun;
-                              return $data;
-                         }
-                    })
-                    ->editColumn('luas', function($row) {
-                         foreach($row->pembangunan as $p){
-                              $data = $p->luas;
-                              return $data;
-                         }
+                    ->editColumn('pembangunan', function($row) {
+                         $data = '<strong>Tahun : '.(isset($row->pembangunan->tahun)?$row->pembangunan->tahun:'-').'</strong><p> <strong>Luas : '.(isset($row->pembangunan->luas)?$row->pembangunan->luas:'-').'</strong></p>';
+                         return $data;
                     })
                     ->editColumn('titik_lokasi', function($row) {
                          $data = 'Latitude : '.$row->lat.'<br> Longtidue : '.$row->long;
@@ -106,6 +98,7 @@ class DashboardController extends Controller
           $kelurahan = Kelurahan::count();
           $survey   = Survey::with('klasi');
           $klasifikasi = Klasifikasi::orderBy('nama','ASC')->get();
+          $kecamatans = Kecamatan::orderBy('nama_kec','ASC')->get();
           $pembangunan = Pembangunan::all();
           $status_lahan = StatusLahan::all();
 
@@ -123,6 +116,16 @@ class DashboardController extends Controller
                }
                $data[$key]['jml'] = $jml;
           }
+          $data_kec = array();
+          foreach($kecamatans as $key => $val){
+               $data_kec[$key]['id_kec'] = $val->nama_kec;
+               if (Auth::user()->group != 1) {
+                   $jml =  Survey::where('id_kec', $val->id)->where('id_created',Auth::user()->id)->count();
+               }else{
+                   $jml =  Survey::where('id_kec', $val->id)->count();
+               }
+               $data_kec[$key]['jml'] = $jml;
+          }
 // echo json_encode($data);
 // exit();
 
@@ -132,6 +135,7 @@ class DashboardController extends Controller
           ->with('kecamatan',$kecamatan)
           ->with('kelurahan',$kelurahan)
           ->with('data',$data)
+          ->with('data_kec',$data_kec)
           ->with('pembangunan',$pembangunan)
           ->with('status_lahan',$status_lahan)
           ->with('survey',$survey->count());

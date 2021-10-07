@@ -99,8 +99,7 @@
                                        <th>No</th>
                                        <th>Klasifikasi</th>
                                        <th>Lokasi</th>
-                                       <th>Tahun Pembangunan</th>
-                                       <th>Luas</th>
+                                       <th>Pembangunan</th>
                                        <th>Status Lahan</th>
                                        <th>Titik Lokasi</th>
                                        <th>Aksi</th>
