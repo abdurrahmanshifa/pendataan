@@ -1,16 +1,16 @@
 @extends('layouts.template')
 
 @section('title')
-<title>TRANSAKSI SURVEY | DINAS PERKIM KOTA TANGERANG </title>
+<title>TRANSAKSI KERUSAKAN | DINAS PERKIM KOTA TANGERANG </title>
 @endsection
 
 @section('content')
 <section class="section">
      <div class="section-header">
-          <h1>Survey</h1>
+          <h1>Kerusakan</h1>
           <div class="section-header-breadcrumb">
                <div class="breadcrumb-item active"><a href="#">Transaksi</a></div>
-               <div class="breadcrumb-item">Survey</div>
+               <div class="breadcrumb-item">Kerusakan</div>
           </div>
      </div>
      <div class="section-body">
@@ -102,9 +102,6 @@
                     <div class="card">
                          <div class="card-header">
                               <h4>
-                                   <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Tambah Data">
-                                        <i class="fas fa-plus"></i> Tambah
-                                   </button>
                                    <button type="button" class="refresh btn btn-icon btn-lg btn-success">
                                         <i class="fas fa-sync-alt"></i> Muat Ulang
                                    </button>
@@ -125,7 +122,8 @@
                                                             <th style="text-align: center;">Lokasi</th>
                                                             <th style="text-align: center;">Pembangunan</th>
                                                             <th style="text-align: center;">Status Lahan</th>
-                                                            <th style="text-align: center;" width="100px;">Media</th>
+                                                            <th style="text-align: center;" width="50;">Kerusakan</th>
+                                                            <th style="text-align: center;" width="50px;">Perbaikan</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>
                                                   </thead>
@@ -145,9 +143,9 @@
 @endsection
 
 @section('modal')
-     @include('pages.survey.modal')
+     @include('pages.kerusakan.modal')
 @endsection
 
 @section('script')
-     @include('pages.survey.script')
+     @include('pages.kerusakan.script')
 @endsection

@@ -51,6 +51,7 @@
             url: "{{ route('survey') }}",
             data: function (data) {
                 data.filter = {
+                        'tahun' : $('[name="filter_tahun"]').val(),
                         'kec'    : $('[name="filter_kec"]').val(),
                         'kel'   : $('[name="filter_kel"]').val(),
                         'kla'   : $('[name="filter_kla"]').val(),
@@ -63,7 +64,7 @@
             {"data":"lokasi"},
             {"data":"pembangunan"},
             {"data":"status_lahan"},
-            {"data":"kelengkapan"},
+            {"data":"media"},
             {"data":"aksi"},
         ],
         columnDefs: [
@@ -81,6 +82,10 @@
     function table_data(){
         table.ajax.reload(null,true);
     }
+
+    $('[name="filter_tahun"]').keyup(delay(function (e) {
+        table_data();
+    }, 9000));
 
     $("[name=form_data]").on('submit', function(e) {
         e.preventDefault();
