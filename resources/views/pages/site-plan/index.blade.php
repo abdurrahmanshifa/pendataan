@@ -21,11 +21,7 @@
                                         <label class="col-form-label col-md-4 col-lg-4 text-center">
                                              @if(isset($sitePlan->foto))
                                              <a target="_blank" href="{{ url('show-file/site-plan/'.$sitePlan->foto) }}"> 
-<<<<<<< HEAD
                                                   <i class="fas fa-file-download" style="font-size:16px;"></i> <br> Unduh / Preview 
-=======
-                                                  <i class="fas fa-file-download"></i> &nbsp;&nbsp; Unduh / Preview 
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                                              </a>
                                              @endif
                                         </label>

@@ -11,7 +11,7 @@
           pageLength: 10,
           processing: true,
           serverSide: true,
-          info :false,
+          info :true,
           ajax: {
                url: "{{ route('kerusakan.detail',['id' => $data->id]) }}",
                data: function (data) {
@@ -41,7 +41,7 @@
           pageLength: 10,
           processing: true,
           serverSide: true,
-          info :false,
+          info :true,
           ajax: {
                url: "{{ route('kerusakan.riwayat',['id' => $data->id]) }}",
                data: function (data) {

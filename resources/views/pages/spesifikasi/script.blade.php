@@ -5,11 +5,7 @@
           lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
           processing: true,
           serverSide: true,
-<<<<<<< HEAD
           info :true,
-=======
-          info :false,
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
           ajax: {
                url: "{{ route('spesifikasi',['id' => $data->id]) }}",
           },
@@ -250,13 +246,8 @@
      var counter = 0;
         
         $("#addButton").click(function () {            
-<<<<<<< HEAD
           if(counter>100){
                alert("Maksimal 100 Data Lainnya");
-=======
-          if(counter>10){
-               alert("Maksimal 10 Data Lainnya");
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                return false;
           }   
           counter++;
@@ -349,13 +340,8 @@
 
      var counterlain = 1;
      $("#addButton_lain").click(function () {            
-<<<<<<< HEAD
           if(counterlain>100){
                alert("Maksimal 100 Data Lainnya");
-=======
-          if(counterlain>10){
-               alert("Maksimal 10 Data Lainnya");
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                return false;
           }   
           counterlain++;

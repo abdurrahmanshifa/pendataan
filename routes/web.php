@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
-=======
 use Illuminate\Support\Facades\Auth;
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,10 +20,6 @@ Auth::routes([
     'verify'    => false,
 ]);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
 Route::get('/', function () {
     return redirect('login');
 });
@@ -58,15 +51,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('halaman/ubah', 'App\Http\Controllers\Master\HalamanController@ubah')->name('halaman.ubah');
             Route::get('halaman/data/{id}', 'App\Http\Controllers\Master\HalamanController@data')->name('halaman.data');
             Route::delete('halaman/hapus/{id}', 'App\Http\Controllers\Master\HalamanController@hapus')->name('halaman.hapus');
-<<<<<<< HEAD
-=======
 
             Route::get('/satuan', 'App\Http\Controllers\Master\SatuanController@index')->name('satuan');
             Route::post('satuan/simpan', 'App\Http\Controllers\Master\SatuanController@simpan')->name('satuan.simpan');
             Route::post('satuan/ubah', 'App\Http\Controllers\Master\SatuanController@ubah')->name('satuan.ubah');
             Route::get('satuan/data/{id}', 'App\Http\Controllers\Master\SatuanController@data')->name('satuan.data');
             Route::delete('satuan/hapus/{id}', 'App\Http\Controllers\Master\SatuanController@hapus')->name('satuan.hapus');
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
         });
 
         Route::get('/pengguna', 'App\Http\Controllers\PenggunaController@index')->name('pengguna');
@@ -74,8 +64,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('pengguna/ubah', 'App\Http\Controllers\PenggunaController@ubah')->name('pengguna.ubah');
         Route::get('pengguna/data/{id}', 'App\Http\Controllers\PenggunaController@data')->name('pengguna.data');
         Route::delete('pengguna/hapus/{id}', 'App\Http\Controllers\PenggunaController@hapus')->name('pengguna.hapus');
-<<<<<<< HEAD
-=======
 
         Route::get('/kerusakan', 'App\Http\Controllers\KerusakanController@index')->name('kerusakan');
         Route::get('kerusakan/detail/{id}', 'App\Http\Controllers\KerusakanController@detail')->name('kerusakan.detail');
@@ -85,7 +73,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('riwayat/detail/{id}', 'App\Http\Controllers\KerusakanController@data')->name('riwayat.data');
         Route::post('riwayat/ubah', 'App\Http\Controllers\KerusakanController@ubah')->name('riwayat.ubah');
         Route::delete('riwayat/hapus/{id}', 'App\Http\Controllers\KerusakanController@hapus')->name('riwayat.hapus');
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
     });
 
     Route::group(['prefix'=>'master'], function () {
