@@ -61,7 +61,7 @@
         pageLength: 10,
         processing: true,
         serverSide: true,
-        info :false,
+        info :true,
         ajax: {
             url: "{{ route('dashboard') }}",
         },
@@ -101,10 +101,12 @@ Highcharts.chart('myChart2', {
         type: 'category'
     },
     yAxis: {
+        tickWidth: 1,
         title: {
             text: ''
-        }
-
+        },
+        lineWidth: 1,
+        opposite: true
     },
     legend: {
         enabled: false
@@ -126,7 +128,7 @@ Highcharts.chart('myChart2', {
 
     series: [
         {
-            name: 'klasifikasi',
+            name: 'Klasifikasi',
             colorByPoint: true,
             data:  [
                         @foreach($data as $val)
@@ -136,7 +138,7 @@ Highcharts.chart('myChart2', {
                             drilldown: '{{ $val['klasifikasi'] }}'
                         },
                         @endforeach
-                    ]
+                    ],
         }
     ],
 
@@ -147,10 +149,10 @@ Highcharts.chart('myChart2', {
                 name : '{{ $val['klasifikasi'] }}',
                 id : '{{ $val['klasifikasi'] }}',
                 data: [
-                    @foreach($data_kec as $val)
+                    @foreach($val['kecamatan'] as $vals)
                     [
-                        '{{ $val['id_kec'] }}',
-                        {{ $val['jml'] }}
+                        '{{ $vals['id_kec'] }}',
+                        {{ $vals['jml'] }}
                     ],
                     @endforeach
                 ]

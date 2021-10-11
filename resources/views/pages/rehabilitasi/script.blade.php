@@ -1,7 +1,7 @@
 <script>
      $(".addButton_rehab").click(function () {            
-          if(counterrehab>10){
-               alert("Maksimal 10 Data Lainnya");
+          if(counterrehab>100){
+               alert("Maksimal 100 Data Lainnya");
                return false;
           }   
           counterrehab++;
@@ -50,7 +50,7 @@
           lengthMenu: [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
           processing: true,
           serverSide: true,
-          info :false,
+          info :true,
           ajax: {
                url: "{{ route('rehabilitasi-detail') }}",
                type: 'GET',
@@ -254,10 +254,10 @@
                                    '</div>'+
                                    '<div class="col-md-4">'+
                                         '<div class="form-group row mb-4">'+
-                                             '<label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Foto <span class="text-danger">*</span></label>'+
+                                             '<label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Foto</label>'+
                                              '<div class="col-sm-12 col-md-9">'+
                                                   '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto[]">'+
-                                                  '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb</label></p>'+
+                                                  '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb, Kosongkan jika data tidak diubah</label></p>'+
                                              '</div>'+
                                         '</div>'+
                                    '</div></div>');

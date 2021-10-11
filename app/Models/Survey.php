@@ -43,4 +43,13 @@ class Survey extends Model
           return $this->HasOne('App\Models\Pembangunan','id_survey');
      }
 
+     function kondisi()
+     {
+          return $this->HasMany('App\Models\Kondisi','id_survey');
+     }
+
+     function perbaikan()
+     {
+          return $this->HasMany('App\Models\Perbaikan','id_survey');
+     }
 }

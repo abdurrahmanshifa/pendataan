@@ -64,8 +64,14 @@ class SurveyController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','pembangunan'])->orderBy('created_at','desc');
+               $tahun = $_GET['filter']['tahun'];
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi',
+                    'pembangunan'=> function ($query) use ($tahun){
+                         if($tahun != ''){
+                              $query->where('tahun', $tahun);
+                         }
+                        
+               }])->orderBy('id_kec','asc')->orderBy('id_kel','asc');
                
                if($_GET['filter']['kec'] != ''){
                     $data = $data->where('id_kec',$_GET['filter']['kec']);
@@ -85,58 +91,69 @@ class SurveyController extends Controller
                }else{
                     $data = $data->get();
                }
-               return Datatables::of($data)
+               $result = array();
+               $i=0;
+               foreach($data as $idx => $itm)
+               {
+                    if($itm->pembangunan != null)
+                    {
+                         $result[$i] = $itm;
+                         $i++;
+                    }
+                    
+               }
+               return Datatables::of($result)
                     ->addIndexColumn()
-                    ->editColumn('kelengkapan', function($row) {
-                         $persen = 0;
+                    // ->editColumn('kelengkapan', function($row) {
+                    //      $persen = 0;
 
-                         $kondisi = Kondisi::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check15($kondisi);
+                    //      $kondisi = Kondisi::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check15($kondisi);
 
-                         $pembangunan = Pembangunan::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check10($pembangunan);
+                    //      $pembangunan = Pembangunan::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check10($pembangunan);
 
-                         $pembangunanDetail = PembangunanRuangan::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check10($pembangunanDetail);
+                    //      $pembangunanDetail = PembangunanRuangan::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check10($pembangunanDetail);
 
-                         $Rehabilitasi = Rehabilitasi::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check10($Rehabilitasi);
+                    //      $Rehabilitasi = Rehabilitasi::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check10($Rehabilitasi);
 
-                         $RehabilitasiDetail = RehabilitasiDetail::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check10($RehabilitasiDetail);
+                    //      $RehabilitasiDetail = RehabilitasiDetail::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check10($RehabilitasiDetail);
 
-                         $sitePlan = SitePlan::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check15($sitePlan);
+                    //      $sitePlan = SitePlan::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check15($sitePlan);
 
-                         $spesifikasi = Spesifikasi::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check15($spesifikasi);
+                    //      $spesifikasi = Spesifikasi::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check15($spesifikasi);
 
-                         $validasi = SurveyValidasi::where('id_survey',$row->id)->count();
-                         $persen = $persen + $this->check15($validasi);
+                    //      $validasi = SurveyValidasi::where('id_survey',$row->id)->count();
+                    //      $persen = $persen + $this->check15($validasi);
 
-                         if($persen <= 40)
-                         {
-                              $status = 'bg-danger';
-                         }else if($persen <= 70)
-                         {
-                              $status = 'bg-warning';
-                         }else{
-                              $status = 'bg-success';
-                         }
-                         if($persen == 0)
-                         {
-                              $jarak = 100;
-                         }else{
-                              $jarak = $persen;
-                         }
-                         $data = '
-                              <div class="progress mb-3">
-                                   <div class="progress-bar '.$status.'" role="progressbar" data-width="'.$persen.'%" aria-valuenow="'.$persen.'" aria-valuemin="0" aria-valuemax="100" style="width:'.$jarak.'%">'.$persen.'%</div>
-                              </div>
-                         ';
+                    //      if($persen <= 40)
+                    //      {
+                    //           $status = 'bg-danger';
+                    //      }else if($persen <= 70)
+                    //      {
+                    //           $status = 'bg-warning';
+                    //      }else{
+                    //           $status = 'bg-success';
+                    //      }
+                    //      if($persen == 0)
+                    //      {
+                    //           $jarak = 100;
+                    //      }else{
+                    //           $jarak = $persen;
+                    //      }
+                    //      $data = '
+                    //           <div class="progress mb-3">
+                    //                <div class="progress-bar '.$status.'" role="progressbar" data-width="'.$persen.'%" aria-valuenow="'.$persen.'" aria-valuemin="0" aria-valuemax="100" style="width:'.$jarak.'%">'.$persen.'%</div>
+                    //           </div>
+                    //      ';
 
-                         return $data;
-                    })
+                    //      return $data;
+                    // })
                     ->editColumn('aksi', function($row) {
                          $data = '
                               <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
@@ -162,21 +179,21 @@ class SurveyController extends Controller
                          $data = '<strong>Tahun : '.(isset($row->pembangunan->tahun)?$row->pembangunan->tahun:'-').'</strong><p> <strong>Luas : '.(isset($row->pembangunan->luas)?$row->pembangunan->luas:'-').'</strong></p>';
                          return $data;
                     })
-                    // ->editColumn('media', function($row) {
-                    //      if($row->foto != null):
-                    //           $data = "
-                    //                <div class='gallery gallery-md text-center'>
-                    //                     <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama_objek."' href='#foto-modal'>
-                    //                          <div class='gallery-item' data-title='".$row->nama_objek."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
-                    //                     </a>
-                    //                </div>
-                    //           ";
-                    //      else:
-                    //           $data = '-';
-                    //      endif;
+                    ->editColumn('media', function($row) {
+                         if($row->foto != null):
+                              $data = "
+                                   <div class='gallery gallery-md text-center'>
+                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama_objek."' href='#foto-modal'>
+                                             <div class='gallery-item' data-title='".$row->nama_objek."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
+                                        </a>
+                                   </div>
+                              ";
+                         else:
+                              $data = '-';
+                         endif;
 
-                    //      return $data;
-                    // })
+                         return $data;
+                    })
                     ->escapeColumns([])
                     ->make(true);
           }
@@ -429,3 +446,4 @@ class SurveyController extends Controller
           return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan','rehabilitasi','halaman','pagar','saluran','validasi'));
      }
 }
+

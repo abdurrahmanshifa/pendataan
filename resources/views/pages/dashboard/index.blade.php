@@ -80,7 +80,7 @@
                     </div>
                     <div class="card-body">
                          {{-- <canvas id="myChart2"></canvas> --}}
-                         <div id="myChart2"></div>
+                         <div id="myChart2" style="overflow:scroll"></div>
                     </div>
                </div>
           </div>  

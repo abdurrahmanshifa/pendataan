@@ -21,6 +21,7 @@
     <li class="nav-item {{ request()->is('master*') ? 'active' : '' }}  dropdown">
         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Master Data</span></a>
         <ul class="dropdown-menu">
+            {{-- 
             <li class="{{ request()->is('master/kecamatan*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('kecamatan') }}">
                     Kecamatan
@@ -31,9 +32,15 @@
                     Kelurahan
                 </a>
             </li>
+            --}}
             <li class="{{ request()->is('master/klasifikasi*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('klasifikasi') }}">
                     Klasifikasi
+                </a>
+            </li>
+            <li class="{{ request()->is('master/satuan*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('satuan') }}">
+                    Satuan
                 </a>
             </li>
             {{-- 
@@ -42,12 +49,12 @@
                     Ruangan
                 </a>
             </li>
-            --}}
             <li class="{{ request()->is('master/halaman*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('halaman') }}">
                     Halaman
                 </a>
             </li>
+            --}}
         </ul>
     </li>
     <li class="nav-item {{ request()->is('pengguna*') ? 'active' : '' }}">
@@ -64,4 +71,12 @@
             <span>Survey</span>
         </a>
     </li>
+    @if(Auth::user()->group == 1)
+        <li class="nav-item {{ request()->is('kerusakan*') ? 'active' : '' }}">
+            <a href="{{ route('kerusakan') }}" class="nav-link">
+                <i class="fas fa-poll-h"></i>
+                <span>Kerusakan</span>
+            </a>
+        </li>
+    @endif;
 </ul>

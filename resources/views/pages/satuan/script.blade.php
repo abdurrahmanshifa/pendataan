@@ -5,19 +5,16 @@
         serverSide: true,
         info :true,
         ajax: {
-            url: "{{ route('pengguna') }}",
+            url: "{{ route('satuan') }}",
         },
         columns: [
             {"data":"DT_RowIndex"},
-            {"data":"name"},
-            {"data":"email"},
-            {"data":"group"},
-            {"data":"last_login"},
+            {"data":"nama"},
             {"data":"aksi"},
         ],
         columnDefs: [
             {
-                targets: [0,-2,-1],
+                targets: [0,-1],
                 className: 'text-center'
             },
         ]
@@ -42,9 +39,9 @@
         var form = $('[name="form_data"]')[0];
         var data = new FormData(form);
         if(save_method == 'add'){
-            var url = '{{route("pengguna.simpan")}}';
+            var url = '{{route("satuan.simpan")}}';
         }else{
-            var url = '{{route("pengguna.ubah")}}';
+            var url = '{{route("satuan.ubah")}}';
         }
 
         $.ajax({
@@ -110,15 +107,14 @@
         $('.help').empty();
 
         $.ajax({
-            url : "{{url('pengguna/data/')}}"+"/"+id,
+            url : "{{url('master/satuan/data/')}}"+"/"+id,
             type: "GET",
             dataType: "JSON",
             success: function(data){
                 $('#modal_form').modal('show');
                 $('.modal-title').text('Ubah Data');
                 $('[name="id"]').val(data.id);
-                $('[name="nama"]').val(data.name);
-                $('[name="email"]').val(data.email);
+                $('[name="nama"]').val(data.nama);
             },
             error: function (jqXHR, textStatus, errorThrown){
                 alert('Error get data from ajax');
@@ -141,7 +137,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                        url : "{{url('pengguna/hapus/')}}"+"/"+id,
+                        url : "{{url('master/satuan/hapus/')}}"+"/"+id,
                         type: "POST",
                         data : {
                             '_method'   : 'delete',
