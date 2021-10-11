@@ -6,7 +6,11 @@
           <button class="btn btn-icon btn-lg btn-dark tambah_rehabilitasi" type="button" title="Simpan Data">
                <i class="fas fa-plus"></i> Tambah
           </button>
+<<<<<<< HEAD
           @if(!$rehabilitasi->isEmpty())
+=======
+          @if($rehabilitasi != null)
+>>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                <button type="button" title="Ubah Data" class="btn-ubah-rehabilitasi btn btn-success btn-icon btn-lg" onclick="ubah_rehabilitasi('{{ $rehabilitasi[0]->id }}')">
                     <i class="fas fa-edit"></i> Ubah
                </button>
@@ -37,7 +41,11 @@
                               </div>
                          </div>
                          <div class="table-responsive">
+<<<<<<< HEAD
                               <table id="table-rehabilitasi" class="table table-bordered ">
+=======
+                              <table id="table-rehabilitasi" class="table table-bordered table-hover">
+>>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                                    <thead>
                                         <tr>
                                              <th style="text-align: center;" width="50px;">No</th>

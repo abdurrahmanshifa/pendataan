@@ -66,7 +66,7 @@ class RehabilitasiController extends Controller
                          {
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = $id.'_'.Str::random(10).'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                               $img = Image::make($file->path());
                               $img->resize(600, null, function ($constraint) {
                                    $constraint->aspectRatio();
@@ -143,7 +143,7 @@ class RehabilitasiController extends Controller
                          {
                               $file = $request->file('foto')[$key];
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = $id.'_'.Str::random(10).'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                               $img = Image::make($file->path());
                               $img->resize(600, null, function ($constraint) {
                                    $constraint->aspectRatio();

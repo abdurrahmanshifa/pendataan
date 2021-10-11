@@ -39,7 +39,7 @@ class Pembangunan extends Model
 
      function ruangan()
      {
-          return $this->HasMany('App\Models\PembangunanRuangan','id_pembangunan');
+          return $this->hasOne('App\Models\PembangunanRuangan','id_pembangunan');
      }
 
 }
