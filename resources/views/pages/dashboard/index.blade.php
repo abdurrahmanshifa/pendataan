@@ -73,23 +73,12 @@
           </div>
      </div>
      <div class="row">
-<<<<<<< HEAD
-          <div class="col-lg-6 col-6">
-=======
           <div class="col-12">
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                <div class="card">
                     <div class="card-header">
                          <h4>Survey Menurut Klasifikasi</h4>
                     </div>
                     <div class="card-body">
-<<<<<<< HEAD
-                         <canvas id="myChart2"></canvas>
-                    </div>
-               </div>
-          </div>
-          <div class="col-lg-6 col-6">
-=======
                          {{-- <canvas id="myChart2"></canvas> --}}
                          <div id="myChart2" style="overflow:scroll"></div>
                     </div>
@@ -98,28 +87,17 @@
      </div>
      <div class="row">
           <div class="col-12">
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                <div class="card">
                     <div class="card-header">
                          <h4>Data Survey </h4>
                     </div>
                     <div class="card-body">
-<<<<<<< HEAD
-=======
                      <div class="table-responsive">
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                         <table class="table table-bordered" id="table">
                              <thead>
                                   <tr>
                                        <th>No</th>
                                        <th>Klasifikasi</th>
-<<<<<<< HEAD
-                                       <th>Kelengkapan</th>
-                                       <th>Aksi</th>
-                                  </tr>
-                             </thead>
-                        </table>
-=======
                                        <th>Lokasi</th>
                                        <th>Pembangunan</th>
                                        <th>Status Lahan</th>
@@ -132,7 +110,6 @@
                              </tbody>
                         </table>
                      </div>
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                     </div>
                </div>
           </div>

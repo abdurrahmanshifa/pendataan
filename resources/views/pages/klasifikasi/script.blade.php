@@ -3,11 +3,7 @@
         pageLength: 10,
         processing: true,
         serverSide: true,
-<<<<<<< HEAD
         info :true,
-=======
-        info :false,
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
         ajax: {
             url: "{{ route('klasifikasi') }}",
         },

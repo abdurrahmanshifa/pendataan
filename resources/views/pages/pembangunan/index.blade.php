@@ -131,11 +131,7 @@
                               </label>
                          </div>
                          <div class="table-responsive">
-<<<<<<< HEAD
-                              <table id="table-jenis-ruangan" class="table table-bordered ">
-=======
                               <table id="table-jenis-ruangan" class="table table-bordered table-hover">
->>>>>>> 0d497187dec807cf52f64144c5c6e3b575dd1166
                                    <thead>
                                         <tr>
                                              <th style="text-align: center;" width="50px;">No</th>
