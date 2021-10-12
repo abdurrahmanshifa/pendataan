@@ -28,14 +28,13 @@
             {"data":"klasifikasi"},
             {"data":"lokasi"},
             {"data":"pembangunan"},
-            {"data":"status_lahan"},
             {"data":"kerusakan"},
             {"data":"perbaikan"},
             {"data":"aksi"},
         ],
         columnDefs: [
             {
-                targets: [0,-1,-2,-3],
+                targets: [0,-1],
                 className: 'text-center'
             },
         ]
