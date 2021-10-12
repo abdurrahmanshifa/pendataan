@@ -48,7 +48,7 @@ class KerusakanController extends Controller
      {
           if ($request->ajax()) {
                $tahun = $_GET['filter']['tahun'];
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','perbaikan',
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','perbaikan.kondisi',
                     'pembangunan'=> function ($query) use ($tahun){
                          if($tahun != ''){
                               $query->where('tahun', $tahun);
@@ -81,13 +81,15 @@ class KerusakanController extends Controller
                $i=0;
                foreach($data as $idx => $itm)
                {
-                    if($itm->pembangunan != null AND $itm->kondisi != null)
+                    if(isset($itm->pembangunan->id) AND !$itm->kondisi->isEmpty())
                     {
                          $result[$i] = $itm;
                          $i++;
                     }
                     
                }
+               // echo json_encode($result);
+               // exit();
                return Datatables::of($result)
                     ->addIndexColumn()
                     // ->editColumn('kelengkapan', function($row) {
@@ -164,11 +166,19 @@ class KerusakanController extends Controller
                          return $data;
                     })
                     ->editColumn('kerusakan', function($row) {
-                         $data = '<span class="badge badge-info">'.$row->kondisi->count().'</span>';
+                         $data = '';
+                         foreach($row->kondisi as $val)
+                         {
+                              $data .= ucwords(strtolower($val->nama)).' - '.$val->luas.'<br>';
+                         }
                          return $data;
                     })
                     ->editColumn('perbaikan', function($row) {
-                         $data = '<span class="badge badge-success">'.$row->perbaikan->count().'</span>';
+                         $data = '';
+                         foreach($row->perbaikan as $val)
+                         {
+                              $data .= ucwords(strtolower($val->kondisi->nama)).' - '.$val->luas.' '.$val->satuan.'<br>';
+                         }
                          return $data;
                     })
                     ->editColumn('media', function($row) {

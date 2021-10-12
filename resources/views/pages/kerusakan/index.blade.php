@@ -121,9 +121,8 @@
                                                             <th style="text-align: center;" width="200px;">Klasifikasi</th>
                                                             <th style="text-align: center;">Lokasi</th>
                                                             <th style="text-align: center;">Pembangunan</th>
-                                                            <th style="text-align: center;">Status Lahan</th>
-                                                            <th style="text-align: center;" width="50;">Kerusakan</th>
-                                                            <th style="text-align: center;" width="50px;">Perbaikan</th>
+                                                            <th style="text-align: center;">Item Kerusakan</th>
+                                                            <th style="text-align: center;">Perbaikan</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>
                                                   </thead>
