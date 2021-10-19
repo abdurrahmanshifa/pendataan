@@ -64,6 +64,15 @@
         info :true,
         ajax: {
             url: "{{ route('dashboard') }}",
+            data: function (data) {
+                data.filter = {
+                        'tahun' : $('[name="filter_tahun"]').val(),
+                        'kec'    : $('[name="filter_kec"]').val(),
+                        'kel'   : $('[name="filter_kel"]').val(),
+                        'kla'   : $('[name="filter_kla"]').val(),
+                        'stat'   : $('[name="filter_stat"]').val(),
+                };
+            }
         },
         columns: [
             {"data":"DT_RowIndex"},
@@ -81,6 +90,54 @@
             },
         ]
     });
+
+    function table_data(){
+        table.ajax.reload(null,true);
+    }
+
+    $('[name="filter_tahun"]').keyup(delay(function (e) {
+        table_data();
+    }, 9000));
+
+    $("[name='id_kec']").change(function(){
+        var id = $(this).val();
+        $.ajax({
+            url : "{{url('master/kelurahan/id-by-kec/')}}"+"/"+id,
+            type: "GET",
+            dataType: "HTML",
+            success: function(data){
+                    $('[name="id_kel"]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                    alert('Error get data from ajax');
+            }
+        });
+     });
+
+     $("[name='filter_kec']").change(function(){
+        var id = $(this).val();
+        $.ajax({
+            url : "{{url('master/kelurahan/id-by-kec/')}}"+"/"+id,
+            type: "GET",
+            dataType: "HTML",
+            success: function(data){
+                    $('[name="filter_kel"]').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                    alert('Error get data from ajax');
+            }
+        });
+        table_data();
+     });
+     $("[name='filter_kla']").change(function(){
+        table_data();
+     });
+     $("[name='filter_kel']").change(function(){
+        table_data();
+     });
+     $("[name='filter_stat']").change(function(){
+        table_data();
+     });
 
 Highcharts.chart('myChart2', {
     chart: {

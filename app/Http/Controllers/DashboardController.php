@@ -24,15 +24,48 @@ class DashboardController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','pembangunan'])->orderBy('created_at','desc');
+               $tahun = $_GET['filter']['tahun'];
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi',
+                    'pembangunan'=> function ($query) use ($tahun){
+                         if($tahun != ''){
+                              $query->where('tahun', $tahun);
+                         }
+                        
+               }])->orderBy('id_kec','asc')->orderBy('id_kel','asc')->orderBy('created_at','desc');
+               
+               if($_GET['filter']['kec'] != ''){
+                    $data = $data->where('id_kec',$_GET['filter']['kec']);
+               }
+
+               if($_GET['filter']['kel'] != ''){
+                    $data = $data->where('id_kel',$_GET['filter']['kel']);
+               }
+
+               if($_GET['filter']['kla'] != ''){
+                    $data = $data->where('klasifikasi',$_GET['filter']['kla']);
+               }
+
+               if($_GET['filter']['stat'] != ''){
+                    $data = $data->where('id_status_lahan',$_GET['filter']['stat']);
+               }
+
                if(Auth::user()->group != 1)
                {
                     $data = $data->where('id_created',Auth::user()->id)->get();
                }else{
                     $data = $data->get();
                }
-               //echo json_encode($data);
-               //exit();
+               $result = array();
+               $i=0;
+               foreach($data as $idx => $itm)
+               {
+                    if($itm->pembangunan != null)
+                    {
+                         $result[$i] = $itm;
+                         $i++;
+                    }
+                    
+               }
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('klasifikasi', function($row) {
@@ -128,11 +161,12 @@ class DashboardController extends Controller
                $data[$key]['jml'] = $jml;
           }
 
-          return view('pages.dashboard.index',[
-               'surveys'=>Survey::all()
-          ])->with('user',$user)
+          return view('pages.dashboard.index')
+          ->with('user',$user)
           ->with('kecamatan',$kecamatan)
+          ->with('kecamatans',$kecamatans)
           ->with('kelurahan',$kelurahan)
+          ->with('klasifikasi',$klasifikasi)
           ->with('data',$data)
           ->with('pembangunan',$pembangunan)
           ->with('status_lahan',$status_lahan)
