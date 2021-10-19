@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Survey;
+use App\Models\Satuan;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Models\Atap;
@@ -179,21 +180,21 @@ class SurveyController extends Controller
                          $data = '<strong>Tahun : '.(isset($row->pembangunan->tahun)?$row->pembangunan->tahun:'-').'</strong><p> <strong>Luas : '.(isset($row->pembangunan->luas)?$row->pembangunan->luas:'-').'</strong></p>';
                          return $data;
                     })
-                    ->editColumn('media', function($row) {
-                         if($row->foto != null):
-                              $data = "
-                                   <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama_objek."' href='#foto-modal'>
-                                             <div class='gallery-item' data-title='".$row->nama_objek."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
-                                        </a>
-                                   </div>
-                              ";
-                         else:
-                              $data = '-';
-                         endif;
+                    // ->editColumn('media', function($row) {
+                    //      if($row->foto != null):
+                    //           $data = "
+                    //                <div class='gallery gallery-md text-center'>
+                    //                     <a data-toggle='modal' class='open-AddBookDialog' data-id='".$row->foto."' data-title='".$row->nama_objek."' href='#foto-modal'>
+                    //                          <div class='gallery-item' data-title='".$row->nama_objek."' style='background-image:url(".url('show-image/survey/'.$row->foto).")'></div>
+                    //                     </a>
+                    //                </div>
+                    //           ";
+                    //      else:
+                    //           $data = '-';
+                    //      endif;
 
-                         return $data;
-                    })
+                    //      return $data;
+                    // })
                     ->escapeColumns([])
                     ->make(true);
           }
@@ -201,7 +202,6 @@ class SurveyController extends Controller
           $klasifikasi   = Klasifikasi::get();
           $kecamatan     = Kecamatan::orderBy('nama_kec','asc')->get();
           $statuslahan   = StatusLahan::orderBy('created_at','asc')->get();
-
           return view('pages.survey.index')->with('kecamatan',$kecamatan)->with('status_lahan',$statuslahan)->with('klasifikasi',$klasifikasi);
      }
 
@@ -281,7 +281,7 @@ class SurveyController extends Controller
 
      public function ubah(Request $request)
      {
-          if($request->input())
+          if($request->input($this->input->post('id_kondisi')))
           {
                $validator = Validator::make($request->all(), [
                          'klasifikasi'  => 'required',
@@ -442,8 +442,9 @@ class SurveyController extends Controller
           $spesifikai = Spesifikasi::where('id_survey',$id)->get();
           $sitePlan =    SitePlan::where('id_survey',$id)->first();
           $validasi =    SurveyValidasi::where('id_survey',$id)->first();
+          $satuan   = Satuan::get();
           
-          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan','rehabilitasi','halaman','pagar','saluran','validasi'));
+          return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan','rehabilitasi','halaman','pagar','saluran','validasi','satuan'));
      }
 }
 

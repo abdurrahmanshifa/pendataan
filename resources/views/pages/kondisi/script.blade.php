@@ -18,7 +18,7 @@
             {"data":"kondisi"},
             {"data":"foto_kondisi"},
             {"data":"luas"},
-            {"data":"foto_luas"},
+            {"data":"keterangan"},
             {"data":"aksi"},
         ],
         columnDefs: [
@@ -53,7 +53,7 @@
         $('.form-group').removeClass('has-error');
         $('.help').empty();
         $('.lainnya').html('');
-        counterkondisi = 0;
+        counterkondisi = 1;
         $.ajax({
             url : "{{url('survey/kondisi/data/')}}"+"/"+id+"/"+tahun,
             type: "GET",
@@ -76,11 +76,12 @@
                     }
 
                     hitung++;
-                    var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv_kondisi' + counterkondisi);        
+                    var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv_kondisi' + hitung);        
                     newTextBoxDiv.after().html('<div class="row input">'+
-                                '<div class="col-md-7">'+
+                                '<div class="col-md-5">'+
                                         '<div class="form-group row mb-4">'+
                                         '<div class="col-sm-4 col-md-4">'+
+                                            '<input type="hidden" name="id_kondisi[]" class="form-control" placeholder="Kondisi" value="'+data[i].id+'">'+
                                             '<input type="text" name="nama[]" class="form-control" placeholder="Kondisi" value="'+data[i].nama+'">'+
                                         '</div>'+
                                         '<div class="col-md-4">'+
@@ -95,11 +96,20 @@
                                 '</div>'+
                                 '<div class="col-md-5">'+
                                         '<div class="form-group row mb-4">'+
-                                        '<div class="col-sm-6 col-md-6">'+
-                                        '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah" value="'+data[i].luas+'"></div>'+
-                                        '<div class="col-sm-6">'+
+                                        '<div class="col-sm-4 col-md-4">'+
+                                        '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah" value="'+(data[i].luas!=null?data[i].luas:'')+'"></div>'+
+                                        '<div class="col-sm-4 col-md-4">'+
+                                        '<select class="form-control select2" name="satuan[]"><option value="">Pilih Satuan</option>@foreach($satuan as $val) <option '+(data[i].satuan=='{{$val->id}}'?'selected':'')+' value="{{$val->id}}">@php echo $val->nama;@endphp</option> @endforeach</select></div>'+
+                                        '<div class="col-sm-4">'+
                                             '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_luas[]"><input type="hidden" class="form-control" name="foto_luas_lama[]" value="'+data[i].foto_luas+'">'+
                                             '<span class="help form-control-label"></span><span class="help-text form-control-label"><p>* Maksimal file 2 Mb, Kosongkan jika data tidak diubah</p></span>'+
+                                        '</div>'+
+                                        '</div>'+
+                                '</div>'+
+                                '<div class="col-md-2">'+
+                                        '<div class="form-group row mb-4">'+
+                                        '<div class="col-sm-12 col-md-12">'+
+                                            '<textarea class="form-control" name="keterangan[]" placeholder="Keterangan">'+(data[i].keterangan!=null?data[i].keterangan:'')+'</textarea>'+
                                         '</div>'+
                                         '</div>'+
                                 '</div>'+
@@ -120,7 +130,7 @@
         $('.help-block').empty();
         $("div").removeClass("has-error");
         $('#btn-kondisi').text('sedang menyimpan...');
-        $('#btn-kondisi').attr('disabled', true);
+        //$('#btn-kondisi').attr('disabled', true);
 
         var form = $('[name="form_kondisi"]')[0];
         var data = new FormData(form);
@@ -149,6 +159,8 @@
                             button: true,
                             timer: 1000
                         });
+                        $('#btn-kondisi').text('Simpan');
+                        $('#btn-kondisi').attr('disabled', false);
                     }
                     else {
                         $('#modal_kondisi').modal('hide');
@@ -162,11 +174,17 @@
                                 location.reload();
                             }
                         });
-                        
+                        $('#btn-kondisi').text('Simpan');
+                        $('#btn-kondisi').attr('disabled', false);   
                     }
-                    $('#btn-kondisi').text('Simpan');
-                    $('#btn-kondisi').attr('disabled', false);
                 }else{
+                    Swal.fire({
+                        text: obj.error_string[0],
+                        title: "Perhatian",
+                        icon: "error",
+                        button: true,
+                        timer: 1000
+                    });
                     for (var i = 0; i < obj.input_error.length; i++) 
                     {
                         $('[name="'+obj.input_error[i]+'"]').parent().parent().addClass('has-error');
@@ -242,7 +260,7 @@
         counterkondisi++;
         var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv_kondisi' + counterkondisi);        
         newTextBoxDiv.after().html('<div class="row input">'+
-                                    '<div class="col-md-7">'+
+                                    '<div class="col-md-5">'+
                                             '<div class="form-group row mb-4">'+
                                             '<div class="col-sm-4 col-md-4">'+
                                                 '<input type="text" name="nama[]" class="form-control" placeholder="Kondisi">'+
@@ -259,22 +277,34 @@
                                     '</div>'+
                                     '<div class="col-md-5">'+
                                             '<div class="form-group row mb-4">'+
-                                            '<div class="col-sm-6 col-md-6">'+
+                                            '<div class="col-sm-4 col-md-4">'+
                                             '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah"></div>'+
-                                            '<div class="col-sm-6">'+
+                                            '<div class="col-sm-4 col-md-4">'+
+                                            '<select class="form-control select2" name="satuan[]"><option value="">Pilih Satuan</option>@foreach($satuan as $val) <option value="{{$val->id}}">@php echo $val->nama;@endphp</option> @endforeach</select></div>'+
+                                            '<div class="col-sm-4">'+
                                                 '<input required type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_luas[]">'+
                                                 '<span class="help form-control-label"></span><p><label class="help-text form-control-label">* Maksimal File 2 Mb</label></p>'+
                                             '</div>'+
                                             '</div>'+
                                     '</div>'+
+                                    '<div class="col-md-2">'+
+                                        '<div class="form-group row mb-4">'+
+                                            '<div class="col-sm-12 col-md-12">'+
+                                            '<textarea class="form-control" name="keterangan[]" placeholder="Keterangan"></textarea>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
                                 '</div>');
 
-        newTextBoxDiv.appendTo("#TextBoxesGroup_kondisi");        
+        newTextBoxDiv.appendTo("#TextBoxesGroup_kondisi");  
+        $('.select2').select2({
+            escapeMarkup: function (text) { return text; }
+        });      
     });
 
     $("#removeButton_kondisi").click(function () {
         $("#TextBoxDiv_kondisi" + counterkondisi).remove();
         counterkondisi--;   
-            
+        
     });
 </script>

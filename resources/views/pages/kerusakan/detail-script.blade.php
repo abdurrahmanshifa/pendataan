@@ -26,7 +26,7 @@
                {"data":"kondisi"},
                {"data":"foto_kondisi"},
                {"data":"luas"},
-               {"data":"foto_luas"},
+               {"data":"keterangan"},
                {"data":"aksi"},
           ],
           columnDefs: [
