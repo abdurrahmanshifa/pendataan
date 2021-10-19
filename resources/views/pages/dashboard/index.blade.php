@@ -2,6 +2,25 @@
 
 @section('title')
 <title>DASHBOARD | DINAS PERKIM KOTA TANGERANG </title>
+<style>
+     #myChart2 {
+          height: 450px;
+          width:100%;
+          overflow-x: scroll !important;
+     }
+
+     ::-webkit-scrollbar {
+          -webkit-appearance: none;
+          width: 3px;
+          height: 4px;
+     }
+
+     ::-webkit-scrollbar-thumb {
+          border-radius: 5px;
+          background-color: rgba(0, 0, 0, .5);
+          box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+     }
+</style>
 @endsection
 
 
@@ -80,7 +99,7 @@
                     </div>
                     <div class="card-body">
                          {{-- <canvas id="myChart2"></canvas> --}}
-                         <div id="myChart2" style="overflow:scroll"></div>
+                         <div id="myChart2"></div>
                     </div>
                </div>
           </div>  
@@ -184,7 +203,6 @@
                                        <th>Lokasi</th>
                                        <th>Pembangunan</th>
                                        <th>Status Lahan</th>
-                                       <th>Titik Lokasi</th>
                                        <th>Aksi</th>
                                   </tr>
                              </thead>
