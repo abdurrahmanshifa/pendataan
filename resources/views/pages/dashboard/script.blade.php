@@ -80,7 +80,6 @@
             {"data":"lokasi"},
             {"data":"pembangunan"},
             {"data":"status_lahan"},
-            {"data":"titik_lokasi"},
             {"data":"detail"},
         ],
         columnDefs: [
@@ -163,7 +162,10 @@ Highcharts.chart('myChart2', {
             text: ''
         },
         lineWidth: 1,
-        opposite: true
+        opposite: true,
+        scrollbar: {
+            enabled: true
+        },
     },
     legend: {
         enabled: false
