@@ -280,7 +280,7 @@
                                                                       <th style="text-align: center;">Kondisi</th>
                                                                       <th style="text-align: center;">Foto Kondisi</th>
                                                                       <th style="text-align: center;">Luas / Jumlah</th>
-                                                                      <th style="text-align: center;">Foto</th>
+                                                                      <th style="text-align: center;">Keterangan</th>
                                                                       <th style="text-align: center;" width="100px">Aksi</th>
                                                                  </tr>
                                                             </thead>

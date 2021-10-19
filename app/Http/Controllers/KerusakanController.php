@@ -48,13 +48,14 @@ class KerusakanController extends Controller
      {
           if ($request->ajax()) {
                $tahun = $_GET['filter']['tahun'];
-               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','perbaikan',
+               $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi','perbaikan.kondisi',
                     'pembangunan'=> function ($query) use ($tahun){
                          if($tahun != ''){
                               $query->where('tahun', $tahun);
                          }
                     },
                     'kondisi' => function ($query) {
+                         $query->with('satuans');
                          $query->where('kondisi', 'Ada Kerusakaan');
                     }
                ])->orderBy('id_kec','asc')->orderBy('id_kel','asc');
@@ -81,13 +82,15 @@ class KerusakanController extends Controller
                $i=0;
                foreach($data as $idx => $itm)
                {
-                    if($itm->pembangunan != null AND $itm->kondisi != null)
+                    if(isset($itm->pembangunan->id) AND !$itm->kondisi->isEmpty())
                     {
                          $result[$i] = $itm;
                          $i++;
                     }
                     
                }
+               // echo json_encode($result);
+               // exit();
                return Datatables::of($result)
                     ->addIndexColumn()
                     // ->editColumn('kelengkapan', function($row) {
@@ -164,11 +167,26 @@ class KerusakanController extends Controller
                          return $data;
                     })
                     ->editColumn('kerusakan', function($row) {
-                         $data = '<span class="badge badge-info">'.$row->kondisi->count().'</span>';
+                         $data = '';
+                         foreach($row->kondisi as $val)
+                         {
+                              if(isset($val->satuans->nama)){
+                                   $data .= ucwords(strtolower($val->nama)).' = '.$val->luas.' '.$val->satuans->nama.'<br>';
+                              }else{
+                                   $data .= ucwords(strtolower($val->nama)).' = '.$val->luas.' - <br>';
+                              }
+                         }
                          return $data;
                     })
                     ->editColumn('perbaikan', function($row) {
-                         $data = '<span class="badge badge-success">'.$row->perbaikan->count().'</span>';
+                         $data = '';
+                         foreach($row->perbaikan as $val)
+                         {
+                              if(isset($val->kondisi->nama))
+                              {
+                                   $data .= ucwords(strtolower($val->kondisi->nama)).' = '.$val->luas.' '.$val->satuan.'<br>';
+                              }
+                         }
                          return $data;
                     })
                     ->editColumn('media', function($row) {
@@ -206,7 +224,7 @@ class KerusakanController extends Controller
                }else{
                     $tahun = date('Y');
                }
-               $data = Kondisi::where('id_survey',$id)->where('kondisi', 'Ada Kerusakaan')->where('tahun',$tahun)->orderBy('urutan','asc')->get();  
+               $data = Kondisi::with('satuans')->where('id_survey',$id)->where('kondisi', 'Ada Kerusakaan')->where('tahun',$tahun)->orderBy('urutan','asc')->get();  
                
                return Datatables::of($data)
                     ->addIndexColumn()
@@ -225,25 +243,34 @@ class KerusakanController extends Controller
 
                          return $data;
                     })
-                    ->editColumn('foto_luas', function($row) {
-                         if($row->foto_luas != null):
-                              $data = "
-                                   <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".url('show-image/luas-kondisi/'.$row->foto_luas)."' data-title='".$row->nama."<br> Luas : ".$row->luas."' href='#foto-modal'>
-                                             <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/luas-kondisi/'.$row->foto_luas).")'></div>
-                                        </a>
-                                   </div>
-                              ";
-                         else:
-                              $data = '-';
-                         endif;
+                    ->editColumn('keterangan', function($row) {
+                         // if($row->foto_luas != null):
+                         //      $data = "
+                         //           <div class='gallery gallery-md text-center'>
+                         //                <a data-toggle='modal' class='zoom' data-id='".url('show-image/luas-kondisi/'.$row->foto_luas)."' data-title='".$row->nama."<br> Luas : ".$row->luas."' href='#foto-modal'>
+                         //                     <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/luas-kondisi/'.$row->foto_luas).")'></div>
+                         //                </a>
+                         //           </div>
+                         //      ";
+                         // else:
+                         //      $data = '-';
+                         // endif;
 
-                         return $data;
+                         return ($row->keterangan != null?$row->keterangan:'-');
                     })
                     ->editColumn('aksi', function($row) {
                          $data = '
                               <a title="Perbaiki" class="btn btn-success btn-sm" onclick="ubah_kondisi(\''.$row->id_survey.'\',\''.$row->tahun.'\')"> <i class="fas fa-tools text-white"></i></a>
                          ';
+
+                         return $data;
+                    })
+                    ->editColumn('luas', function($row) {
+                         if($row->luas != null):
+                              $data = $row->luas.' '.(isset($row->satuans->nama)?$row->satuans->nama:'-');
+                         else:
+                              $data = '-';
+                         endif;
 
                          return $data;
                     })

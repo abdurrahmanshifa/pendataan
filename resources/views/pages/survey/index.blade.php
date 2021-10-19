@@ -125,7 +125,6 @@
                                                             <th style="text-align: center;">Lokasi</th>
                                                             <th style="text-align: center;">Pembangunan</th>
                                                             <th style="text-align: center;">Status Lahan</th>
-                                                            <th style="text-align: center;" width="100px;">Media</th>
                                                             <th style="text-align: center;" width="100px;">Aksi</th>
                                                        </tr>
                                                   </thead>
