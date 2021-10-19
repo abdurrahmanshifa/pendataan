@@ -55,6 +55,7 @@ class KerusakanController extends Controller
                          }
                     },
                     'kondisi' => function ($query) {
+                         $query->with('satuans');
                          $query->where('kondisi', 'Ada Kerusakaan');
                     }
                ])->orderBy('id_kec','asc')->orderBy('id_kel','asc');
@@ -169,7 +170,11 @@ class KerusakanController extends Controller
                          $data = '';
                          foreach($row->kondisi as $val)
                          {
-                              $data .= ucwords(strtolower($val->nama)).' - '.$val->luas.'<br>';
+                              if(isset($val->satuans->nama)){
+                                   $data .= ucwords(strtolower($val->nama)).' = '.$val->luas.' '.$val->satuans->nama.'<br>';
+                              }else{
+                                   $data .= ucwords(strtolower($val->nama)).' = '.$val->luas.' - <br>';
+                              }
                          }
                          return $data;
                     })
@@ -177,7 +182,10 @@ class KerusakanController extends Controller
                          $data = '';
                          foreach($row->perbaikan as $val)
                          {
-                              $data .= ucwords(strtolower($val->kondisi->nama)).' - '.$val->luas.' '.$val->satuan.'<br>';
+                              if(isset($val->kondisi->nama))
+                              {
+                                   $data .= ucwords(strtolower($val->kondisi->nama)).' = '.$val->luas.' '.$val->satuan.'<br>';
+                              }
                          }
                          return $data;
                     })
@@ -216,7 +224,7 @@ class KerusakanController extends Controller
                }else{
                     $tahun = date('Y');
                }
-               $data = Kondisi::where('id_survey',$id)->where('kondisi', 'Ada Kerusakaan')->where('tahun',$tahun)->orderBy('urutan','asc')->get();  
+               $data = Kondisi::with('satuans')->where('id_survey',$id)->where('kondisi', 'Ada Kerusakaan')->where('tahun',$tahun)->orderBy('urutan','asc')->get();  
                
                return Datatables::of($data)
                     ->addIndexColumn()
@@ -235,25 +243,34 @@ class KerusakanController extends Controller
 
                          return $data;
                     })
-                    ->editColumn('foto_luas', function($row) {
-                         if($row->foto_luas != null):
-                              $data = "
-                                   <div class='gallery gallery-md text-center'>
-                                        <a data-toggle='modal' class='open-AddBookDialog' data-id='".url('show-image/luas-kondisi/'.$row->foto_luas)."' data-title='".$row->nama."<br> Luas : ".$row->luas."' href='#foto-modal'>
-                                             <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/luas-kondisi/'.$row->foto_luas).")'></div>
-                                        </a>
-                                   </div>
-                              ";
-                         else:
-                              $data = '-';
-                         endif;
+                    ->editColumn('keterangan', function($row) {
+                         // if($row->foto_luas != null):
+                         //      $data = "
+                         //           <div class='gallery gallery-md text-center'>
+                         //                <a data-toggle='modal' class='zoom' data-id='".url('show-image/luas-kondisi/'.$row->foto_luas)."' data-title='".$row->nama."<br> Luas : ".$row->luas."' href='#foto-modal'>
+                         //                     <div class='gallery-item' data-title='".$row->nama."' style='background-image:url(".url('show-image/luas-kondisi/'.$row->foto_luas).")'></div>
+                         //                </a>
+                         //           </div>
+                         //      ";
+                         // else:
+                         //      $data = '-';
+                         // endif;
 
-                         return $data;
+                         return ($row->keterangan != null?$row->keterangan:'-');
                     })
                     ->editColumn('aksi', function($row) {
                          $data = '
                               <a title="Perbaiki" class="btn btn-success btn-sm" onclick="ubah_kondisi(\''.$row->id_survey.'\',\''.$row->tahun.'\')"> <i class="fas fa-tools text-white"></i></a>
                          ';
+
+                         return $data;
+                    })
+                    ->editColumn('luas', function($row) {
+                         if($row->luas != null):
+                              $data = $row->luas.' '.(isset($row->satuans->nama)?$row->satuans->nama:'-');
+                         else:
+                              $data = '-';
+                         endif;
 
                          return $data;
                     })

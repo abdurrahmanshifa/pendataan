@@ -64,7 +64,6 @@
             {"data":"lokasi"},
             {"data":"pembangunan"},
             {"data":"status_lahan"},
-            {"data":"media"},
             {"data":"aksi"},
         ],
         columnDefs: [
