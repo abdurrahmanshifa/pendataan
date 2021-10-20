@@ -29,6 +29,7 @@
                                    <select name="group" class="form-control select2" id="">
                                         <option value="1">Administrator</option>
                                         <option value="0">Surveyor</option>
+                                        <option value="2">Dinas</option>
                                    </select>
                                    <span class="help form-control-label"></span>
                               </div>

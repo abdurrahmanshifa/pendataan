@@ -44,6 +44,9 @@ class PenggunaController extends Controller
                          if($row->group == 0)
                          {
                               $data = '<span class="badge badge-info">Surveyor</span>';
+                         }elseif($row->group == 2)
+                         {
+                              $data = '<span class="badge badge-warning">Dinas</span>';
                          }else{
                               $data = '<span class="badge badge-primary">Administrator</span>';
                          }
