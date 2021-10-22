@@ -185,14 +185,14 @@ $("#group").change(function () {
 var selectedgroup = $("#group option:selected").val();
 if(selectedgroup == '2'){
       const newfield = `
-      <div class="form-group row mb-4">
+      <div class="form-group row mb-4" id="row">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nama Instansi <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <input type="text" class="form-control" name="instansi">
                                    <span class="help form-control-label"></span>
                               </div>
                          </div>
-                         <div class="form-group row mb-4">
+                         <div class="form-group row mb-4" id="row1">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Klasifikasi <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">
                                    <select class="form-control select2" name="states[]" multiple="multiple" id="klasi">
@@ -208,6 +208,9 @@ if(selectedgroup == '2'){
             $(document).ready(function() {
             $('#klasi').select2();
             });
+    }else{
+        $('#row').remove();
+        $('#row1').remove();
     }
 });
 });  
