@@ -99,7 +99,7 @@
                                         '<div class="col-sm-4 col-md-4">'+
                                         '<input type="text" name="luas[]" class="form-control" placeholder="Luas / Jumlah" value="'+(data[i].luas!=null?data[i].luas:'')+'"></div>'+
                                         '<div class="col-sm-4 col-md-4">'+
-                                        '<select class="form-control select2" name="satuan[]"><option value="">Pilih Satuan</option>@foreach($satuan as $val) <option '+(data[i].satuan=='{{$val->id}}'?'selected':'')+' value="{{$val->id}}">@php echo $val->nama;@endphp</option> @endforeach</select></div>'+
+                                        '<select class="form-control select2" name="satuan[]"><option value="">Pilih Satuan</option>@foreach($satuan as $val) <option value="{{$val->id}}">@php echo $val->nama;@endphp</option> @endforeach</select></div>'+
                                         '<div class="col-sm-4">'+
                                             '<input type="file" accept="image/x-png,image/gif,image/jpeg" class="form-control" name="foto_luas[]"><input type="hidden" class="form-control" name="foto_luas_lama[]" value="'+data[i].foto_luas+'">'+
                                             '<span class="help form-control-label"></span><span class="help-text form-control-label"><p>* Maksimal file 2 Mb, Kosongkan jika data tidak diubah</p></span>'+
