@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Klasifikasi;
+use App\Models\Instansi;
+use App\Models\UserGroup;
 use App\Helpers\DateHelper;
 use Illuminate\Support\Facades\Hash;
 use DataTables;
@@ -19,7 +22,7 @@ class PenggunaController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = User::orderBy('created_at','desc')->get();
+               $data = User::with('dinas')->orderBy('created_at','desc')->get();
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
@@ -46,7 +49,7 @@ class PenggunaController extends Controller
                               $data = '<span class="badge badge-info">Surveyor</span>';
                          }elseif($row->group == 2)
                          {
-                              $data = '<span class="badge badge-warning">Dinas</span>';
+                              $data = '<span class="badge badge-warning">'.$row->dinas->nama.'</span>';
                          }else{
                               $data = '<span class="badge badge-primary">Administrator</span>';
                          }
@@ -56,7 +59,10 @@ class PenggunaController extends Controller
                     ->escapeColumns([])
                     ->make(true);
           }
-          return view('pages.pengguna.index');
+
+          $klasifikasi = Klasifikasi::get();
+          $instansi = Instansi::get();
+          return view('pages.pengguna.index')->with('klasifikasi',$klasifikasi)->with('instansi',$instansi);
      }
 
      public function simpan(Request $request)
@@ -67,6 +73,8 @@ class PenggunaController extends Controller
                          'nama' => 'required',
                          'email'     => 'required|email|unique:users,email,'.$request->input('id'),
                          'password'  => 'required',
+                         'id_instansi' => 'required_if:group,==,2',
+                         'id_klasifikasi.*' => 'required_if:group,==,2',
                     ],
                     [
                          'nama.required' => 'Nama tidak boleh kosong!',
@@ -74,6 +82,8 @@ class PenggunaController extends Controller
                          'email.email'       => 'Alamat email tidak sesuai!',
                          'email.unique'      => 'Alamat email sudah terdaftar di data kami!',
                          'password.required' => 'Password tidak boleh kosong!',
+                         'id_instansi.required_if'        => 'Instansi tidak boleh kosong!',
+                         'id_klasifikasi.*.required_if'        => 'Klasifikasi tidak boleh kosong!',
                     ]
                );
                
@@ -84,13 +94,28 @@ class PenggunaController extends Controller
                     $data->email = $request->input('email');
                     $data->group = $request->input('group');
                     $data->password = Hash::make($request->input('password'));
+                    if($request->input('group') == 2)
+                    {
+                         $data->id_instansi = $request->input('id_instansi');
+                    }
                     $data->created_at = now();
                     
+                    
                     if($data->save()){
+                         if ($request->input('id_klasifikasi')) {
+                             foreach ($request->input('id_klasifikasi') as $val) {
+                                 $group = new UserGroup();
+                                 $group->id_user = $data->id;
+                                 $group->id_klasifikasi = $val;
+                                 $group->created_at = now();
+                                 $group->save();
+                             }
+                         }
+
                          $msg = array(
-                         'success' => true, 
-                         'message' => 'Data berhasil disimpan!',
-                         'status' => TRUE
+                              'success' => true, 
+                              'message' => 'Data berhasil disimpan!',
+                              'status' => TRUE
                          );
                          return response()->json($msg);
                     }else{
@@ -117,12 +142,16 @@ class PenggunaController extends Controller
                $validator = Validator::make($request->all(), [
                          'nama' => 'required',
                          'email'     => 'required|email|unique:users,email,'.$request->input('id'),
+                         'id_instansi' => 'required_if:group,==,2',
+                         'id_klasifikasi.*' => 'required_if:group,==,2',
                     ],
                     [
                          'nama.required' => 'Nama tidak boleh kosong!',
                          'email.required'    => 'Alamat email tidak boleh kosong!',
                          'email.email'       => 'Alamat email tidak sesuai!',
                          'email.unique'      => 'Alamat email sudah terdaftar di data kami!',
+                         'id_instansi.required_if'        => 'Instansi tidak boleh kosong!',
+                         'id_klasifikasi.*.required_if'        => 'Klasifikasi tidak boleh kosong!',
                     ]
                );
           
@@ -135,13 +164,33 @@ class PenggunaController extends Controller
                     {
                          $data->password = Hash::make($request->input('password'));
                     }
+                    if($request->input('group') == 2)
+                    {
+                         $data->id_instansi = $request->input('id_instansi');
+                    }else{
+                         $data->id_instansi = null;
+                    }
+
                     $data->updated_at = now();
+                    UserGroup::where('id_user',$data->id)->delete();
 
                     if($data->save()){
+                         if ($request->input('group') == 2) {
+                             if ($request->input('id_klasifikasi')) {
+                                 foreach ($request->input('id_klasifikasi') as $val) {
+                                     $group = new UserGroup();
+                                     $group->id_user = $data->id;
+                                     $group->id_klasifikasi = $val;
+                                     $group->created_at = now();
+                                     $group->save();
+                                 }
+                             }
+                         }
+
                          $msg = array(
-                         'success' => true, 
-                         'message' => 'Data berhasil diubah!',
-                         'status' => TRUE
+                              'success' => true, 
+                              'message' => 'Data berhasil diubah!',
+                              'status' => TRUE
                          );
                          return response()->json($msg);
                     }else{
@@ -163,7 +212,7 @@ class PenggunaController extends Controller
 
      public function data($id)
      {
-          $data = User::where('id', $id)->first();
+          $data = User::with('groups')->where('id', $id)->first();
           return response()->json($data);
      }
 
@@ -209,6 +258,18 @@ class PenggunaController extends Controller
                $data['error_string'][] = $validator->errors()->first('password');
                $data['status'] = false;
            endif;
+
+           if ($validator->errors()->has('id_instansi')):
+               $data['input_error'][] = 'instansi';
+               $data['error_string'][] = $validator->errors()->first('id_instansi');
+               $data['status'] = false;
+           endif;
+
+          if ($validator->errors()->has('id_klasifikasi.0')):
+               $data['input_error'][] = 'klasifikasi';
+               $data['error_string'][] = $validator->errors()->first('id_klasifikasi.0');
+               $data['status'] = false;
+          endif;
 
           return $data;
      }
