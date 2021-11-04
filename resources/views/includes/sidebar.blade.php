@@ -38,6 +38,11 @@
                     Klasifikasi
                 </a>
             </li>
+            <li class="{{ request()->is('master/instansi*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('instansi') }}">
+                    Instansi
+                </a>
+            </li>
             <li class="{{ request()->is('master/satuan*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('satuan') }}">
                     Satuan

@@ -102,9 +102,11 @@
                     <div class="card">
                          <div class="card-header">
                               <h4>
+                                   @if(Auth::user()->group != 2)
                                    <button class="btn btn-icon btn-lg btn-dark tambah" type="button" title="Tambah Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
+                                   @endif
                                    <button type="button" class="refresh btn btn-icon btn-lg btn-success">
                                         <i class="fas fa-sync-alt"></i> Muat Ulang
                                    </button>

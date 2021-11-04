@@ -34,7 +34,33 @@
                                    <span class="help form-control-label"></span>
                               </div>
                          </div>
-                         <div id="field"></div>
+                         <div id="field" style="display:none">
+                              <div class="form-group row mb-4" id="row">
+                                   <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Instansi <span class="text-danger">*</span></label>
+                                   <div class="col-sm-12 col-md-9">
+                                   <select class="form-control select2" name="id_instansi">
+                                             <option value="">-- Pilih Instansi --</option>
+                                             @foreach($instansi as $val)
+                                                  <option value="{{ $val->id }}"> {{ $val->nama }} </option>
+                                             @endforeach
+                                        </select> 
+                                        <input type="hidden" name="instansi">
+                                        <span class="help form-control-label"></span>
+                                   </div>
+                              </div>
+                              <div class="form-group row mb-4" id="row1">
+                                   <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Klasifikasi <span class="text-danger">*</span></label>
+                                   <div class="col-sm-12 col-md-9">
+                                        <select class="form-control select2 id_klasifikasi" name="id_klasifikasi[]" multiple="" placeholder="Pilih Klasifikasi">
+                                             @foreach($klasifikasi as $val)
+                                                  <option value="{{ $val->id }}"> {{ $val->nama }} </option>
+                                             @endforeach
+                                        </select> 
+                                        <input type="hidden" name="klasifikasi">
+                                        <span class="help form-control-label"></span>
+                                   </div>
+                              </div>
+                         </div>
                          <div class="form-group row mb-4">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Password <span class="text-danger">*</span></label>
                               <div class="col-sm-12 col-md-9">

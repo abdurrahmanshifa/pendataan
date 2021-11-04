@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserGroup;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Models\Survey;
@@ -23,6 +24,11 @@ class DashboardController extends Controller
 
      public function index(Request $request)
      {
+          if(Auth::user()->group == 2)
+          {
+               $group = UserGroup::select('id_klasifikasi')->where('id_user', Auth::user()->id)->pluck('id_klasifikasi');
+          }
+
           if ($request->ajax()) {
                $tahun = $_GET['filter']['tahun'];
                $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi',
@@ -49,10 +55,14 @@ class DashboardController extends Controller
                     $data = $data->where('id_status_lahan',$_GET['filter']['stat']);
                }
 
-               if(Auth::user()->group != 1)
+               if(Auth::user()->group == 0)
                {
                     $data = $data->where('id_created',Auth::user()->id)->get();
-               }else{
+               }else if(Auth::user()->group == 2)
+               {
+                    $data = $data->whereIn('klasifikasi',json_decode($group))->get();
+               }
+               else{
                     $data = $data->get();
                }
                $result = array();
@@ -126,33 +136,51 @@ class DashboardController extends Controller
                     ->escapeColumns([])
                     ->make(true);
           }
+
           $user     = User::count();
           $kecamatan = Kecamatan::count();
           $kelurahan = Kelurahan::count();
           $survey   = Survey::with('klasi');
-          $klasifikasi = Klasifikasi::orderBy('nama','ASC')->get();
+          $klasifikasi = Klasifikasi::orderBy('nama','ASC');
+          if(Auth::user()->group == 2){
+               $klasifikasi = $klasifikasi->whereIn('id',json_decode($group))->get();
+          }else{
+               $klasifikasi = $klasifikasi->get();
+          }
+
           $kecamatans = Kecamatan::orderBy('nama_kec','ASC')->get();
           $pembangunan = Pembangunan::all();
           $status_lahan = StatusLahan::all();
 
-          if(Auth::user()->group != 1){
+          if(Auth::user()->group == 0){
                $survey = Survey::with('klasi')->where('id_created',Auth::user()->id);
+          }else if(Auth::user()->group == 2)
+          {
+               $survey = Survey::with('klasi')->whereIn('klasifikasi',json_decode($group));
           }
           
           $data = array();
           foreach($klasifikasi as $key => $val){
                $data[$key]['klasifikasi'] = $val->nama;
-               if (Auth::user()->group != 1) {
+               if (Auth::user()->group == 0) {
                    $jml =  Survey::where('klasifikasi', $val->id)->where('id_created',Auth::user()->id)->count();
-               }else{
+               }
+               else if(Auth::user()->group == 2)
+               {
+                    $jml = Survey::where('klasifikasi',$val->id)->count();
+               }
+               else{
                    $jml =  Survey::where('klasifikasi', $val->id)->count();
                }
                $data_kec = array();
                foreach($kecamatans as $keys => $vals){
                     $data_kec[$keys]['id_kec'] = $vals->nama_kec;
-                    if (Auth::user()->group != 1) {
+                    if (Auth::user()->group == 0) {
                         $jmls =  Survey::where('id_kec', $vals->id)->where('klasifikasi', $val->id)->where('id_created',Auth::user()->id)->count();
-                    }else{
+                    }else if (Auth::user()->group == 2) {
+                         $jmls =  Survey::where('id_kec', $vals->id)->where('klasifikasi', $val->id)->count();
+                    }
+                    else{
                         $jmls =  Survey::where('id_kec', $vals->id)->where('klasifikasi', $val->id)->count();
                     }
                     $data_kec[$keys]['jml'] = $jmls;

@@ -3,9 +3,11 @@
           Kondisi Tahun
      </h4>
      <div class="card-header-action">
+          @if(Auth::user()->group != 2)
           <a  href="javascript:void(0);" class="btn btn-icon btn-lg btn-dark tambah_kondisi" title="Tambah Kondisi">
                <i class="fas fa-plus"></i> Tambah Kondisi
           </a>
+          @endif
           <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
      </div>
 </div>

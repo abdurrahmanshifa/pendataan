@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Survey;
 use App\Models\Satuan;
 use App\Models\Kecamatan;
+use App\Models\UserGroup;
 use App\Models\Kelurahan;
 use App\Models\Atap;
 use App\Models\Dinding;
@@ -64,6 +65,11 @@ class SurveyController extends Controller
 
      public function index(Request $request)
      {
+          if(Auth::user()->group == 2)
+          {
+               $group = UserGroup::select('id_klasifikasi')->where('id_user', Auth::user()->id)->pluck('id_klasifikasi');
+          }
+
           if ($request->ajax()) {
                $tahun = $_GET['filter']['tahun'];
                $data = Survey::with(['statuslahan','kecamatan','kelurahan','klasi',
@@ -86,12 +92,17 @@ class SurveyController extends Controller
                     $data = $data->where('klasifikasi',$_GET['filter']['kla']);
                }
 
-               if(Auth::user()->group != 1)
+               if(Auth::user()->group == 0)
                {
                     $data = $data->where('id_created',Auth::user()->id)->get();
-               }else{
+               }else if(Auth::user()->group == 2)
+               {
+                    $data = $data->whereIn('klasifikasi',json_decode($group))->get();
+               }
+               else{
                     $data = $data->get();
                }
+
                $result = array();
                $i=0;
                foreach($data as $idx => $itm)
@@ -156,11 +167,17 @@ class SurveyController extends Controller
                     //      return $data;
                     // })
                     ->editColumn('aksi', function($row) {
-                         $data = '
-                              <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
-                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
-                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
-                         ';
+                         if(Auth::user()->group == 2){
+                              $data = '
+                                   <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
+                              ';
+                         }else{
+                              $data = '
+                                   <a href="'.url('survey/detail/'.$row->id).'" title="Detail Data" class="btn btn-warning btn-sm"> <i class="fas fa-eye text-white"></i></a>
+                                   <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
+                                   <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
+                              ';
+                         }
 
                          return $data;
                     })
@@ -199,7 +216,12 @@ class SurveyController extends Controller
                     ->make(true);
           }
 
-          $klasifikasi   = Klasifikasi::get();
+          $klasifikasi = Klasifikasi::orderBy('nama','ASC');
+          if(Auth::user()->group == 2){
+               $klasifikasi = $klasifikasi->whereIn('id',json_decode($group))->get();
+          }else{
+               $klasifikasi = $klasifikasi->get();
+          }
           $kecamatan     = Kecamatan::orderBy('nama_kec','asc')->get();
           $statuslahan   = StatusLahan::orderBy('created_at','asc')->get();
           return view('pages.survey.index')->with('kecamatan',$kecamatan)->with('status_lahan',$statuslahan)->with('klasifikasi',$klasifikasi);

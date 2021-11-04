@@ -57,6 +57,12 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('satuan/ubah', 'App\Http\Controllers\Master\SatuanController@ubah')->name('satuan.ubah');
             Route::get('satuan/data/{id}', 'App\Http\Controllers\Master\SatuanController@data')->name('satuan.data');
             Route::delete('satuan/hapus/{id}', 'App\Http\Controllers\Master\SatuanController@hapus')->name('satuan.hapus');
+
+            Route::get('/instansi', 'App\Http\Controllers\Master\InstansiController@index')->name('instansi');
+            Route::post('instansi/simpan', 'App\Http\Controllers\Master\InstansiController@simpan')->name('instansi.simpan');
+            Route::post('instansi/ubah', 'App\Http\Controllers\Master\InstansiController@ubah')->name('instansi.ubah');
+            Route::get('instansi/data/{id}', 'App\Http\Controllers\Master\InstansiController@data')->name('instansi.data');
+            Route::delete('instansi/hapus/{id}', 'App\Http\Controllers\Master\InstansiController@hapus')->name('instansi.hapus');
         });
 
         Route::get('/pengguna', 'App\Http\Controllers\PenggunaController@index')->name('pengguna');
