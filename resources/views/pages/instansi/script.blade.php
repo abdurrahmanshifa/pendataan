@@ -5,19 +5,16 @@
         serverSide: true,
         info :true,
         ajax: {
-            url: "{{ route('pengguna') }}",
+            url: "{{ route('instansi') }}",
         },
         columns: [
             {"data":"DT_RowIndex"},
-            {"data":"name"},
-            {"data":"email"},
-            {"data":"group"},
-            {"data":"last_login"},
+            {"data":"nama"},
             {"data":"aksi"},
         ],
         columnDefs: [
             {
-                targets: [0,-2,-1],
+                targets: [0,-1],
                 className: 'text-center'
             },
         ]
@@ -42,9 +39,9 @@
         var form = $('[name="form_data"]')[0];
         var data = new FormData(form);
         if(save_method == 'add'){
-            var url = '{{route("pengguna.simpan")}}';
+            var url = '{{route("instansi.simpan")}}';
         }else{
-            var url = '{{route("pengguna.ubah")}}';
+            var url = '{{route("instansi.ubah")}}';
         }
 
         $.ajax({
@@ -100,10 +97,6 @@
         $('.help').empty();
         $('#modal_form').modal('show');
         $('.modal-title').text('Tambah Data');
-        $('#field').attr('style','display:none');
-        $('.id_klasifikasi').val([]).change();
-        $('[name="group"]').val(1).change();
-        $('[name="id_instansi"]').val('').change();
     });
 
     function ubah(id)
@@ -113,31 +106,15 @@
         $('.form-group').removeClass('has-error');
         $('.help').empty();
 
-        $('#field').attr('style','display:none');
-        $('.id_klasifikasi').val([]).change();
-        $('[name="id_instansi"]').val('').change();
-
         $.ajax({
-            url : "{{url('pengguna/data/')}}"+"/"+id,
+            url : "{{url('master/instansi/data/')}}"+"/"+id,
             type: "GET",
             dataType: "JSON",
             success: function(data){
                 $('#modal_form').modal('show');
                 $('.modal-title').text('Ubah Data');
                 $('[name="id"]').val(data.id);
-                $('[name="nama"]').val(data.name);
-                $('[name="email"]').val(data.email);
-                $('[name="group"]').val(data.group).change();
-                if(data.group == 2)
-                {
-                    var Values = new Array();
-                    data.groups.forEach((element) => {
-                        Values.push(element.id_klasifikasi);
-                    });
-                    $('.id_klasifikasi').val(Values).change();
-                    $('[name="id_instansi"]').val(data.id_instansi).change();
-                }
-                
+                $('[name="nama"]').val(data.nama);
             },
             error: function (jqXHR, textStatus, errorThrown){
                 alert('Error get data from ajax');
@@ -160,7 +137,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                        url : "{{url('pengguna/hapus/')}}"+"/"+id,
+                        url : "{{url('master/instansi/hapus/')}}"+"/"+id,
                         type: "POST",
                         data : {
                             '_method'   : 'delete',
@@ -198,14 +175,4 @@
 
         });
     }
-
-    $("#group").change(function(){
-        var id = $(this).val();
-        if(id == 2)
-        {
-            $('#field').removeAttr('style','display:none');
-        }else{
-            $('#field').attr('style','display:none');
-        }
-    });
 </script>

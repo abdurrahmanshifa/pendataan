@@ -42,4 +42,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    
+    function groups()
+    {
+        return $this->HasMany('App\Models\UserGroup','id_user');
+    }
+
+    function dinas()
+    {
+        return $this->BelongsTo('App\Models\Instansi','id_instansi');
+    }
+
 }

@@ -1,16 +1,16 @@
 @extends('layouts.template')
 
 @section('title')
-<title>MASTER SATUAN | DINAS PERKIM KOTA TANGERANG </title>
+<title>MASTER INSTANSI | DINAS PERKIM KOTA TANGERANG </title>
 @endsection
 
 @section('content')
 <section class="section">
      <div class="section-header">
-          <h1>Satuan</h1>
+          <h1>Instansi</h1>
           <div class="section-header-breadcrumb">
                <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-               <div class="breadcrumb-item">Satuan</div>
+               <div class="breadcrumb-item">Instansi</div>
           </div>
      </div>
      <div class="section-body">
@@ -58,9 +58,9 @@
 @endsection
 
 @section('modal')
-     @include('pages.satuan.modal')
+     @include('pages.instansi.modal')
 @endsection
 
 @section('script')
-     @include('pages.satuan.script')
+     @include('pages.instansi.script')
 @endsection

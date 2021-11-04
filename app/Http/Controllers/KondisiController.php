@@ -14,6 +14,7 @@ use Str;
 use App\Models\Kondisi;
 use Ramsey\Uuid\Uuid;
 use Image;
+use Auth;
 
 class KondisiController extends Controller
 {
@@ -67,10 +68,14 @@ class KondisiController extends Controller
                          return ($row->keterangan != null?$row->keterangan:'-');
                     })
                     ->editColumn('aksi', function($row) {
-                         $data = '
+                         if (Auth::user()->group != 2) {
+                             $data = '
                               <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_kondisi(\''.$row->id_survey.'\',\''.$row->tahun.'\')"> <i class="fas fa-edit text-white"></i></a>
                               <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_kondisi(\''.$row->id.'\')"> <i class="fas fa-trash text-white"></i></a>
-                         ';
+                             ';
+                         }else{
+                              $data = '';
+                         }
 
                          return $data;
                     })

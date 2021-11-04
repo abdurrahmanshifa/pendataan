@@ -18,6 +18,7 @@ use App\Models\RangkaAtap;
 use Ramsey\Uuid\Uuid;
 use Str;
 use Image;
+use Auth;
 
 class SpesifikasiController extends Controller
 {
@@ -49,10 +50,14 @@ class SpesifikasiController extends Controller
                          return $data;
                     })
                     ->editColumn('aksi', function($row) {
-                         $data = '
-                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
-                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
-                         ';
+                         if (Auth::user()->group != 2) {
+                             $data = '
+                                   <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
+                                   <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
+                              ';
+                         }else{
+                              $data= '';
+                         }
 
                          return $data;
                     })
