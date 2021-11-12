@@ -465,7 +465,7 @@ class SurveyController extends Controller
           $sitePlan =    SitePlan::where('id_survey',$id)->first();
           $validasi =    SurveyValidasi::where('id_survey',$id)->first();
           $satuan   = Satuan::get();
-          
+
           return view('pages.survey.detail',compact('data','atap','dinding','kusen','lantai','plafond','rangkaAtap','spesifikai','sitePlan','rehabilitasi','halaman','pagar','saluran','validasi','satuan'));
      }
 }
