@@ -100,6 +100,10 @@
         $('.help').empty();
         $('#modal_form').modal('show');
         $('.modal-title').text('Tambah Data');
+        $('#field').attr('style','display:none');
+        $('.id_klasifikasi').val([]).change();
+        $('[name="group"]').val(1).change();
+        $('[name="id_instansi"]').val('').change();
     });
 
     function ubah(id)
@@ -108,6 +112,10 @@
         $('#form_data')[0].reset();
         $('.form-group').removeClass('has-error');
         $('.help').empty();
+
+        $('#field').attr('style','display:none');
+        $('.id_klasifikasi').val([]).change();
+        $('[name="id_instansi"]').val('').change();
 
         $.ajax({
             url : "{{url('pengguna/data/')}}"+"/"+id,
@@ -119,6 +127,17 @@
                 $('[name="id"]').val(data.id);
                 $('[name="nama"]').val(data.name);
                 $('[name="email"]').val(data.email);
+                $('[name="group"]').val(data.group).change();
+                if(data.group == 2)
+                {
+                    var Values = new Array();
+                    data.groups.forEach((element) => {
+                        Values.push(element.id_klasifikasi);
+                    });
+                    $('.id_klasifikasi').val(Values).change();
+                    $('[name="id_instansi"]').val(data.id_instansi).change();
+                }
+                
             },
             error: function (jqXHR, textStatus, errorThrown){
                 alert('Error get data from ajax');
@@ -179,4 +198,14 @@
 
         });
     }
+
+    $("#group").change(function(){
+        var id = $(this).val();
+        if(id == 2)
+        {
+            $('#field').removeAttr('style','display:none');
+        }else{
+            $('#field').attr('style','display:none');
+        }
+    });
 </script>

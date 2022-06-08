@@ -18,6 +18,7 @@ use App\Models\RangkaAtap;
 use Ramsey\Uuid\Uuid;
 use Str;
 use Image;
+use Auth;
 
 class SpesifikasiController extends Controller
 {
@@ -49,10 +50,14 @@ class SpesifikasiController extends Controller
                          return $data;
                     })
                     ->editColumn('aksi', function($row) {
-                         $data = '
-                              <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
-                              <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
-                         ';
+                         if (Auth::user()->group != 2) {
+                             $data = '
+                                   <a title="Ubah Data" class="btn btn-success btn-sm" onclick="ubah_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
+                                   <a title="Hapus Data" class="btn btn-danger btn-sm" onclick="hapus_spesifikasi(\''.$row->id.'\')"> <i class="fas fa-trash-alt text-white"></i></a>
+                              ';
+                         }else{
+                              $data= '';
+                         }
 
                          return $data;
                     })
@@ -91,7 +96,7 @@ class SpesifikasiController extends Controller
                     {
                          $file = $request->file('foto')[$key];
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = $id.'_'.Str::random(10).'.'.$file_ext;
+                         $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                          $img = Image::make($file->path());
                          $img->resize(600, null, function ($constraint) {
                               $constraint->aspectRatio();
@@ -147,7 +152,7 @@ class SpesifikasiController extends Controller
                     {
                          $file = $request->file('foto')[$key];
                          $file_ext = $file->getClientOriginalExtension();
-                         $filename = $id.'_'.Str::random(10).'.'.$file_ext;
+                         $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                          $img = Image::make($file->path());
                          $img->resize(600, null, function ($constraint) {
                               $constraint->aspectRatio();
@@ -192,7 +197,7 @@ class SpesifikasiController extends Controller
                {
                     $file = $request->file('foto');
                     $file_ext = $file->getClientOriginalExtension();
-                    $filename = $request->input('id_spesifikasi').'_'.Str::random(10).'.'.$file_ext;
+                    $filename = strtolower(str_replace(' ','_',$request->input('id_spesifikasi'))).'_'.Str::random(10).'.'.$file_ext;
                     $img = Image::make($file->path());
                     $img->resize(600, null, function ($constraint) {
                          $constraint->aspectRatio();
@@ -408,3 +413,4 @@ class SpesifikasiController extends Controller
           }
      }
 }
+

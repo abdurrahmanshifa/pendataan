@@ -17,4 +17,9 @@ class Kondisi extends Model
 
     protected $table = 't_kondisi';
 
+    function satuans()
+    {
+         return $this->belongsTo('App\Models\Satuan','satuan');
+    }
+
 }

@@ -26,7 +26,7 @@
                               <img src="{{ asset('stisla/img/logo.png') }}" alt="logo" width="80" class="mb-5 mt-2">
                               <h4 class="text-dark font-weight-normal">
                                    <span class="font-weight-bold">
-                                   Pendataan Bangunan milik Pemerintah Kota Tangerang
+                                   SISTEM PENDATAAN BANGUNAN YANG KOMPREHENSIF DAN LENGKAP  (Si TANGAN KOREK)
                                    </span>
                               </h4>
                               <p class="text-muted">

@@ -6,9 +6,11 @@
                     Survey Validasi
                </h4>
                <div class="card-header-action">
-                    <button class="btn btn-icon btn-lg btn-dark" id="btn_survey" type="submit" title="Tambah Data">
-                         <i class="fas fa-save"></i> Simpan
-                    </button>
+                    @if(Auth::user()->group != 2)
+                         <button class="btn btn-icon btn-lg btn-dark" id="btn_survey" type="submit" title="Tambah Data">
+                              <i class="fas fa-save"></i> Simpan
+                         </button>
+                    @endif
                     <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
                </div>
           </div>
