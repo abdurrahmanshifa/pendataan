@@ -78,7 +78,7 @@ class SurveyController extends Controller
                               $query->where('tahun', $tahun);
                          }
                         
-               }])->orderBy('id_kec','asc')->orderBy('id_kel','asc');
+               }])->orderBy('created_at','desc');
                
                if($_GET['filter']['kec'] != ''){
                     $data = $data->where('id_kec',$_GET['filter']['kec']);
@@ -107,11 +107,8 @@ class SurveyController extends Controller
                $i=0;
                foreach($data as $idx => $itm)
                {
-                    if($itm->pembangunan != null)
-                    {
-                         $result[$i] = $itm;
-                         $i++;
-                    }
+                    $result[$i] = $itm;
+                    $i++;
                     
                }
                return Datatables::of($result)
