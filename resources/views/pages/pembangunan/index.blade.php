@@ -3,14 +3,16 @@
           Survey Pembangunan
      </h4>
      <div class="card-header-action">
-          @if($data->pembangunan != null)
-               <a href="javascript:void(0);" onclick="ubah_pembangunan('{{$data->pembangunan->id}}')" class="btn btn-icon btn-lg btn-success text-white" title="Ubah Data">
-                    <i class="fas fa-edit"></i> Ubah
-               </a>
-          @else
-               <a href="javascript:void(0);" onclick="tambah_pembangunan()" class="btn btn-icon btn-lg btn-dark" title="Tambah Data">
-                    <i class="fas fa-plus"></i> Tambah
-               </a>
+          @if(Auth::user()->group != 2)
+               @if($data->pembangunan != null)
+                    <a href="javascript:void(0);" onclick="ubah_pembangunan('{{$data->pembangunan->id}}')" class="btn btn-icon btn-lg btn-success text-white" title="Ubah Data">
+                         <i class="fas fa-edit"></i> Ubah
+                    </a>
+               @else
+                    <a href="javascript:void(0);" onclick="tambah_pembangunan()" class="btn btn-icon btn-lg btn-dark" title="Tambah Data">
+                         <i class="fas fa-plus"></i> Tambah
+                    </a>
+               @endif
           @endif
           <a data-collapse="#mycard-collapse" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
      </div>
@@ -131,7 +133,7 @@
                               </label>
                          </div>
                          <div class="table-responsive">
-                              <table id="table-jenis-ruangan" class="table table-bordered ">
+                              <table id="table-jenis-ruangan" class="table table-bordered table-hover">
                                    <thead>
                                         <tr>
                                              <th style="text-align: center;" width="50px;">No</th>

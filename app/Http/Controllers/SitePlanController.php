@@ -38,7 +38,7 @@ class SitePlanController extends Controller
                          {
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = $check->id.'_'.Str::random(10).'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$check->id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('site-plan', $filename);
                               $data->foto    = $filename;
                          }
@@ -52,7 +52,7 @@ class SitePlanController extends Controller
                          {
                               $file = $request->file('foto');
                               $file_ext = $file->getClientOriginalExtension();
-                              $filename = $id.'_'.Str::random(10).'.'.$file_ext;
+                              $filename = strtolower(str_replace(' ','_',$id)).'_'.Str::random(10).'.'.$file_ext;
                               $file->storeAs('site-plan', $filename);
                               $data->foto    = $filename;
                          }
@@ -97,3 +97,4 @@ class SitePlanController extends Controller
           return $data;
      }
 }
+

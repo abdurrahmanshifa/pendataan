@@ -31,7 +31,7 @@
                               <div class="card-body p-0">
                                    <div style="padding: 30px;">
                                         <div class="table-responsive">
-                                             <table id="table" class="table table-bordered ">
+                                             <table id="table" class="table table-bordered table-hover">
                                                   <thead>
                                                        <tr>
                                                             <th style="text-align: center;" width="50px;">No</th>

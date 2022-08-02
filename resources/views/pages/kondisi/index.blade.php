@@ -3,9 +3,11 @@
           Kondisi Tahun
      </h4>
      <div class="card-header-action">
+          @if(Auth::user()->group != 2)
           <a  href="javascript:void(0);" class="btn btn-icon btn-lg btn-dark tambah_kondisi" title="Tambah Kondisi">
                <i class="fas fa-plus"></i> Tambah Kondisi
           </a>
+          @endif
           <a data-collapse="#kondisi" class="btn btn-icon btn-lg btn-info" href="#"><i class="fas fa-minus"></i></a>
      </div>
 </div>
@@ -29,7 +31,7 @@
                               </div>
                          </div>
                          <div class="table-responsive">
-                              <table id="table-kondisi" class="table table-bordered ">
+                              <table id="table-kondisi" class="table table-bordered table-hover">
                                    <thead>
                                         <tr>
                                              <th style="text-align: center;" width="50px;">No</th>
@@ -37,7 +39,7 @@
                                              <th style="text-align: center;">Kondisi</th>
                                              <th style="text-align: center;">Foto Kondisi</th>
                                              <th style="text-align: center;">Luas / Jumlah</th>
-                                             <th style="text-align: center;">Foto</th>
+                                             <th style="text-align: center;">Keterangan</th>
                                              <th style="text-align: center;" width="100px">Aksi</th>
                                         </tr>
                                    </thead>

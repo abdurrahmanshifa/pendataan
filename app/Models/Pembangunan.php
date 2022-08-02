@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Pembangunan extends Model
 {
     use SoftDeletes;
-
     public $incrementing = false;
 
     protected $primaryKey = 'id';
@@ -39,7 +38,7 @@ class Pembangunan extends Model
 
      function ruangan()
      {
-          return $this->HasMany('App\Models\PembangunanRuangan','id_pembangunan');
+          return $this->hasOne('App\Models\PembangunanRuangan','id_pembangunan');
      }
 
 }

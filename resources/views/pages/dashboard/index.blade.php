@@ -2,6 +2,25 @@
 
 @section('title')
 <title>DASHBOARD | DINAS PERKIM KOTA TANGERANG </title>
+<style>
+     #myChart2 {
+          height: 450px;
+          width:100%;
+          overflow-x: scroll !important;
+     }
+
+     ::-webkit-scrollbar {
+          -webkit-appearance: none;
+          width: 3px;
+          height: 4px;
+     }
+
+     ::-webkit-scrollbar-thumb {
+          border-radius: 5px;
+          background-color: rgba(0, 0, 0, .5);
+          box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+     }
+</style>
 @endsection
 
 
@@ -73,32 +92,125 @@
           </div>
      </div>
      <div class="row">
-          <div class="col-lg-6 col-6">
+          <div class="col-12">
                <div class="card">
                     <div class="card-header">
                          <h4>Survey Menurut Klasifikasi</h4>
                     </div>
                     <div class="card-body">
-                         <canvas id="myChart2"></canvas>
+                         {{-- <canvas id="myChart2"></canvas> --}}
+                         <div id="myChart2"></div>
+                    </div>
+               </div>
+          </div>  
+     </div>
+     <div class="row">
+          <div class="col-12">
+               <div class="card">
+                    <div class="card-header">
+                         <h4>
+                              Filter Searching
+                         </h4>
+                         <div class="card-header-form">
+                              <a data-collapse="#mycard-collapse1" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
+                         </div>
+                    </div>
+                    <div class="collapse" id="mycard-collapse1" style="">
+                         <div class="card-body p-0">
+                              <div class="form-group row mb-4">
+                                   <label class="col-form-label text-md-right col-md-2">
+                                        Tahun Pembangunan
+                                   </label>
+                                   <div class="col-md-4">
+                                        <input type="text" class="form-control" name="filter_tahun">
+                                   </div>
+                              </div>
+                              <div class="form-group row mb-4">
+                                   <label class="col-form-label text-md-right col-md-2">
+                                        Klasifikasi
+                                   </label>
+                                   <div class="col-md-4">
+                                        <select name="filter_kla" class="form-control select2" style="width:100%">
+                                             <option value="">-- Semua Klasifikasi --</option>
+                                             @foreach($klasifikasi as $val)
+                                                  <option value="{{$val->id}}">{{$val->nama}}</option>
+                                             @endforeach
+                                        </select>
+                                   </div>
+                              </div>
+                              <div class="form-group row mb-4">
+                                   <label class="col-form-label text-md-right col-md-2">
+                                        Kecamatan
+                                   </label>
+                                   <div class="col-md-4">
+                                        <select name="filter_kec" class="form-control select2" style="width:200px">
+                                             <option value="">-- Semua Kecamatan --</option>
+                                             @foreach($kecamatans as $val)
+                                                  <option value="{{ $val->id }}">{{ $val->nama_kec }}</option>
+                                             @endforeach
+                                        </select>
+                                   </div>
+                              </div>
+                              <div class="form-group row mb-4">
+                                   <label class="col-form-label text-md-right col-md-2">
+                                        Kelurahan
+                                   </label>
+                                   <div class="col-md-4">
+                                        <select name="filter_kel" class="form-control select2" style="width:200px">
+                                             <option value="">-- Semua Kelurahan --</option>
+                                        </select>
+                                   </div>
+                              </div>
+                              <div class="form-group row mb-4">
+                                   <label class="col-form-label text-md-right col-md-2">
+                                        Status Lahan
+                                   </label>
+                                   <div class="col-md-4">
+                                        <select name="filter_stat" class="form-control select2" style="width:200px">
+                                             <option value="">-- Semua Lahan --</option>
+                                             @foreach($status_lahan as $val)
+                                                  <option value="{{ $val->id }}">{{ $val->nama }}</option>
+                                             @endforeach
+                                        </select>
+                                   </div>
+                              </div>
+                              <div class="form-group row mb-4">
+                                   <label class="col-form-label text-md-right col-md-2">
+                                        
+                                   </label>
+                                   <div class="col-md-4">
+                                        <button type="button" class="refresh btn btn-icon btn-xs btn-warning">
+                                             Cari
+                                        </button>
+                                   </div>
+                              </div>
+                         </div>
                     </div>
                </div>
           </div>
-          <div class="col-lg-6 col-6">
+          <div class="col-12">
                <div class="card">
                     <div class="card-header">
                          <h4>Data Survey </h4>
                     </div>
                     <div class="card-body">
+                     <div class="table-responsive">
                         <table class="table table-bordered" id="table">
                              <thead>
                                   <tr>
                                        <th>No</th>
                                        <th>Klasifikasi</th>
-                                       <th>Kelengkapan</th>
+                                       <th>Lokasi</th>
+                                       <th>Pembangunan</th>
+                                       <th>Status Lahan</th>
                                        <th>Aksi</th>
                                   </tr>
                              </thead>
+                             <tbody>
+                              
+                             </tbody>
                         </table>
+                     </div>
                     </div>
                </div>
           </div>
